@@ -1,1 +1,37 @@
-<p>signup works!</p>
+<div class="container">
+  <div class="registration form">
+    <header>Signup</header>
+    <form (ngSubmit)="onSignup()" [formGroup]="signupForm">
+      <input type="email" placeholder="Enter your email" formControlName="email">
+      <div class="error"
+           *ngIf="signupForm.get('email')?.invalid && signupForm.get('email')?.touched">
+        <small *ngIf="signupForm.get('email')?.errors?.['required']">Email is required</small>
+        <small *ngIf="signupForm.get('email')?.errors?.['email']">Invalid email</small>
+      </div>
+
+      <input type="password" placeholder="Enter your password" formControlName="password">
+      <div class="error"
+           *ngIf="signupForm.get('password')?.invalid && signupForm.get('password')?.touched">
+        <small *ngIf="signupForm.get('password')?.errors?.['required']">Password is required</small>
+        <small *ngIf="signupForm.get('password')?.errors?.['minlength']">Password must have at least
+          8 characters</small>
+      </div>
+
+      <input type="password" placeholder="Re-enter your password" formControlName="confirmPassword">
+      <div class="error"
+           *ngIf="signupForm.get('confirmPassword')?.invalid && signupForm.get('confirmPassword')?.touched">
+        <small *ngIf="signupForm.get('confirmPassword')?.errors?.['required']">Password is
+          required</small>
+      </div>
+
+      <input type="button" class="button" (click)="onSignup()" value="Signup"
+             [disabled]="signupForm.invalid">
+    </form>
+
+    <div class="login">
+      <span class="login">Already have an account?
+        <a routerLink="/login">Login</a>
+      </span>
+    </div>
+  </div>
+</div>

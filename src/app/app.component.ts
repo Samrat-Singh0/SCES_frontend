@@ -1,9 +1,10 @@
-import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import {Component} from '@angular/core';
+import {FormsModule} from '@angular/forms';
+import {AddUserComponent} from './user/add-user/add-user/add-user.component';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet],
+  imports: [ FormsModule, AddUserComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })

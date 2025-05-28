@@ -1,31 +1,23 @@
 <div class="container">
-  <input type="checkbox" id="check">
   <div class="login form">
     <header>Login</header>
-    <form action="#">
-      <input type="text" placeholder="Enter your email" [(ngModel)]="email">
-      <input type="password" placeholder="Enter your password" [(ngModel)]="password">
-      <a href="#">Forgot password?</a>
-      <input (click)="submit()" type="button" class="button" value="Login">
+    <form [formGroup]="loginForm" (ngSubmit)="onLogin()" (keydown.enter)="onLogin()">
+
+      <input type="email" placeholder="Enter your email" formControlName="email">
+      <div class="error" *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched">
+        <small *ngIf="loginForm.get('email')?.errors?.['required']">Name is required.</small>
+        <small *ngIf="loginForm.get('email')?.errors?.['email']">Invalid email</small>
+      </div>
+      <input type="password" formControlName="password" placeholder="Enter your password">
+      <div class="error"
+           *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched">
+        <small *ngIf="loginForm.get('password')?.errors?.['required']">Password is required.</small>
+        <small *ngIf="loginForm.get('password')?.errors?.['minlength']">Password must have at least
+          8 characters.</small>
+      </div>
+      <a href="#">Forgot Password?</a>
+      <input type="button" (click)="onLogin()" class="button" value="Login"
+             [disabled]="loginForm.invalid">
     </form>
-    <div class="signup">
-        <span class="signup">Don't have an account?
-         <label for="check">Signup</label>
-        </span>
-    </div>
-  </div>
-  <div class="registration form">
-    <header>Signup</header>
-    <form action="#">
-      <input type="text" placeholder="Enter your email">
-      <input type="password" placeholder="Create a password">
-      <input type="password" placeholder="Confirm your password">
-      <input type="button" class="button" value="Signup">
-    </form>
-    <div class="signup">
-        <span class="signup">Already have an account?
-         <label for="check">Login</label>
-        </span>
-    </div>
   </div>
 </div>
