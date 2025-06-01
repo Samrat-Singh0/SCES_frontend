@@ -1,7 +1,7 @@
 import {Component} from '@angular/core';
 import {FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
 import {NgIf} from '@angular/common';
-import {Router, RouterLink} from '@angular/router';
+import {Router} from '@angular/router';
 import {AuthService} from '../../services/auth.service';
 
 @Component({
@@ -29,7 +29,6 @@ export class LoginComponent {
 
   onLogin() {
     if(this.loginForm.valid){
-      // console.log(this.loginForm.valid);
       this.authService.login(this.loginForm.value.email!, this.loginForm.value.password!).subscribe({
         next: (response: any) => {
           const token = response.headers.get('Authorization');
@@ -51,7 +50,6 @@ export class LoginComponent {
               break;
             }
           }
-          // this.router.navigate(['/super-admin-dashboard']);
         },
         error: (err) => {
           console.log("error:::", err);

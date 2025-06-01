@@ -7,10 +7,12 @@ import {
 import {AdminDashboardComponent} from './dashboard/admin/admin-dashboard/admin-dashboard.component';
 import {UserDashboardComponent} from './dashboard/user/user-dashboard/user-dashboard.component';
 import {UserComponent} from './user/user/user.component';
+import {InitialLoginComponent} from './auth/initial-login/initial-login.component';
 
 export const routes: Routes = [
   {path: "", component: LoginComponent},
   {path: "login", component: LoginComponent},
+  {path: "initial-login", component: InitialLoginComponent},
   {path: "signup", component: SignupComponent},
   {path: "super-admin-dashboard", component:SuperAdminDashboardComponent, children: [
       {path: "user", component: UserComponent}

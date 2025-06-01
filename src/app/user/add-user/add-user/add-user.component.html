@@ -1,0 +1,81 @@
+<div class="form-container">
+  <h3>Add User</h3>
+  <form [formGroup]="myForm" (ngSubmit)="onSubmit()">
+    <div class="form-group">
+      <label for="name">First Name</label>
+      <input type="text" placeholder="e.g. 'John'" formControlName="firstName">
+      <div class="error"
+           *ngIf="myForm.get('firstName')?.invalid && myForm.get('firstName')?.touched">
+        <small *ngIf="myForm.get('firstName')?.errors?.['required']">First Name is required.</small>
+        <small *ngIf="myForm.get('firstName')?.errors?.['minlength']">Must be at least 3
+          letters.</small>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="name">Middle Name</label>
+      <input type="text" placeholder="(Optional) e.g. 'D.' " formControlName="middleName">
+      <div *ngIf="myForm.get('middleName')?.invalid && myForm.get('middleName')?.touched">
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="name">Last Name</label>
+      <input type="text" placeholder="e.g. 'Doe'" formControlName="lastName">
+      <div *ngIf="myForm.get('lastName')?.invalid && myForm.get('lastName')?.touched">
+        <small *ngIf="myForm.get('lastName')?.errors?.['required']">Last Name is required.</small>
+        <small *ngIf="myForm.get('lastName')?.errors?.['minlength']">Must be at least 3
+          letters.</small>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="email">Email</label>
+      <input type="email" placeholder="e.g. 'johndoe@gmail.com'" formControlName="email">
+      <div class="error" *ngIf="myForm.get('email')?.invalid && myForm.get('email')?.touched">
+        <small *ngIf="myForm.get('email')?.errors?.['required']">Email is required.</small>
+        <small *ngIf="myForm.get('email')?.errors?.['pattern']">Please provide a valid
+          email.</small>
+
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="password">Password</label>
+      <input type="password" [placeholder]="myForm.get('password')" formControlName="password"
+             readonly>
+    </div>
+
+    <div class="form-group">
+      <label for="address">Address</label>
+      <input type="text" placeholder="e.g. 'Pulchowk'" formControlName="address">
+      <div class="error" *ngIf="myForm.get('address')?.invalid && myForm.get('address')?.touched">
+        <small *ngIf="myForm.get('address')?.errors?.['required']">Address is required.</small>
+        <small *ngIf="myForm.get('address')?.errors?.['pattern']">Please provide a valid
+          address.</small>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="phoneNumber">Phone Number</label>
+      <input type="text" placeholder="e.g. '9800000000'" formControlName="phoneNumber">
+      <div class="error" *ngIf="myForm.get('phoneNumber')?.invalid && myForm.get('phoneNumber')?.touched">
+        <small *ngIf="myForm.get('phoneNumber')?.errors?.['required']">Phone number is required.</small>
+<!--        <small *ngIf="myForm.get('phoneNumber')?.errors?.['pattern']">Please provide a valid-->
+<!--          phone number.</small>-->
+        <small *ngIf="myForm.get('phoneNumber')?.errors?.['minlength']">At least 10</small>
+
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="role">Role</label>
+      <select formControlName="role">
+        <option value="Instructor">Instructor</option>
+        <option value="Student">Student</option>
+      </select>
+    </div>
+
+    <button type="submit">Submit</button>
+  </form>
+</div>

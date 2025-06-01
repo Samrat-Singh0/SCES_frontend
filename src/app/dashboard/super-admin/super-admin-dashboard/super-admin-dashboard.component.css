@@ -1,0 +1,61 @@
+body, html {
+  height:100%;
+  margin: 0;
+  padding: 0;
+}
+
+.dashboard-wrapper {
+  background-color: white;
+  border-radius: 1rem;
+  box-shadow: 0 0 15px rgba(0,0,0,0.2);
+  height: 95vh;
+  margin: 2rem auto;
+  max-width: 95%;
+  display: flex;
+  overflow: hidden;
+
+}
+
+.sidebar {
+  background-color: #f8f9fa;
+  width: 250px;
+  padding:1rem;
+}
+
+.main-content {
+  flex-grow: 1;
+  padding: 2rem;
+  overflow-y: auto;
+}
+
+li {
+  list-style: none;
+}
+
+.user-dropdown {
+  position: relative;
+}
+
+.sub-menu {
+  display: none;
+  padding-left: 1rem;
+  margin-top: 0.5rem;
+}
+
+.user-dropdown:hover .sub-menu{
+  display: block;
+}
+
+
+.sub-meru li {
+  margin-bottom: 0.5rem;
+}
+
+.sub-menu a {
+  font-size: 1.2rem;
+  padding-left: 0.5rem;
+}
+
+.sub-menu a:hover {
+  cursor: pointer;
+}
