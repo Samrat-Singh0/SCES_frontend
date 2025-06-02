@@ -17,9 +17,52 @@ body, html {
 }
 
 .sidebar {
+  color: #343a40;
+  text-decoration: none;
+  display: block;
+  padding: 1rem 1rem;
   background-color: #f8f9fa;
-  width: 250px;
-  padding:1rem;
+  font-weight: 500;
+  border-right: 1px solid #dee2e6;
+  text-align: center;
+  transition: background-color 0.3s, color 0.3s;
+  width: 300px;
+}
+
+.sidebar a:hover{
+  background-color: #e2e6ea;
+  border-radius: 5px;
+  color: #000;
+}
+
+.sidebar-icon {
+  width: 24px;
+  text-align: center;
+}
+
+
+h4 {
+  margin-top: 25px;
+}
+
+.nav {
+  margin-top: 40px;
+}
+
+.nav-item {
+  width: 100%;
+  margin-bottom: 10rem;
+  border: 1px solid #dee2e6;
+  border-radius: 8px;
+  overflow: hidden;
+  background-color: #fff;
+  transition: box-shadow 0.3s;
+}
+
+.nav-gap {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
 }
 
 .main-content {
@@ -30,32 +73,4 @@ body, html {
 
 li {
   list-style: none;
-}
-
-.user-dropdown {
-  position: relative;
-}
-
-.sub-menu {
-  display: none;
-  padding-left: 1rem;
-  margin-top: 0.5rem;
-}
-
-.user-dropdown:hover .sub-menu{
-  display: block;
-}
-
-
-.sub-meru li {
-  margin-bottom: 0.5rem;
-}
-
-.sub-menu a {
-  font-size: 1.2rem;
-  padding-left: 0.5rem;
-}
-
-.sub-menu a:hover {
-  cursor: pointer;
 }

@@ -1,32 +1,62 @@
-import {Component} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {FormControl, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
-import {NgIf} from '@angular/common';
+import {NgClass, NgIf} from '@angular/common';
+import {UserService} from '../../services/user.service';
+import {ChangePassword} from '../../models/change-password.model';
+import {ActivatedRoute, Router} from '@angular/router';
+import {passwordMatchValidator} from '../validators/password-match.validator';
+import {classNames} from '@angular/cdk/schematics';
 
 @Component({
   selector: 'app-initial-login',
   imports: [
     ReactiveFormsModule,
-    NgIf
+    NgIf,
+    NgClass
   ],
   templateUrl: './initial-login.component.html',
   styleUrl: './initial-login.component.css'
 })
-export class InitialLoginComponent {
+export class InitialLoginComponent implements OnInit {
 
-  isOldPasswordValid: Boolean = false;
+  hide: Boolean = false;
+  email!: string;
+
+  constructor(private userService: UserService, private route: ActivatedRoute,private router: Router) {
+  }
+
+  ngOnInit() {
+    this.route.queryParamMap.subscribe(params => {
+      this.email = params.get('email')!;
+    })
+  }
 
   changePasswordForm = new FormGroup({
-    email: new FormControl('', [Validators.required,  Validators.pattern("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,4}$")]),
-    oldPassword: new FormControl('', [Validators.required]),
-    newPassword: new FormControl('', [Validators.required, Validators.pattern("^(?=.*[0-9])(?=.*[^a-zA-Z0-9]).{8,}$\n")]),
-    confirmPassword: new FormControl('', [Validators.required])
-  });
+      newPassword: new FormControl('', [Validators.required, Validators.pattern("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[!@#$%^&*()_\\-+=.?/\\\\])[A-Za-z\\d!@#$%^&*()_\\-+=.?/\\\\]{8,}$")]),
+      confirmPassword: new FormControl('', [Validators.required])
+    }, {
+      validators: passwordMatchValidator()
+    }
+  );
 
   onSubmit() {
-    if(this.changePasswordForm.valid){
-      console.log("VAlIDDDDDDDD");
-    }else {
-      console.log("Invaliddddddd");
+    if (this.changePasswordForm.valid) {
+      const form = this.changePasswordForm.value;
+      const initialData: ChangePassword = {
+        email: this.email,
+        newPassword: form.newPassword!
+      }
+      this.userService.initialPasswordChange(initialData)
+      .subscribe({
+        next: res => {
+          this.router.navigate(['login']);
+        },
+        error: err => {
+          console.log(err);
+        }
+      })
     }
   }
+
+  protected readonly classNames = classNames;
 }

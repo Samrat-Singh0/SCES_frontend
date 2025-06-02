@@ -3,8 +3,8 @@ import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/
 import {NgIf} from '@angular/common';
 import {MatIconModule} from '@angular/material/icon';
 import generator from 'generate-password-ts';
-import {User} from '../../../models/user.model';
-import {UserService} from '../../../services/user.service';
+import {User} from '../../models/user.model';
+import {UserService} from '../../services/user.service';
 import {catchError, tap, throwError} from 'rxjs';
 
 @Component({

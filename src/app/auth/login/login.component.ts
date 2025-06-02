@@ -1,8 +1,9 @@
 import {Component} from '@angular/core';
 import {FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
-import {NgIf} from '@angular/common';
+import {NgClass, NgIf} from '@angular/common';
 import {Router} from '@angular/router';
 import {AuthService} from '../../services/auth.service';
+import {MatIconModule} from '@angular/material/icon';
 
 @Component({
   selector: 'app-login',
@@ -11,11 +12,15 @@ import {AuthService} from '../../services/auth.service';
     FormsModule,
     ReactiveFormsModule,
     NgIf,
+    MatIconModule,
+    NgClass
   ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
 })
 export class LoginComponent {
+
+  hide:Boolean = true;
 
   constructor(private authService: AuthService, private router: Router) {
   }
@@ -35,6 +40,13 @@ export class LoginComponent {
           const body = response.body;
 
           localStorage.setItem('token',token);
+
+          if(body.mustChangePassword){
+            this.router.navigate(['initial-login'], {
+              queryParams: {email: body.email}
+            });
+            return;
+          }
 
           switch (body.role) {
             case "SUPER_ADMIN": {

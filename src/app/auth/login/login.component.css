@@ -1,3 +1,5 @@
+@import 'https://fonts.googleapis.com/icon?family=Material+Icons';
+
 *{
   margin: 0;
   padding: 0;
@@ -40,6 +42,26 @@ body{
   border-radius: 6px;
   outline: none;
 }
+
+.password-container {
+  position: relative;
+}
+
+.password-container input {
+  width: 100%;
+  padding-right: 40px;
+}
+
+.toggle-icon {
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-80%);
+  cursor: pointer;
+  font-size: 24px;
+  color: #555;
+}
+
 .form input:focus{
   box-shadow: 0 1px 0 rgba(0,0,0,0.2);
 }
@@ -64,21 +86,11 @@ body{
 .form input.button:hover{
   background: #006653;
 }
-.signup{
-  font-size: 17px;
-  text-align: center;
-}
-.signup label{
-  color: #009579;
-  cursor: pointer;
-}
-.signup label:hover{
-  text-decoration: underline;
-}
+
 
 .error {
   color: red;
-  font-size: 0.8rem;
+  font-size: 1.3rem;
   margin-top: -10px;
   margin-bottom: 10px;
 }

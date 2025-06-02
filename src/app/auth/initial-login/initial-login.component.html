@@ -1,36 +1,43 @@
-<div class="form-container">
-  <h3>Change Password</h3>
-  <form [formGroup]="changePasswordForm" (ngSubmit)="onSubmit()" (keydown.enter)="onSubmit()">
+<div class="container">
+  <div class="change-password form">
+    <header>Change Password</header>
+    <form [formGroup]="changePasswordForm" (ngSubmit)="onSubmit()" (keydown.enter)="onSubmit()">
 
-    <div class="form-group">
-      <label for="email">Email</label>
-      <input type="email" formControlName="email">
-      <div class="error">
-        <small *ngIf="changePasswordForm.get('email')?.errors?.['required']">Name is required.</small>
-        <small *ngIf="changePasswordForm.get('email')?.errors?.['pattern']">Invalid email</small>
+      <div class="form-group">
+        <label for="newPassword">New Password</label>
+        <div class="password-container">
+          <input [type]="hide? 'password' : 'text'" formControlName="newPassword">
+          <i class="bi toggle-icon" [ngClass]="hide? 'bi-eye-slash' : 'bi-eye'"
+             (click)="hide = !hide"></i>
+        </div>
+
+        <div class="error"
+             *ngIf="changePasswordForm.get('newPassword')?.touched && changePasswordForm.get('newPassword')?.invalid">
+          <small *ngIf="changePasswordForm.get('newPassword')?.errors?.['required']">Password is
+            required.</small>
+          <small *ngIf="changePasswordForm.get('newPassword')?.errors?.['pattern']">Password must
+            have
+            1 uppercase, 1 lowercase, 1 number, 1 symbol and be at least 8 characters long.</small>
+        </div>
       </div>
-    </div>
 
-
-    <div class="form-group">
-      <label for="oldPassword">Old Password</label>
-      <input type="password" formControlName="oldPassword">
-    </div>
-
-    <div class="form-group">
-      <label for="newPassword">New Password</label>
-      <input type="password" formControlName="newPassword">
-      <div class="error">
-        <small *ngIf="changePasswordForm.get('newPassword')?.errors?.['required']">Password is required.</small>
-        <small *ngIf="changePasswordForm.get('newPassword')?.errors?.['pattern']">Password must have at least one number and one symbol.</small>
+      <div class="form-group">
+        <label for="confirmPassword">Confirm Password</label>
+        <input [type]="hide? 'password' : 'text'" formControlName="confirmPassword">
+        <div class="error"
+             *ngIf="changePasswordForm.get('confirmPassword')?.touched && changePasswordForm.get('confirmPassword')?.invalid">
+          <small *ngIf="changePasswordForm.get('confirmPassword')?.errors?.['required']">Passwords
+            must match.</small>
+        </div>
       </div>
-    </div>
 
-    <div class="form-group">
-      <label for="confirmPassword">Confirm Password</label>
-      <input type="password" formControlName="confirmPassword">
-    </div>
+      <div class="error"
+           *ngIf="changePasswordForm.errors?.['passwordMismatch'] && changePasswordForm.touched">
+        <small>New Password and confirm Password do not match.</small>
+      </div>
 
-    <button type="submit">Change</button>
-  </form>
+      <button type="submit">Change</button>
+
+    </form>
+  </div>
 </div>
