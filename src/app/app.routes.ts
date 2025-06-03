@@ -9,15 +9,18 @@ import {UserDashboardComponent} from './dashboard/user/user-dashboard/user-dashb
 import {InitialLoginComponent} from './auth/initial-login/initial-login.component';
 import {AddUserComponent} from './user/add-user/add-user.component';
 import {ViewUserComponent} from './user/view-user/view-user.component';
+import {PasswordPolicyComponent} from './password-policy/password-policy.component';
 
 export const routes: Routes = [
   {path: "", component: LoginComponent},
   {path: "login", component: LoginComponent},
   {path: "initial-login", component: InitialLoginComponent},
   {path: "signup", component: SignupComponent},
+  {path: "super-admin-dashboard", component: SuperAdminDashboardComponent},
   {path: "super-admin-dashboard", component:SuperAdminDashboardComponent, children: [
       {path: "add-user", component: AddUserComponent},
       {path: "view-user", component: ViewUserComponent},
+      {path: "password-policy", component: PasswordPolicyComponent},
       {path:"", component: ViewUserComponent},
     ]},
   {path: "admin-dashboard", component:AdminDashboardComponent},

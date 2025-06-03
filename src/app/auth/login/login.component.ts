@@ -21,13 +21,14 @@ import {MatIconModule} from '@angular/material/icon';
 export class LoginComponent {
 
   hide:Boolean = true;
+  errorMessage: string = '';
 
   constructor(private authService: AuthService, private router: Router) {
   }
 
   loginForm = new FormGroup({
     email: new FormControl('', [Validators.required, Validators.email]),
-    password: new FormControl('', [Validators.required, Validators.minLength(8)])
+    password: new FormControl('', [Validators.required])
   })
 
 
@@ -39,7 +40,12 @@ export class LoginComponent {
           const token = response.headers.get('Authorization');
           const body = response.body;
 
-          localStorage.setItem('token',token);
+          if(token){
+            localStorage.setItem('token',token.replace('Bearer ', '').trim());
+          }
+
+          this.errorMessage = '';
+
 
           if(body.mustChangePassword){
             this.router.navigate(['initial-login'], {
@@ -63,8 +69,8 @@ export class LoginComponent {
             }
           }
         },
-        error: (err) => {
-          console.log("error:::", err);
+        error:(err) => {
+          this.errorMessage = 'Invalid email or password';
         }
       })
     }

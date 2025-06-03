@@ -61,8 +61,6 @@
       <input type="text" placeholder="e.g. '9800000000'" formControlName="phoneNumber">
       <div class="error" *ngIf="myForm.get('phoneNumber')?.invalid && myForm.get('phoneNumber')?.touched">
         <small *ngIf="myForm.get('phoneNumber')?.errors?.['required']">Phone number is required.</small>
-<!--        <small *ngIf="myForm.get('phoneNumber')?.errors?.['pattern']">Please provide a valid-->
-<!--          phone number.</small>-->
         <small *ngIf="myForm.get('phoneNumber')?.errors?.['minlength']">At least 10</small>
 
       </div>

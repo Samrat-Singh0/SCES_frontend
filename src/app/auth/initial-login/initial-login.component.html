@@ -10,14 +10,12 @@
           <i class="bi toggle-icon" [ngClass]="hide? 'bi-eye-slash' : 'bi-eye'"
              (click)="hide = !hide"></i>
         </div>
-
-        <div class="error"
-             *ngIf="changePasswordForm.get('newPassword')?.touched && changePasswordForm.get('newPassword')?.invalid">
-          <small *ngIf="changePasswordForm.get('newPassword')?.errors?.['required']">Password is
-            required.</small>
-          <small *ngIf="changePasswordForm.get('newPassword')?.errors?.['pattern']">Password must
-            have
-            1 uppercase, 1 lowercase, 1 number, 1 symbol and be at least 8 characters long.</small>
+        <div class = "error" *ngIf="this.changePasswordForm.get('newPassword')?.touched && this.changePasswordForm.get('newPassword')?.invalid">
+          <ul class="error-list">
+            <li *ngFor="let error of getPasswordErrors()">
+              {{ error }}
+            </li>
+          </ul>
         </div>
       </div>
 

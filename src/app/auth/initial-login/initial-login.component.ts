@@ -1,43 +1,62 @@
 import {Component, OnInit} from '@angular/core';
 import {FormControl, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
-import {NgClass, NgIf} from '@angular/common';
+import {NgClass, NgForOf, NgIf} from '@angular/common';
 import {UserService} from '../../services/user.service';
 import {ChangePassword} from '../../models/change-password.model';
 import {ActivatedRoute, Router} from '@angular/router';
 import {passwordMatchValidator} from '../validators/password-match.validator';
-import {classNames} from '@angular/cdk/schematics';
+import {PasswordPolicy} from '../../models/password-policy.model';
+import {PasswordPolicyService} from '../../services/password-policy.service';
 
 @Component({
   selector: 'app-initial-login',
   imports: [
     ReactiveFormsModule,
     NgIf,
-    NgClass
+    NgClass,
+    NgForOf
   ],
   templateUrl: './initial-login.component.html',
   styleUrl: './initial-login.component.css'
 })
 export class InitialLoginComponent implements OnInit {
-
+  passwordPolicies: PasswordPolicy[] = [];
   hide: Boolean = false;
   email!: string;
-
-  constructor(private userService: UserService, private route: ActivatedRoute,private router: Router) {
-  }
-
-  ngOnInit() {
-    this.route.queryParamMap.subscribe(params => {
-      this.email = params.get('email')!;
-    })
-  }
+  regexPattern: string = '';
 
   changePasswordForm = new FormGroup({
-      newPassword: new FormControl('', [Validators.required, Validators.pattern("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[!@#$%^&*()_\\-+=.?/\\\\])[A-Za-z\\d!@#$%^&*()_\\-+=.?/\\\\]{8,}$")]),
+      newPassword: new FormControl(''),
       confirmPassword: new FormControl('', [Validators.required])
     }, {
       validators: passwordMatchValidator()
     }
   );
+
+  constructor(private userService: UserService,
+              private route: ActivatedRoute,
+              private router: Router,
+              private passwordPolicyService: PasswordPolicyService) {
+  }
+
+  ngOnInit() {
+
+    this.route.queryParamMap.subscribe(params => {
+      this.email = params.get('email')!;
+    })
+
+    this.passwordPolicyService.getActivePolicies().subscribe(
+      data => {
+        this.passwordPolicies = data;
+        this.regexPattern = this.buildRegexPattern();
+        this.changePasswordForm.get('newPassword')?.setValidators([
+          Validators.required,
+          Validators.pattern(this.regexPattern)
+        ]);
+        this.changePasswordForm.get('newPassword')?.updateValueAndValidity();
+      }
+    );
+  }
 
   onSubmit() {
     if (this.changePasswordForm.valid) {
@@ -58,5 +77,32 @@ export class InitialLoginComponent implements OnInit {
     }
   }
 
-  protected readonly classNames = classNames;
+  buildRegexPattern(): string {
+    const pattern = this.passwordPolicies.map(
+      policy => {
+        let regex = policy.regex;
+        if (regex.startsWith('^')) regex = regex.substring(1);
+        if (regex.endsWith('$')) regex = regex.substring(0, regex.length - 1);
+
+        return `(?=${regex})`;
+      }
+    ).join('');
+
+    console.log(`^${pattern}.*$`);
+    return `^${pattern}.*$`;
+  }
+
+  getPasswordErrors(): string[] {
+    const password = this.changePasswordForm.get('newPassword')?.value || '';
+    const failedPolicies: string[] = [];
+
+    this.passwordPolicies.forEach(policy => {
+      const regex = new RegExp(policy.regex);
+      if(!regex.test(password)) {
+        failedPolicies.push(policy.parameters);
+      }
+    });
+
+    return failedPolicies;
+  }
 }

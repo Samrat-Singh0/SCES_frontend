@@ -6,11 +6,13 @@
   box-sizing: border-box;
   font-family: 'Poppins', sans-serif;
 }
-body{
+
+.bg {
   min-height: 100vh;
   width: 100%;
-  background: #009579;
+  background: #009579 ;
 }
+
 .container{
   position: absolute;
   top: 50%;
@@ -90,7 +92,7 @@ body{
 
 .error {
   color: red;
-  font-size: 1.3rem;
+  font-size: 0.8rem;
   margin-top: -10px;
   margin-bottom: 10px;
 }

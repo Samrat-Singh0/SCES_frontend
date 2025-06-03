@@ -1,32 +1,36 @@
-<div class="container">
-  <div class="login form">
-    <header>Login</header>
-    <form [formGroup]="loginForm" (ngSubmit)="onLogin()" (keydown.enter)="onLogin()">
+<div class="bg vh-100 vw-100">
+  <div class="container">
+    <div class="login form">
+      <header>Login</header>
+      <form [formGroup]="loginForm" (ngSubmit)="onLogin()" (keydown.enter)="onLogin()">
 
-      <input id="email" type="email" placeholder="Enter your email" formControlName="email">
-      <div class="error" *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched">
-        <small *ngIf="loginForm.get('email')?.errors?.['required']">Name is required.</small>
-        <small *ngIf="loginForm.get('email')?.errors?.['email']">Invalid email</small>
-      </div>
+        <input id="email" type="email" placeholder="Enter your email" formControlName="email">
+        <div class="error" *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched">
+          <small *ngIf="loginForm.get('email')?.errors?.['required']">Name is required.</small>
+          <small *ngIf="loginForm.get('email')?.errors?.['email']">Invalid email</small>
+        </div>
 
-      <div class="password-container">
-        <input id="password" [type]="hide? 'password' : 'text'" formControlName="password"
-               placeholder="Enter your password">
-<!--        <mat-icon class="toggle-icon" (click)="hide = !hide"> {{hide ? 'visibility_off' : 'visibility'}}</mat-icon>-->
-        <i class="bi toggle-icon" [ngClass]="hide? 'bi-eye-slash' : 'bi-eye'" (click)="hide = !hide"></i>
-      </div>
+        <div class="password-container">
+          <input id="password" [type]="hide? 'password' : 'text'" formControlName="password"
+                 placeholder="Enter your password">
+          <i class="bi toggle-icon" [ngClass]="hide? 'bi-eye-slash' : 'bi-eye'"
+             (click)="hide = !hide"></i>
+        </div>
 
-      <div class="error"
-           *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched">
-        <small *ngIf="loginForm.get('password')?.errors?.['required']">Password is required.</small>
-        <small *ngIf="loginForm.get('password')?.errors?.['minlength']">Password must have at least
-          8 characters.</small>
-      </div>
+        <div class="error"
+             *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched">
+          <small *ngIf="loginForm.get('password')?.errors?.['required']">Password is required.</small>
+        </div>
 
+        <div class="error" *ngIf="errorMessage">
+          <small>{{ errorMessage }}</small>
+        </div>
 
-      <a href="#">Forgot Password?</a>
-      <input id="login" type="button" (click)="onLogin()" class="button" value="Login"
-             [disabled]="loginForm.invalid">
-    </form>
+        <a href="#">Forgot Password?</a>
+        <input id="login" type="button" (click)="onLogin()" class="button" value="Login"
+               [disabled]="loginForm.invalid">
+      </form>
+    </div>
   </div>
+
 </div>
