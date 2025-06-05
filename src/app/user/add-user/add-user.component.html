@@ -1,4 +1,4 @@
-<div class="form-container">
+<div class="p-5">
   <h3>Add User</h3>
   <form [formGroup]="myForm" (ngSubmit)="onSubmit()">
     <div class="form-group">
@@ -9,23 +9,26 @@
         <small *ngIf="myForm.get('firstName')?.errors?.['required']">First Name is required.</small>
         <small *ngIf="myForm.get('firstName')?.errors?.['minlength']">Must be at least 3
           letters.</small>
+        <small *ngIf="myForm.get('firstName')?.errors?.['pattern']">Must consist only alphabets.</small>
       </div>
     </div>
 
     <div class="form-group">
       <label for="name">Middle Name</label>
-      <input type="text" placeholder="(Optional) e.g. 'D.' " formControlName="middleName">
-      <div *ngIf="myForm.get('middleName')?.invalid && myForm.get('middleName')?.touched">
+      <input type="text" placeholder="(Optional) e.g. 'Kumar' " formControlName="middleName">
+      <div class="error" *ngIf="myForm.get('middleName')?.invalid && myForm.get('middleName')?.touched">
+        <small *ngIf="myForm.get('middleName')?.errors?.['pattern']">Must consist only alphabets.</small>
       </div>
     </div>
 
     <div class="form-group">
       <label for="name">Last Name</label>
       <input type="text" placeholder="e.g. 'Doe'" formControlName="lastName">
-      <div *ngIf="myForm.get('lastName')?.invalid && myForm.get('lastName')?.touched">
+      <div class="error" *ngIf="myForm.get('lastName')?.invalid && myForm.get('lastName')?.touched">
         <small *ngIf="myForm.get('lastName')?.errors?.['required']">Last Name is required.</small>
         <small *ngIf="myForm.get('lastName')?.errors?.['minlength']">Must be at least 3
           letters.</small>
+        <small *ngIf="myForm.get('lastName')?.errors?.['pattern']">Must consist only alphabets.</small>
       </div>
     </div>
 
@@ -38,12 +41,6 @@
           email.</small>
 
       </div>
-    </div>
-
-    <div class="form-group">
-      <label for="password">Password</label>
-      <input type="password" [placeholder]="myForm.get('password')" formControlName="password"
-             readonly>
     </div>
 
     <div class="form-group">

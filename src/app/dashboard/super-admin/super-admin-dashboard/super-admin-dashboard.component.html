@@ -3,25 +3,39 @@
     <h4>Dashboard</h4>
     <ul class="nav flex-column nav-gap">
       <li class="nav-item mb-2">
-        <a class="nav-link text-dark d-flex align-items-center px-3" routerLink="view-user">
+        <a class="nav-link text-dark d-flex align-items-center px-3" routerLink="view-user"
+           routerLinkActive="active-tab" [routerLinkActiveOptions]="{ exact: true}">
           <i class="bi bi-person-circle sidebar-icon" style="margin-left: -4px"></i>
           <span class="flex-grow-1">User</span>
         </a>
       </li>
       <li class="nav-item mb-2">
-        <a class="nav-link text-dark d-flex align-items-center px-3" routerLink="view-user">
+        <a class="nav-link text-dark d-flex align-items-center px-3" routerLink="#"
+           routerLinkActive="active-tab" [routerLinkActiveOptions]="{ exact: true}">
+          <i class="bi bi-mortarboard sidebar-icon" style="margin-left: -4px"></i>
+          <span class="flex-grow-1">Semester</span>
+        </a>
+      </li>
+      <li class="nav-item mb-2">
+        <a class="nav-link text-dark d-flex align-items-center px-3" routerLink="#"
+           routerLinkActive="active-tab" [routerLinkActiveOptions]="{ exact: true}">
           <i class="bi bi-journal-bookmark-fill sidebar-icon" style="margin-left: -4px"></i>
           <span class="flex-grow-1">Courses</span>
         </a>
       </li>
       <li class="nav-item mb-2">
-        <a class="nav-link text-dark d-flex align-items-center px-3" routerLink="password-policy">
+        <a class="nav-link text-dark d-flex align-items-center px-3" routerLink="password-policy"
+           routerLinkActive="active-tab" [routerLinkActiveOptions]="{ exact: true}">
           <i class="bi bi-lock sidebar-icon" style="margin-left: -4px"></i>
           <span class="flex-grow-1">Password Policy</span>
         </a>
       </li>
 
     </ul>
+
+    <button class="btn btn-outline-danger mt-auto logout-btn" (click)="logout()">
+      <i class="bi bi-box-arrow-right sidebar-icon" style="margin-left: -4px"></i> Logout
+    </button>
   </nav>
 
   <main class="main-content">

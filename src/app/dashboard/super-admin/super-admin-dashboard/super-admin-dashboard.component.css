@@ -19,7 +19,8 @@ body, html {
 .sidebar {
   color: #343a40;
   text-decoration: none;
-  display: block;
+  display: flex;
+  flex-direction: column;
   padding: 1rem 1rem;
   background-color: #f8f9fa;
   font-weight: 500;
@@ -73,4 +74,23 @@ h4 {
 
 li {
   list-style: none;
+}
+
+.active-tab {
+  background-color: #dce3ea;
+  color: #000;
+  border-radius: 8px;
+  box-shadow: inset 4px 0 0 #198754;
+  transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.nav-link {
+  transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.logout-btn {
+  margin-top: auto;
+  padding: 0.5rem 1rem;
+  font-weight: 500;
+  border-radius: 5px;
 }

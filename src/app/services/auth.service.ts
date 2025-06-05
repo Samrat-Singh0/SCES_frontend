@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {environment} from '../../environments/environment';
+import {ChangePassword} from '../models/change-password.model';
 
 @Injectable({
   providedIn: 'root'
@@ -20,4 +21,9 @@ export class AuthService {
       responseType: 'json',
     })
   }
+
+  initialPasswordChange(initialData: ChangePassword) {
+    return this.http.post(`${this.baseUrl}/api/auth/change-password`, initialData);
+  }
+
 }
