@@ -1,0 +1,36 @@
+<header>Semester</header>
+
+<div class="add-container">
+  <button class="add-btn" (click)="addSemester()">
+    <mat-icon>add</mat-icon>
+    ADD SEMESTER
+  </button>
+</div>
+
+<table class="container">
+  <tr>
+    <th>S.N.</th>
+    <th>Label</th>
+    <th>Fee</th>
+    <th>Start Date</th>
+    <th>End Date</th>
+    <th>Edit</th>
+  </tr>
+  <tr *ngFor="let semester of semesters; let i = index;">
+    <td>{{ i + 1 }}</td>
+    <td>{{semester.label}}</td>
+    <td>{{semester.fee}}</td>
+    <td>{{semester.startDate}}</td>
+    <td>{{semester.endDate}}</td>
+    <td class="edit-delete-btn">
+      <button mat-mini-fab aria-label="Edit User" class="btn-edit" (click)="updateSemester(semester)">
+        <mat-icon>edit</mat-icon>
+      </button>
+      <button mat-mini-fab aria-label="Delete User" class="btn-delete" (click)="deleteSemester(semester.label)">
+        <mat-icon>delete</mat-icon>
+      </button>
+    </td>
+  </tr>
+</table>
+
+

@@ -1,0 +1,54 @@
+<div class="header-div">
+  <button mat-icon-button (click)="goBack()">
+    <mat-icon>arrow_back</mat-icon>
+  </button>
+  <h4 class="header-title">Update Semester</h4>
+</div>
+
+
+<form *ngIf="semester" [formGroup]="editForm" class="p-4 rounded shadow-sm bg-light">
+
+  <div class="mb-3">
+    <label for="label" class="form-label fw-semibold">Semester</label>
+    <input
+      type="text"
+      id="label"
+      class="form-control"
+      formControlName="label">
+  </div>
+
+  <div class="mb-3">
+    <label for="fee" class="form-label fw-semibold">Fee</label>
+    <input
+      type="text"
+      id="fee"
+      class="form-control"
+      formControlName="fee">
+  </div>
+
+  <div class="mb-3">
+    <label for="startDate" class="form-label fw-semibold">Start Date</label>
+    <input
+      type="date"
+      id="startDate"
+      class="form-control"
+      formControlName="startDate">
+  </div>
+
+  <div class="mb-3">
+    <label for="endDate" class="form-label fw-semibold">End Date</label>
+    <input
+      type="date"
+      id="endDate"
+      class="form-control"
+      formControlName="endDate">
+  </div>
+
+  <div class="mt-4">
+    <button type="submit" class="update-btn" (click)="update()">
+      <mat-icon>update</mat-icon>
+      Update
+    </button>
+  </div>
+
+</form>
