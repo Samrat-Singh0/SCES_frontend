@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
 import {NgClass, NgIf} from '@angular/common';
 import {Router} from '@angular/router';
@@ -18,18 +18,26 @@ import {MatIconModule} from '@angular/material/icon';
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit{
 
   hide:Boolean = true;
   errorMessage: string = '';
+  loginForm : FormGroup;
 
   constructor(private authService: AuthService, private router: Router) {
+    this.loginForm = new FormGroup({});
   }
 
-  loginForm = new FormGroup({
-    email: new FormControl('', [Validators.required, Validators.email]),
-    password: new FormControl('', [Validators.required])
-  })
+  ngOnInit(): void {
+    this.buildForm();
+  }
+
+  buildForm(){
+    this.loginForm = new FormGroup({
+      email: new FormControl('', [Validators.required, Validators.email]),
+      password: new FormControl('', [Validators.required])
+    })
+  }
 
 
 
@@ -41,30 +49,30 @@ export class LoginComponent {
           const body = response.body;
 
           if(token){
-            localStorage.setItem('token',token.replace('Bearer ', '').trim());
+            localStorage.setItem('token',token);
           }
 
           this.errorMessage = '';
 
 
-          if(body.mustChangePassword){
+          if(body.body.mustChangePassword){
             this.router.navigate(['initial-login'], {
               queryParams: {email: body.email}
             });
             return;
           }
 
-          switch (body.role) {
+          switch (body.body.role) {
             case "SUPER_ADMIN": {
-              this.router.navigate(['super-admin-dashboard']);
+              this.router.navigate(['super']);
               break;
             }
             case "ADMIN": {
-              this.router.navigate(['admin-dashboard']);
+              this.router.navigate(['admin']);
               break;
             }
             case "USER":{
-              this.router.navigate(['user-dashboard'])
+              this.router.navigate(['user'])
               break;
             }
           }

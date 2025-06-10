@@ -1,3 +1,13 @@
+.close-icon {
+  margin-top: -2vh;
+  text-align: right;
+}
+
+.close-btn {
+  background: none;
+  border: none;
+}
+
 h3 {
   font-weight: 500;
   margin-bottom: 1.5rem;
@@ -30,7 +40,7 @@ select {
   height: 60px;
 }
 
-button {
+.submit-btn {
   height: 50px;
   width: 100%;
   padding: 0.8rem;
@@ -45,7 +55,7 @@ button {
   transition: background-color 0.2s ease;
 }
 
-button:hover {
+.submit-btn:hover {
   background-color: #009579;
 }
 

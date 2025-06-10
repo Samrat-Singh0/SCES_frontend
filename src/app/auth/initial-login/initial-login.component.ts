@@ -1,10 +1,10 @@
 import {Component, OnInit} from '@angular/core';
 import {FormControl, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import {NgClass, NgForOf, NgIf} from '@angular/common';
-import {ChangePassword} from '../../models/change-password.model';
+import {ChangePassword} from '../../model/change-password.model';
 import {ActivatedRoute, Router} from '@angular/router';
 import {passwordMatchValidator} from '../validators/password-match.validator';
-import {PasswordPolicy} from '../../models/password-policy.model';
+import {PasswordPolicy} from '../../model/password-policy.model';
 import {PasswordPolicyService} from '../../services/password-policy.service';
 import {AuthService} from '../../services/auth.service';
 

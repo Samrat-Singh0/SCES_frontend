@@ -1,10 +1,9 @@
 import {Component, Inject, OnInit} from '@angular/core';
-import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
+import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
 import {NgIf} from '@angular/common';
 import {MatIconModule} from '@angular/material/icon';
-import {User} from '../../models/user.model';
+import {User} from '../../model/user.model';
 import {UserService} from '../../services/user.service';
-import {catchError, tap, throwError} from 'rxjs';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {MatSnackBar} from '@angular/material/snack-bar';
 
@@ -14,11 +13,13 @@ import {MatSnackBar} from '@angular/material/snack-bar';
     ReactiveFormsModule,
     NgIf,
     MatIconModule,
+    FormsModule,
+
   ],
-  templateUrl: './add-user.component.html',
-  styleUrl: './add-user.component.css'
+  templateUrl: './save-user.component.html',
+  styleUrl: './save-user.component.css'
 })
-export class AddUserComponent implements OnInit {
+export class SaveUserComponent implements OnInit {
   myForm: FormGroup;
   isEditMode = false;
   parts: string[] = [];
@@ -29,7 +30,7 @@ export class AddUserComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private userService: UserService,
-    private dialogRef: MatDialogRef<AddUserComponent>,
+    private dialogRef: MatDialogRef<SaveUserComponent>,
     private snackBar: MatSnackBar,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {
@@ -68,6 +69,10 @@ export class AddUserComponent implements OnInit {
     })
   }
 
+  closeForm() {
+    this.dialogRef.close();
+  }
+
   onSubmit() {
     if (this.myForm.valid) {
       const form = this.myForm.value;
@@ -84,30 +89,28 @@ export class AddUserComponent implements OnInit {
       if(this.isEditMode){
         this.userService.updateUser(user).subscribe({
           next: (res) => {
-            this.snackBar.open("User Updated.", "Close", {duration:3000})
+            this.snackBar.open(res.message, "Close", {duration:3000})
             this.dialogRef.close();
           }, error: (err)=> {
             console.log(err);
-            this.snackBar.open("Error when updating user", "Close", {duration:3000})
+            this.snackBar.open(err.message, "Close", {duration:3000})
         }
         })
       }else {
-        this.userService.addUser(user)
-        .pipe(
-          tap(res => console.log("User Saved:::", res)),
-          catchError(error => {
-            this.snackBar.open("Error occurred!", "Close", {duration: 3000})
-            return throwError(() => error)
-          })
-        ).subscribe({
-          next: () => {
-            this.snackBar.open("User Added Successfully.", "Close", {duration: 3000});
+        this.userService.addUser(user).subscribe({
+          next: res => {
+            this.snackBar.open(res.message, "Close", {duration: 3000});
+            this.dialogRef.close();
+          }, error: (err) =>{
+            this.snackBar.open(err.message, "Close", {duration: 3000});
             this.dialogRef.close();
           }
         });
       }
     }
   }
+
+
 
   concatName(firstName: string, middleName: string, lastName: string): string {
     // let fullName = "";

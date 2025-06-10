@@ -1,7 +1,7 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {environment} from '../../environments/environment';
-import {ChangePassword} from '../models/change-password.model';
+import {ChangePassword} from '../model/change-password.model';
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +12,7 @@ export class AuthService {
   constructor(private http: HttpClient) {
   }
 
-  login(userEmail: string, userPassword: string) {
+  login(userEmail: string, userPassword: string){
     return this.http.post(`${this.baseUrl}/api/auth/login`, {
       "email": userEmail,
       "password": userPassword
