@@ -13,6 +13,8 @@ import {PasswordPolicyComponent} from './password-policy/password-policy.compone
 import {SemesterComponent} from './semester/semester.component';
 import {EditSemesterComponent} from './semester/edit-semester/edit-semester.component';
 import {AddSemesterComponent} from './semester/add-semester/add-semester.component';
+import {ViewCourseComponent} from './course/view-course/view-course.component';
+import {AddCourseComponent} from './course/add-course/add-course.component';
 
 export const routes: Routes = [
   {path: "", component: LoginComponent},
@@ -26,6 +28,8 @@ export const routes: Routes = [
       {path: "semester", component: SemesterComponent},
       {path: "edit", component: EditSemesterComponent},
       {path: "add", component: AddSemesterComponent},
+      {path: "course/view", component: ViewCourseComponent},
+      {path: "course/add", component: AddCourseComponent},
       {path:"", component: ViewUserComponent},
 
     ]},

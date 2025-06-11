@@ -1,19 +1,19 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {environment} from '../../environments/environment';
 import {ChangePassword} from '../model/change-password.model';
+import {AuthEndpoints} from '../shared/api-endpoints';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  private baseUrl= environment.apiBaseUrl;
+  private readonly authEndpoints = AuthEndpoints;
 
   constructor(private http: HttpClient) {
   }
 
   login(userEmail: string, userPassword: string){
-    return this.http.post(`${this.baseUrl}/api/auth/login`, {
+    return this.http.post(this.authEndpoints.LOGIN, {
       "email": userEmail,
       "password": userPassword
     },{
@@ -23,7 +23,7 @@ export class AuthService {
   }
 
   initialPasswordChange(initialData: ChangePassword) {
-    return this.http.post(`${this.baseUrl}/api/auth/change-password`, initialData);
+    return this.http.post(this.authEndpoints.CHANGE_PASSWORD, initialData);
   }
 
 }
