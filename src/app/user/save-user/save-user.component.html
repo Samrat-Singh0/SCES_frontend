@@ -2,7 +2,7 @@
   <div class="close-icon">
     <button class="close-btn" (click) = "closeForm()"><mat-icon>close</mat-icon></button>
   </div>
-  <h3>Add User</h3>
+  <h3>{{ isEditMode? "Update User" : "Add User" }}</h3>
   <form [formGroup]="myForm" (ngSubmit)="onSubmit()">
     <div class="form-group">
       <label for="name">First Name</label>
@@ -69,8 +69,8 @@
     <div class="form-group">
       <label for="role">Role</label>
       <select class="role" formControlName="role" [disabled]="isEditMode">
-        <option value="Instructor">Instructor</option>
-        <option value="Student">Student</option>
+        <option value="INSTRUCTOR">Instructor</option>
+        <option value="STUDENT">Student</option>
       </select>
     </div>
 

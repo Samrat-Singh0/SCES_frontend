@@ -43,21 +43,18 @@ export class SaveUserComponent implements OnInit {
   }
 
   buildForm() {
-    if (this.isEditMode) {
-      this.splitName(this.data.fullName);
-    }
     this.myForm = this.fb.group({
       userCode:[this.data?.userCode || ''],
-      firstName: [this.parts[0] || '',[
+      firstName: [this.data?.firstName || '',[
           Validators.required,
           Validators.minLength(3),
           Validators.pattern("^[A-Za-z]+$")
       ]],
       middleName:
-        [this.parts.length === 3 ? this.parts[1] : '',
+        [this.data?.middleName || '',
         [Validators.pattern("^[A-Za-z]+$")]],
       lastName:
-        [this.parts.length > 1 ? this.parts.length >= 2 ? this.parts[1] : this.parts[2] : '',
+        [this.data?.lastName || '',
         [
           Validators.required, Validators.minLength(3),
           Validators.pattern("^[A-Za-z]+$")
@@ -76,14 +73,15 @@ export class SaveUserComponent implements OnInit {
   onSubmit() {
     if (this.myForm.valid) {
       const form = this.myForm.value;
-      const fullName: string = this.concatName(form.firstName, form.middleName, form.lastName);
       const user: User = {
-        userCode: this.data?.userCode || '',
+        code: this.data?.code || '',
         email: form.email,
-        fullName: fullName,
+        firstName: form.firstName,
+        middleName: form.middleName,
+        lastName: form.lastName,
         address: form.address,
         phoneNumber: form.phoneNumber,
-        role: form.role == "Instructor" ? "ADMIN" : "USER"
+        role: form.role
       }
 
       if(this.isEditMode){
@@ -110,25 +108,6 @@ export class SaveUserComponent implements OnInit {
     }
   }
 
-
-
-  concatName(firstName: string, middleName: string, lastName: string): string {
-    // let fullName = "";
-    // if(middleName === "" || middleName === " "){
-    //   fullName = firstName.concat(" " + lastName);
-    // }else{
-    //   fullName = firstName + " " + middleName + " " + lastName;
-    // }
-    //
-    // return fullName;
-    return [firstName, middleName, lastName]
-    .filter(Boolean)
-    .join(' ')
-  }
-
-  splitName(fullName: string) {
-    this.parts = fullName.split(' ');
-  }
 
 
 }

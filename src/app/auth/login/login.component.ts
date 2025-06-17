@@ -4,6 +4,7 @@ import {NgClass, NgIf} from '@angular/common';
 import {Router} from '@angular/router';
 import {AuthService} from '../../services/auth.service';
 import {MatIconModule} from '@angular/material/icon';
+import {MatSnackBar} from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-login',
@@ -24,7 +25,11 @@ export class LoginComponent implements OnInit{
   errorMessage: string = '';
   loginForm : FormGroup;
 
-  constructor(private authService: AuthService, private router: Router) {
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+    private snackBar: MatSnackBar
+  ) {
     this.loginForm = new FormGroup({});
   }
 
@@ -50,15 +55,20 @@ export class LoginComponent implements OnInit{
 
           if(token){
             localStorage.setItem('token',token);
+            localStorage.setItem('role', body.body.role);
+            console.log(body.body.role);
           }
 
           this.errorMessage = '';
 
+          if(body.body === null){
+            this.snackBar.open(response.body.message, "Close", {duration: 3000});
+            return;
+          }
+
 
           if(body.body.mustChangePassword){
-            this.router.navigate(['initial-login'], {
-              queryParams: {email: body.email}
-            });
+            this.router.navigate(['initial-login/'+''+body.body.email]);
             return;
           }
 
@@ -67,18 +77,18 @@ export class LoginComponent implements OnInit{
               this.router.navigate(['super']);
               break;
             }
-            case "ADMIN": {
+            case "INSTRUCTOR": {
               this.router.navigate(['admin']);
               break;
             }
-            case "USER":{
+            case "STUDENT":{
               this.router.navigate(['user'])
               break;
             }
           }
         },
         error:(err) => {
-          this.errorMessage = 'Invalid email or password';
+          this.errorMessage = err.message;
         }
       })
     }

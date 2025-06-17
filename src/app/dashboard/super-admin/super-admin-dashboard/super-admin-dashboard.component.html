@@ -24,13 +24,33 @@
         </a>
       </li>
       <li class="nav-item mb-2">
+        <a class="nav-link text-dark d-flex align-items-center px-3" routerLink="course/pending"
+           routerLinkActive="active-tab" >
+          <i class="bi bi-hourglass-split sidebar-icon" style="margin-left: -4px"></i>
+          <span class="flex-grow-1">Pending Courses</span>
+        </a>
+      </li>
+      <li class="nav-item mb-2">
+        <a class="nav-link text-dark d-flex align-items-center px-3" routerLink="enroll/view"
+           routerLinkActive="active-tab" >
+          <i class="bi bi-backpack-fill sidebar-icon" style="margin-left: -4px"></i>
+          <span class="flex-grow-1">Enrollment</span>
+        </a>
+      </li>
+      <li class="nav-item mb-2">
+        <a class="nav-link text-dark d-flex align-items-center px-3" routerLink="#"
+           routerLinkActive="active-tab" >
+          <i class="bi bi-hourglass-split sidebar-icon" style="margin-left: -4px"></i>
+          <span class="flex-grow-1">Pending Enrollment</span>
+        </a>
+      </li>
+      <li class="nav-item mb-2">
         <a class="nav-link text-dark d-flex align-items-center px-3" routerLink="password-policy"
            routerLinkActive="active-tab">
           <i class="bi bi-lock sidebar-icon" style="margin-left: -4px"></i>
           <span class="flex-grow-1">Password Policy</span>
         </a>
       </li>
-
     </ul>
 
     <button class="btn btn-outline-danger mt-auto logout-btn" (click)="logout()">

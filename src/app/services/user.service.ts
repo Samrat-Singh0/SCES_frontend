@@ -2,9 +2,10 @@ import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {User} from '../model/user.model';
 import {Observable} from 'rxjs';
-import {SearchUser} from '../model/search-user.model';
+import {SearchUser} from '../model/search.model';
 import {ApiResponse} from '../model/api-response.model';
 import {UserEndpoints} from '../shared/api-endpoints';
+import {PageResponse} from '../model/page-response.model';
 
 @Injectable({
   providedIn: 'root'
@@ -21,6 +22,10 @@ export class UserService {
     return this.http.post<ApiResponse<User>>(this.userEndpoints.ADD_USER, user);
   }
 
+  getPagedUsers(page: number, size: number): Observable<ApiResponse<PageResponse<User>>> {
+    return this.http.get<ApiResponse<PageResponse<User>>>(this.userEndpoints.GET_PAGED_USERS + `?page=${page}&size=${size}&sort=firstName,asc`);
+  }
+
   getAllUser(): Observable<ApiResponse<User[]>> {
     return this.http.get<ApiResponse<User[]>>(this.userEndpoints.GET_ALL_USERS);
   }
@@ -30,7 +35,7 @@ export class UserService {
   }
 
   deleteUser(userCode: string): Observable<ApiResponse<any>> {
-    return this.http.delete<ApiResponse<any>>(this.userEndpoints.DELETE_USER + `/${userCode}`);
+    return this.http.post<ApiResponse<any>>(this.userEndpoints.DELETE_USER, userCode);
   }
 
   searchUser(searchCriteria: SearchUser): Observable<ApiResponse<User[]>> {

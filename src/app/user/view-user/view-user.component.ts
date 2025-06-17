@@ -2,27 +2,25 @@ import {Component, OnInit} from '@angular/core';
 import {MatTableModule} from '@angular/material/table';
 import {UserService} from '../../services/user.service';
 import {User} from '../../model/user.model';
-import {NgIf, NgSwitch, NgSwitchCase, NgSwitchDefault} from '@angular/common';
+import {NgForOf, NgIf} from '@angular/common';
 import {MatMiniFabButton} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
 import {SaveUserComponent} from '../save-user/save-user.component';
 import {MatDialog} from '@angular/material/dialog';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
-import {SearchUser} from '../../model/search-user.model';
+import {SearchUser} from '../../model/search.model';
 
 
 @Component({
   selector: 'app-view-user',
   imports: [
     MatTableModule,
-    NgSwitch,
-    NgSwitchCase,
-    NgSwitchDefault,
     MatIconModule,
     MatMiniFabButton,
     ReactiveFormsModule,
-    NgIf
+    NgIf,
+    NgForOf
   ],
   templateUrl: './view-user.component.html',
   styleUrl: './view-user.component.css'
@@ -31,6 +29,9 @@ export class ViewUserComponent implements OnInit {
   users: User[] = [];
   displayedColumns: string[] = ['index', 'email', 'fullName', 'address', 'phoneNumber', 'role', 'edit']
   searchForm: FormGroup;
+  totalPages: number = 0;
+  currentPage: number = 0;
+  pageSize: number = 5;
 
   constructor(
     private userService: UserService,
@@ -42,13 +43,15 @@ export class ViewUserComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.renderContent();
+    this.renderContent(this.currentPage);
   }
 
-  renderContent() {
-    this.userService.getAllUser().subscribe({
+  renderContent(page: number) {
+    this.userService.getPagedUsers(page,this.pageSize).subscribe({
       next: data => {
-          this.users = data.body;
+          this.users = data.body.content;
+          this.totalPages = data.body.totalPages;
+          this.currentPage = data.body.number;
           // this.snackbar.open(data.message, "Close", {duration: 3000})
       }, error: err => {
         this.snackbar.open(err.message, "Close", {duration: 3000} )
@@ -57,14 +60,21 @@ export class ViewUserComponent implements OnInit {
     this.buildSearchForm();
   }
 
-
   buildSearchForm() {
     this.searchForm = this.fb.group({
-      fullName: [undefined, Validators.pattern("^[a-zA-Z]*$")],
+      firstName: [undefined, Validators.pattern("^[a-zA-Z]*$")],
+      middleName: [undefined, Validators.pattern("^[a-zA-Z]*$")],
+      lastName: [undefined, Validators.pattern("^[a-zA-Z]*$")],
       role: [undefined, Validators.pattern("^[a-zA-Z]*$")],
       phoneNumber: [undefined, Validators.pattern("^\\d+$")]
     })
 
+  }
+
+  goToPage(page: number): void {
+    if(page >= 0 && page < this.totalPages){
+      this.renderContent(page);
+    }
   }
 
   openDialog(userData ?: any) {
@@ -82,8 +92,8 @@ export class ViewUserComponent implements OnInit {
     })
   }
 
-  deleteUser(userCode: string, username: string) {
-    this.userService.deleteUser(userCode).subscribe({
+  deleteUser(user: User) {
+    this.userService.deleteUser(user.code).subscribe({
       next: (res) => {
         this.ngOnInit();
         this.snackbar.open(res.message, "Close", {duration: 3000});
@@ -95,14 +105,14 @@ export class ViewUserComponent implements OnInit {
   }
 
   searchUser() {
-    let fullName: string = this.searchForm.value.fullName || undefined;
-    let role: string = this.searchForm.value.role || undefined;
-    let phoneNumber: string = this.searchForm.value.phoneNumber || undefined;
+    const formValue = this.searchForm.value;
 
     const searchCriteria: SearchUser = {
-      fullName: fullName,
-      role: role,
-      phoneNumber: phoneNumber
+      firstName: formValue.firstName?.trim() || undefined,
+      middleName: formValue.middleName?.trim() || undefined,
+      lastName: formValue.lastName?.trim() || undefined,
+      role: formValue.role?.trim() || undefined,
+      phoneNumber: formValue.phoneNumber?.trim() || undefined
     }
 
     this.userService.searchUser(searchCriteria).subscribe({
@@ -119,5 +129,10 @@ export class ViewUserComponent implements OnInit {
   resetSearchForm() {
     this.searchForm.reset();
   }
+
+  getFullName(firstName: string, lastName: string, middleName?: string): string {
+    return [firstName, middleName, lastName].filter(Boolean).join(' ');
+  }
+
 
 }

@@ -1,5 +1,5 @@
 export interface PasswordPolicy {
-  policy_code: string;
+  code: string;
   parameters: string;
   regex: string;
   active: boolean;

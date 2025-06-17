@@ -1,4 +1,4 @@
 export interface UpdatePasswordPolicy{
-  policy_code: string;
+  code: string;
   active: boolean;
 }

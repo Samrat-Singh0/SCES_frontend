@@ -14,12 +14,15 @@ import {SemesterComponent} from './semester/semester.component';
 import {EditSemesterComponent} from './semester/edit-semester/edit-semester.component';
 import {AddSemesterComponent} from './semester/add-semester/add-semester.component';
 import {ViewCourseComponent} from './course/view-course/view-course.component';
-import {AddCourseComponent} from './course/add-course/add-course.component';
+import {SaveCourseComponent} from './course/save-course/save-course.component';
+import {PendingCourseComponent} from './pending-course/pending-course.component';
+import {ViewEnrollmentComponent} from './enrollment/view-enrollment/view-enrollment.component';
+import {SaveEnrollmentComponent} from './enrollment/save-enrollment/save-enrollment.component';
 
 export const routes: Routes = [
   {path: "", component: LoginComponent},
   {path: "login", component: LoginComponent},
-  {path: "initial-login", component: InitialLoginComponent},
+  {path: "initial-login/:email", component: InitialLoginComponent},
   {path: "signup", component: SignupComponent},
   {path: "super", component:SuperAdminDashboardComponent, children: [
       {path: "add-user", component: SaveUserComponent},
@@ -29,10 +32,15 @@ export const routes: Routes = [
       {path: "edit", component: EditSemesterComponent},
       {path: "add", component: AddSemesterComponent},
       {path: "course/view", component: ViewCourseComponent},
-      {path: "course/add", component: AddCourseComponent},
+      {path: "course/save", component: SaveCourseComponent},
+      {path:"course/pending", component: PendingCourseComponent},
+      {path: "enroll/view", component: ViewEnrollmentComponent},
       {path:"", component: ViewUserComponent},
 
     ]},
   {path: "admin", component:AdminDashboardComponent},
-  {path: "user", component: UserDashboardComponent}
+  {path: "user", component: UserDashboardComponent, children:[
+      {path: "enroll/view", component: ViewEnrollmentComponent},
+      {path: "enroll/save", component: SaveEnrollmentComponent}
+    ]}
 ];

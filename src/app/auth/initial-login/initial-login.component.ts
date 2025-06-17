@@ -41,13 +41,11 @@ export class InitialLoginComponent implements OnInit {
 
   ngOnInit() {
 
-    this.route.queryParamMap.subscribe(params => {
-      this.email = params.get('email')!;
-    })
+    this.email = this.route.snapshot.paramMap.get('email')!;
 
     this.passwordPolicyService.getActivePolicies().subscribe(
       data => {
-        this.passwordPolicies = data;
+        this.passwordPolicies = data.body;
         this.regexPattern = this.buildRegexPattern();
         this.changePasswordForm.get('newPassword')?.setValidators([
           Validators.required,
@@ -88,7 +86,6 @@ export class InitialLoginComponent implements OnInit {
       }
     ).join('');
 
-    console.log(`^${pattern}.*$`);
     return `^${pattern}.*$`;
   }
 

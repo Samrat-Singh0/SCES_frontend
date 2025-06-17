@@ -4,27 +4,52 @@
 
     <form  class="search-container" [formGroup]="searchForm" (ngSubmit)="searchUser()" >
 
-        <i class="bi bi-search name-search-icon"></i>
-        <input type="text" class="search-input" placeholder="Full Name" formControlName="fullName">
-        <div class = "error" *ngIf="this.searchForm.get('fullName')?.invalid && this.searchForm.get('fullName')?.touched">
-          <small *ngIf="this.searchForm.get('fullName')?.errors?.['pattern']"></small>
+      <div class="inputs-wrap">
+        <div class="input-wrap">
+          <i class="bi bi-search name-search-icon"></i>
+          <input type="text" class="search-input" placeholder="First Name" formControlName="firstName">
+          <div class = "error" *ngIf="this.searchForm.get('firstName')?.invalid && this.searchForm.get('firstName')?.touched">
+            <small *ngIf="this.searchForm.get('firstName')?.errors?.['pattern']"></small>
+          </div>
         </div>
 
-        <i class="bi bi-search role-search-icon"></i>
-        <input type="text" class="search-input" placeholder="Role" formControlName="role">
-        <div class = "error" *ngIf="this.searchForm.get('role')?.invalid && this.searchForm.get('role')?.touched">
-          <small *ngIf="this.searchForm.get('role')?.errors?.['pattern']"></small>
+        <div class="input-wrap">
+          <i class="bi bi-search name-search-icon"></i>
+          <input type="text" class="search-input" placeholder="Middle Name" formControlName="middleName">
+          <div class = "error" *ngIf="this.searchForm.get('middleName')?.invalid && this.searchForm.get('middleName')?.touched">
+            <small *ngIf="this.searchForm.get('middleName')?.errors?.['pattern']"></small>
+          </div>
         </div>
 
-
-        <i class="bi bi-search contact-search-icon"></i>
-        <input type="text" class="search-input" placeholder="Phone Number" formControlName="phoneNumber">
-        <div class = "error" *ngIf="this.searchForm.get('phoneNumber')?.invalid && this.searchForm.get('phoneNumber')?.touched">
-          <small *ngIf="this.searchForm.get('phoneNumber')?.errors?.['pattern']"></small>
+        <div class="input-wrap">
+          <i class="bi bi-search name-search-icon"></i>
+          <input type="text" class="search-input" placeholder="Last Name" formControlName="lastName">
+          <div class = "error" *ngIf="this.searchForm.get('lastName')?.invalid && this.searchForm.get('lastName')?.touched">
+            <small *ngIf="this.searchForm.get('lastName')?.errors?.['pattern']"></small>
+          </div>
         </div>
-      <button class="search-btn" type="submit">Search</button>
-      <button class="reset-btn" (click)="resetSearchForm()">Reset</button>
 
+        <div class="input-wrap">
+          <i class="bi bi-search role-search-icon"></i>
+          <input type="text" class="search-input" placeholder="Role" formControlName="role">
+          <div class = "error" *ngIf="this.searchForm.get('role')?.invalid && this.searchForm.get('role')?.touched">
+            <small *ngIf="this.searchForm.get('role')?.errors?.['pattern']"></small>
+          </div>
+        </div>
+
+        <div class="input-wrap">
+          <i class="bi bi-search contact-search-icon"></i>
+          <input type="text" class="search-input" placeholder="Phone" formControlName="phoneNumber">
+          <div class = "error" *ngIf="this.searchForm.get('phoneNumber')?.invalid && this.searchForm.get('phoneNumber')?.touched">
+            <small *ngIf="this.searchForm.get('phoneNumber')?.errors?.['pattern']"></small>
+          </div>
+        </div>
+      </div>
+
+      <div class="buttons-wrap">
+        <button class="search-btn" type="submit">Search</button>
+        <button class="reset-btn" (click)="resetSearchForm()">Reset</button>
+      </div>
     </form>
 
 
@@ -45,7 +70,7 @@
 
   <ng-container matColumnDef="fullName">
     <th mat-header-cell *matHeaderCellDef>Name</th>
-    <td mat-cell *matCellDef = "let user">{{user.fullName}}</td>
+    <td mat-cell *matCellDef = "let user">{{getFullName(user.firstName, user.middleName, user.lastName)}}</td>
   </ng-container>
 
   <ng-container matColumnDef="email">
@@ -65,12 +90,7 @@
 
   <ng-container matColumnDef="role">
     <th mat-header-cell *matHeaderCellDef>Role</th>
-    <td mat-cell *matCellDef = "let user" [ngSwitch]="user.role">
-      <label *ngSwitchCase="'ADMIN'">Instructor</label>
-      <label *ngSwitchCase="'USER'">Student</label>
-      <label *ngSwitchCase="'SUPER_ADMIN'">SUPER_ADMIN</label>
-      <label *ngSwitchDefault>#NAN</label>
-    </td>
+    <td mat-cell *matCellDef = "let user">{{user.role}}</td>
   </ng-container>
 
   <ng-container matColumnDef="edit">
@@ -79,7 +99,7 @@
       <button mat-mini-fab aria-label="Edit User" class="btn-edit" (click)="openDialog(user)">
         <mat-icon>edit</mat-icon>
       </button>
-      <button mat-mini-fab aria-label="Delete User" class="btn-delete" (click)="deleteUser(user.userCode, user.fullName)">
+      <button mat-mini-fab aria-label="Delete User" class="btn-delete" (click)="deleteUser(user)">
         <mat-icon>delete</mat-icon>
       </button>
     </td>
@@ -90,3 +110,25 @@
 </table>
 
 
+<div class="pagination-container">
+  <button [disabled]="currentPage === 0" (click)="goToPage(currentPage - 1)">
+    Prev
+  </button>
+
+
+<!--  [].constructor(totalPages): empty array create garxa, of size: totalPAges-->
+  <button
+    *ngFor="let page of [].constructor(totalPages); let i = index"
+    [class.active]="i === currentPage"
+    (click)="goToPage(i)">
+    {{ i + 1 }}
+  </button>
+
+  <button [disabled]="currentPage === totalPages - 1" (click)="goToPage(currentPage + 1)">
+    Next
+  </button>
+</div>
+
+<div *ngIf="users?.length === 0" class="no-user-message text-center mt-4">
+  <p>No any users added yet.</p>
+</div>
