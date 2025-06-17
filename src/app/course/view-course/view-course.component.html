@@ -1,0 +1,71 @@
+<h3 class="mt-1 text-center">Course</h3>
+
+<div class="control-container">
+
+  <form class="search-container" [formGroup]="searchForm">
+
+    <i class="bi bi-search name-search-icon"></i>
+    <input type="text" class="search-input" placeholder="Course Name" formControlName="name">
+
+
+    <i class="bi bi-search ins-search-icon"></i>
+    <input type="text" class="search-input" placeholder="Assigned To"
+           formControlName="instructor">
+
+
+    <i class="bi bi-search sem-search-icon"></i>
+    <input type="text" class="search-input" placeholder="Semester" formControlName="semester">
+
+    <button class="search-btn" type="submit" (click)="searchCourse()">Search</button>
+    <button class="reset-btn" (click)="resetSearchForm()">Reset</button>
+
+  </form>
+
+
+  <div class="add-container">
+    <button class="add-btn" (click) = "addCourse()">
+      <mat-icon>add</mat-icon>
+      Add Course
+    </button>
+  </div>
+
+</div>
+
+<div class="course-container">
+  <table class="mt-5 custom-table">
+    <thead>
+    <tr>
+      <th>S.N.</th>
+      <th>Course Name</th>
+      <th>Credit Hour</th>
+      <th>Full Mark</th>
+      <th>Assigned Instructor</th>
+      <th>Semester</th>
+      <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let course of courses; let i = index">
+      <td>{{ i + 1 }}</td>
+      <td>{{ course.name }}</td>
+      <td>{{ course.creditHours }}</td>
+      <td>{{ course.fullMarks }}</td>
+      <td>{{joinName.getFullName(course.instructor.user.firstName, course.instructor.user.middleName, course.instructor.user.lastName)}}</td>
+      <td>{{ course.semester.label }}</td>
+      <td class="edit-delete-btn">
+        <button mat-mini-fab aria-label="Edit User" class="btn-edit" (click)="updateCourse(course.code)">
+          <mat-icon>edit</mat-icon>
+        </button>
+        <button mat-mini-fab aria-label="Delete User" class="btn-delete" (click) = "deleteCourse(course.code)">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+
+<div *ngIf="courses?.length === 0" class="no-courses-message text-center mt-4">
+  <p>No courses found. Please add a course.</p>
+</div>
+

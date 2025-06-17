@@ -1,0 +1,64 @@
+<div class="header-div">
+  <button mat-icon-button (click)="goBack()">
+    <mat-icon>arrow_back</mat-icon>
+  </button>
+  <h4 class="header-title">{{ isEditable?"Update Course":"Add Course" }}</h4>
+</div>
+
+  <form [formGroup]="courseForm" class="course-form">
+  <div class="form-group">
+    <label for="name">Course Name</label>
+    <input type="text" id="name" formControlName="name" placeholder="Enter course name">
+    <div class="error"
+         *ngIf="this.courseForm.get('name')?.touched && this.courseForm.get('name')?.invalid">
+      <small *ngIf="this.courseForm.get('name')?.errors?.['required']">Field required.</small>
+      <small *ngIf="this.courseForm.get('name')?.errors?.['pattern']">Please enter alphabets only.</small>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="creditHours">Credit Hours</label>
+    <input type="number" id="creditHours" formControlName="creditHours" placeholder="e.g. 3">
+    <div class="error"
+         *ngIf="this.courseForm.get('creditHours')?.touched && this.courseForm.get('creditHours')?.invalid">
+      <small *ngIf="this.courseForm.get('creditHours')?.errors?.['required']">Field Required.</small>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="fullMarks">Full Marks</label>
+    <input type="number" id="fullMarks" formControlName="fullMarks" placeholder="e.g. 100">
+    <div class="error"
+         *ngIf="this.courseForm.get('fullMarks')?.touched && this.courseForm.get('fullMarks')?.invalid">
+      <small *ngIf="this.courseForm.get('fullMarks')?.errors?.['required']">Field Required.</small>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="instructor">Instructor</label>
+    <mat-select class="custom-ng-select" formControlName="instructor" [compareWith]="instructorMapper">
+      @for (instructor of instructors; track instructor) {
+        <mat-option [value]="instructor">
+          {{ joinName.getFullName(instructor.user.firstName,
+                                  instructor.user.middleName,
+                                  instructor.user.lastName)
+          }}
+        </mat-option>
+      }
+    </mat-select>
+  </div>
+
+  <div class="form-group">
+    <label for="semester">Semester</label>
+    <mat-select class="custom-ng-select" formControlName="semester" [compareWith]="semesterMapper">
+      @for (semester of semesters; track semester) {
+        <mat-option [value]="semester">{{ semester.label }}</mat-option>
+      }
+    </mat-select>
+  </div>
+
+  <div>
+    <button type="submit" (click)="onSubmit()">{{ isEditable? "Update Course" : "Add Course" }}</button>
+
+  </div>
+</form>

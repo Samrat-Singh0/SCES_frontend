@@ -1,0 +1,49 @@
+
+.custom-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.custom-table thead tr {
+  border-bottom: 1px solid #d1d5db;
+}
+
+.custom-table tbody tr {
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.custom-table tbody tr:hover {
+  background-color: #f9fafb;
+}
+
+tr {
+  height: 65px;
+}
+
+th,td {
+  text-align: center;
+  font-size: 1rem;
+}
+
+td.status {
+  min-width: 100px;
+  vertical-align: middle;
+}
+
+.accept-icon {
+  color: #1976d2;
+}
+
+.reject-icon {
+  color: #d32f2f;
+}
+
+.accept-icon,
+.reject-icon {
+  vertical-align: middle;
+}
+
+.no-courses-message {
+  font-style: italic;
+  color: gray;
+}

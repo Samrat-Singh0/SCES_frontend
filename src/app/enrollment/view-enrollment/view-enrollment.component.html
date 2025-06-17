@@ -1,0 +1,84 @@
+<h3 class="mt-2 text-center">Enrolled Courses</h3>
+
+<div class="add-container" *ngIf="userRole === 'STUDENT'">
+  <button class="add-btn" (click)="enroll()">
+    <mat-icon>add</mat-icon>
+    Enroll
+  </button>
+</div>
+
+
+
+<div class="enroll-container">
+  <table class="mt-5 custom-table">
+    <tr>
+      <th>S.N.</th>
+      <th>Semester</th>
+      <th>Enrolled Date</th>
+      <th>Status</th>
+      <th>Paid/Unpaid</th>
+      <th>Outstanding Fee</th>
+      <th>Completion Date</th>
+      <th *ngIf="userRole === 'STUDENT'">Drop</th>
+      <th *ngIf="userRole === 'SUPER_ADMIN'">Mark Complete</th>
+<!--      <th class="action-column">Action</th>-->
+    </tr>
+
+    <ng-container *ngFor="let enrollment of enrollments; let i = index">
+      <tr class="enrollment-row" (click)="toggleRow(i)">
+        <td>{{ i + 1 }}</td>
+        <td>{{ enrollment.semester.label }}</td>
+        <td>{{ enrollment.enrolledDate }}</td>
+        <td class="status-cell">
+          <span [ngClass]="getStatusClass(enrollment.completionStatus)">
+            {{enrollment.completionStatus}}
+          </span>
+        </td>
+        <td class="paid-cell">
+          <span [ngClass]="getStatusClass(enrollment.paidStatus)">
+            {{ enrollment.paidStatus }}
+          </span>
+        </td>
+        <td>{{ 'Rs. ' + enrollment.outstandingFee }}</td>
+        <td>{{ enrollment.completionDate || '-'}}</td>
+        <td class="delete-cell" *ngIf="userRole === 'STUDENT'">
+          <button mat-mini-fab aria-label="Drop Enrollment"
+                  class="btn-delete"
+                  (click)="dropEnroll(enrollment); $event.stopPropagation();"
+                  [disabled]="isDroppedorComplete(enrollment)"
+          >
+            <mat-icon>delete</mat-icon>
+          </button>
+        </td>
+        <td class="delete-cell" *ngIf="userRole === 'SUPER_ADMIN'">
+          <button mat-mini-fab aria-label="Mark Complete"
+                  class="btn-complete"
+                  (click)="completeEnroll(enrollment); $event.stopPropagation();"
+                  [disabled]="isDroppedorComplete(enrollment)"
+          >
+            <mat-icon>check</mat-icon>
+          </button>
+        </td>
+
+      </tr>
+
+      <tr *ngIf="expandedRowIndex === i">
+        <td colspan="7">
+          <div class="expanded-content">
+            <strong>Enrolled Courses:</strong>
+            <div class="course-list">
+              <div class="course-item" *ngFor="let course of enrollment.courses">
+                <mat-icon class="course-icon">school</mat-icon>
+                <span>{{ course.name }}</span>
+              </div>
+            </div>
+          </div>
+        </td>
+      </tr>
+    </ng-container>
+  </table>
+</div>
+
+<div *ngIf="enrollments?.length === 0" class="no-enrollments-message text-center mt-4">
+  <p>No enrollments found. Please enroll in a course.</p>
+</div>

@@ -1,0 +1,41 @@
+<div class="header-div">
+  <button mat-icon-button (click)="goBack()">
+    <mat-icon>arrow_back</mat-icon>
+  </button>
+  <h4 class="header-title">Enroll</h4>
+</div>
+
+
+<form [formGroup]="enrollForm" class="enroll-form" (ngSubmit)="enroll()">
+  <div class="form-group">
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Semester</mat-label>
+      <mat-select formControlName="semester" (selectionChange)="onSemesterChange($event.value)">
+        @for (semester of semesters; track semester.label) {
+          <mat-option [value]="semester">{{semester.label}}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+  </div>
+  <div class="courses-grid">
+    <div *ngFor="let course of coursePerSemester"
+         class="course-card"
+         [ngClass]="{ 'selected': selectedCourses.includes(course)}"
+         (click)="selectCourse(course)">
+      <h5>{{course.name}}</h5>
+      <p>Instructor:
+        {{joinName.getFullName(
+          course.instructor.user.firstName,
+          course.instructor.user.middleName,
+          course.instructor.user.lastName)}}
+      </p>
+    </div>
+  </div>
+
+  <button class="mt-5 enroll-btn" type="submit">
+    <mat-icon>add</mat-icon>
+    Enroll
+  </button>
+</form>
+
+

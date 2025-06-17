@@ -1,0 +1,124 @@
+import {Component, OnInit} from '@angular/core';
+import {CourseService} from '../../services/course.service';
+import {
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule, Validators
+} from '@angular/forms';
+import {MatIcon, MatIconModule} from '@angular/material/icon';
+import {Course} from '../../model/course.model';
+import {MatSnackBar} from '@angular/material/snack-bar';
+import {NgForOf, NgIf} from '@angular/common';
+import {Router} from '@angular/router';
+import {MatMiniFabButton} from '@angular/material/button';
+import {SearchCourse} from '../../model/search.model';
+import {JoinNameService} from '../../shared/join-name.service';
+
+@Component({
+  selector: 'app-view-course',
+  imports: [
+    FormsModule,
+    ReactiveFormsModule,
+    MatIcon,
+    MatIconModule,
+    NgForOf,
+    MatMiniFabButton,
+    NgIf
+  ],
+  templateUrl: './view-course.component.html',
+  styleUrl: './view-course.component.css'
+})
+export class ViewCourseComponent implements OnInit {
+  searchForm: FormGroup;
+  courses: Course[];
+
+  constructor(
+    private courseService: CourseService,
+    private builder: FormBuilder,
+    private snackBar: MatSnackBar,
+    private router: Router,
+    public joinName: JoinNameService
+
+  ) {
+    this.searchForm = new FormGroup({});
+    this.courses = [];
+  }
+
+  ngOnInit() {
+    this.renderContent();
+    this.buildForm();
+  }
+
+  renderContent() {
+    this.courseService.getCourses().subscribe({
+      next: res => {
+        this.courses = res.body;
+      }, error: err => {
+        this.snackBar.open(err.message, "Close", {duration: 3000})
+      }
+    });
+  }
+
+  buildForm() {
+    this.searchForm = this.builder.group({
+      name: [undefined, Validators.pattern("^[a-zA-Z]*$")],
+      instructor: [undefined, Validators.pattern("^[a-zA-Z]*$")],
+      semester: [undefined, Validators.pattern("^\\d+$")]
+    });
+  }
+
+
+  addCourse() {
+    this.router.navigate(['super/course/save'])
+  }
+
+  updateCourse(code: string) {
+    this.router.navigate(['super/course/save'],{
+      queryParams : {
+        code: code
+      }
+    });
+  }
+
+  deleteCourse(code: string){
+    this.courseService.deleteCourse(code).subscribe({
+      next: res => {
+        this.ngOnInit();
+        this.snackBar.open(res.message, "Close", {duration: 3000});
+      }, error: err => {
+        this.snackBar.open(err.message, "Close", {duration: 3000});
+      }
+    });
+  }
+
+  searchCourse() {
+    let name: string = this.searchForm.value.name || undefined;
+    let instructor: string = this.searchForm.value.instructor || undefined;
+    let semester: string = this.searchForm.value.semester || undefined;
+
+    const searchCriteria: SearchCourse = {
+      name: name,
+      instructor: instructor,
+      semester: semester
+    }
+
+    this.courseService.searchCourse(searchCriteria).subscribe({
+      next: res => {
+        this.courses = res.body;
+      }, error: err => {
+        console.log(err.message);
+      }
+    });
+  }
+
+  resetSearchForm() {
+    this.searchForm.reset();
+    this.searchCourse();
+  }
+
+  getFullName(firstName: string, lastName: string, middleName?: string): string {
+    return [firstName, middleName, lastName].filter(Boolean).join(' ');
+  }
+}
