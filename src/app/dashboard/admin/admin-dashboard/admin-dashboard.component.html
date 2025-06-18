@@ -1,1 +1,29 @@
-<p>admin-dashboard works!</p>
+<div class="dashboard-wrapper">
+  <nav class="sidebar">
+    <h4>Dashboard</h4>
+    <ul class="nav flex-column nav-gap">
+      <li class="nav-item mb-2">
+        <a class="nav-link text-dark d-flex align-items-center px-3" routerLink="enroll/view"
+           routerLinkActive="active-tab" >
+          <i class="bi bi-person-circle sidebar-icon" style="margin-left: -4px"></i>
+          <span class="flex-grow-1">Enroll</span>
+        </a>
+      </li>
+      <li class="nav-item mb-2">
+        <a class="nav-link text-dark d-flex align-items-center px-3" routerLink="grade/view"
+           routerLinkActive="active-tab" >
+          <i class="bi bi-person-circle sidebar-icon" style="margin-left: -4px"></i>
+          <span class="flex-grow-1">Grade</span>
+        </a>
+      </li>
+    </ul>
+
+    <button class="btn btn-outline-danger mt-auto logout-btn">
+      <i class="bi bi-box-arrow-right sidebar-icon" style="margin-left: -4px"></i> Logout
+    </button>
+  </nav>
+
+  <main class="main-content">
+    <router-outlet></router-outlet>
+  </main>
+</div>

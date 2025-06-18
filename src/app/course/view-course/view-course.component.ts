@@ -1,12 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {CourseService} from '../../services/course.service';
-import {
-  FormBuilder,
-  FormControl,
-  FormGroup,
-  FormsModule,
-  ReactiveFormsModule, Validators
-} from '@angular/forms';
+import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
 import {MatIcon, MatIconModule} from '@angular/material/icon';
 import {Course} from '../../model/course.model';
 import {MatSnackBar} from '@angular/material/snack-bar';
@@ -15,6 +9,8 @@ import {Router} from '@angular/router';
 import {MatMiniFabButton} from '@angular/material/button';
 import {SearchCourse} from '../../model/search.model';
 import {JoinNameService} from '../../shared/join-name.service';
+import {MatDialog} from '@angular/material/dialog';
+import {ConfirmationComponent} from '../../shared/confirmation/confirmation.component';
 
 @Component({
   selector: 'app-view-course',
@@ -39,8 +35,8 @@ export class ViewCourseComponent implements OnInit {
     private builder: FormBuilder,
     private snackBar: MatSnackBar,
     private router: Router,
-    public joinName: JoinNameService
-
+    public joinName: JoinNameService,
+    private dialog: MatDialog
   ) {
     this.searchForm = new FormGroup({});
     this.courses = [];
@@ -83,15 +79,35 @@ export class ViewCourseComponent implements OnInit {
   }
 
   deleteCourse(code: string){
-    this.courseService.deleteCourse(code).subscribe({
-      next: res => {
-        this.ngOnInit();
-        this.snackBar.open(res.message, "Close", {duration: 3000});
-      }, error: err => {
-        this.snackBar.open(err.message, "Close", {duration: 3000});
+    this.openConfirmDialog(code);
+  }
+
+  openConfirmDialog(code: string){
+    const dialogRef = this.dialog.open(ConfirmationComponent, {
+      width: '600px',
+      maxWidth: 'none',
+      disableClose: true,
+      data: {
+        title: 'Delete Course',
+        message: 'Are you sure you want to delete the course?',
+        requireRemarks: true
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if(result?.confirmed){
+        this.courseService.deleteCourse(code, result?.remarks).subscribe({
+          next: res => {
+            this.ngOnInit();
+            this.snackBar.open(res.message, "Close", {duration: 3000});
+          }, error: err => {
+            this.snackBar.open(err.message, "Close", {duration: 3000});
+          }
+        });
       }
     });
   }
+
 
   searchCourse() {
     let name: string = this.searchForm.value.name || undefined;

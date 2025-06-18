@@ -34,8 +34,8 @@ export class UserService {
     return this.http.put<ApiResponse<any>>(this.userEndpoints.UPDATE_USER, user);
   }
 
-  deleteUser(userCode: string): Observable<ApiResponse<any>> {
-    return this.http.post<ApiResponse<any>>(this.userEndpoints.DELETE_USER, userCode);
+  deleteUser(code: string, remarks: String): Observable<ApiResponse<any>> {
+    return this.http.post<ApiResponse<any>>(this.userEndpoints.DELETE_USER+`/${code}`, remarks);
   }
 
   searchUser(searchCriteria: SearchUser): Observable<ApiResponse<User[]>> {

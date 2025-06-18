@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {PasswordPolicy} from '../model/password-policy.model';
 import {PasswordPolicyService} from '../services/password-policy.service';
-import {NgForOf, NgIf} from '@angular/common';
+import {NgForOf} from '@angular/common';
 import {MatCheckbox} from '@angular/material/checkbox';
 import {MatIcon} from '@angular/material/icon';
 import {MatSnackBar} from '@angular/material/snack-bar';
@@ -12,8 +12,7 @@ import {UpdatePasswordPolicy} from '../model/update-password-policy.model';
   imports: [
     NgForOf,
     MatCheckbox,
-    MatIcon,
-    NgIf
+    MatIcon
   ],
   templateUrl: './password-policy.component.html',
   styleUrl: './password-policy.component.css'

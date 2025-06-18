@@ -10,7 +10,7 @@ export interface Enrollment {
   outstandingFee: number;
   courses: Course[];
   code: string;
-  student: Student[];
+  student: Student;
   completionStatus: CompletionStatus;
   completionDate: Date;
   paidStatus: PaidStatus;

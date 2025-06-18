@@ -45,7 +45,8 @@ export const CourseEndpoints = {
   DELETE_COURSE : COURSE_API + '/delete',
   UPDATE_COURSE : COURSE_API + '/update',
   SEARCH_COURSE : COURSE_API + "/search",
-  PENDING_COURSE: COURSE_API + "/list/pending"
+  PENDING_COURSE: COURSE_API + "/list/pending",
+  GET_COURSE_BASED_ON_ROLE : COURSE_API + "/list/role"
 }
 
 export const InstructorEndpoints = {
@@ -55,5 +56,6 @@ export const InstructorEndpoints = {
 export const EnrollmentEndpoints = {
   GET_ALL : ENROLLMENT_API + '/list',
   ENROLL: ENROLLMENT_API + '/enroll',
-  UPDATE: ENROLLMENT_API + '/update'
+  UPDATE: ENROLLMENT_API + '/update',
+  GET_PENDING: ENROLLMENT_API + '/list/pending'
 }

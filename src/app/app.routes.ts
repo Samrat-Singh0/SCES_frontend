@@ -18,6 +18,8 @@ import {SaveCourseComponent} from './course/save-course/save-course.component';
 import {PendingCourseComponent} from './pending-course/pending-course.component';
 import {ViewEnrollmentComponent} from './enrollment/view-enrollment/view-enrollment.component';
 import {SaveEnrollmentComponent} from './enrollment/save-enrollment/save-enrollment.component';
+import {PendingEnrollmentComponent} from './pending-enrollment/pending-enrollment.component';
+import {ViewGradesComponent} from './grade/view-grades/view-grades.component';
 
 export const routes: Routes = [
   {path: "", component: LoginComponent},
@@ -35,12 +37,18 @@ export const routes: Routes = [
       {path: "course/save", component: SaveCourseComponent},
       {path:"course/pending", component: PendingCourseComponent},
       {path: "enroll/view", component: ViewEnrollmentComponent},
+      {path: "enroll/pending", component: PendingEnrollmentComponent},
       {path:"", component: ViewUserComponent},
 
     ]},
-  {path: "admin", component:AdminDashboardComponent},
+  {path: "admin", component:AdminDashboardComponent,children:[
+      {path: "grade/view", component: ViewGradesComponent},
+    ]},
+
   {path: "user", component: UserDashboardComponent, children:[
       {path: "enroll/view", component: ViewEnrollmentComponent},
-      {path: "enroll/save", component: SaveEnrollmentComponent}
+      {path: "enroll/save", component: SaveEnrollmentComponent},
+      {path: "grade/view", component: ViewGradesComponent},
+      {path: "", component: ViewEnrollmentComponent}
     ]}
 ];

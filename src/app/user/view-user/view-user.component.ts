@@ -10,6 +10,7 @@ import {MatDialog} from '@angular/material/dialog';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import {SearchUser} from '../../model/search.model';
+import {ConfirmationComponent} from '../../shared/confirmation/confirmation.component';
 
 
 @Component({
@@ -93,13 +94,32 @@ export class ViewUserComponent implements OnInit {
   }
 
   deleteUser(user: User) {
-    this.userService.deleteUser(user.code).subscribe({
-      next: (res) => {
-        this.ngOnInit();
-        this.snackbar.open(res.message, "Close", {duration: 3000});
-      },
-      error: (err) => {
-        this.snackbar.open(err.message, "Close", {duration: 3000});
+    this.openConfirmDialog(user)
+  }
+
+  openConfirmDialog(user: User): void {
+    const dialogRef= this.dialog.open(ConfirmationComponent, {
+      width: '600px',
+      maxWidth: 'none',
+      disableClose: true,
+      data: {
+        title: 'Delete User',
+        message: 'Are you sure you want to delete the user?',
+        requireRemarks: true
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if(result?.confirmed){
+        this.userService.deleteUser(user.code, result?.remarks).subscribe({
+          next: (res) => {
+            this.ngOnInit();
+            this.snackbar.open(res.message, "Close", {duration: 3000});
+          },
+          error: (err) => {
+            this.snackbar.open(err.message, "Close", {duration: 3000});
+          }
+        })
       }
     })
   }
@@ -127,7 +147,7 @@ export class ViewUserComponent implements OnInit {
   }
 
   resetSearchForm() {
-    this.searchForm.reset();
+    this.renderContent(this.currentPage)
   }
 
   getFullName(firstName: string, lastName: string, middleName?: string): string {

@@ -1,0 +1,137 @@
+.title {
+  font-size: 1.5rem;
+  margin-top: 1rem;
+  font-weight: 600;
+}
+
+.custom-table {
+  width: 100%;
+  border-collapse: collapse;
+  border-spacing: 10px 10px;
+  margin-top: 3rem;
+}
+
+
+.custom-table th,
+.custom-table td {
+  padding: 20px 15px;
+  text-align: center;
+  font-size: 0.95rem;
+}
+
+.custom-table tr {
+  border-bottom: 1px solid #ccc;
+}
+
+.custom-table td {
+  padding: 20px 15px;
+  text-align: center;
+  vertical-align: middle;
+}
+
+
+.enrollment-row {
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.enrollment-row:hover {
+  background-color: #f1f1f1;
+}
+
+.expanded-row {
+  animation: expandFade 0.3s ease-in-out;
+}
+
+@keyframes expandFade {
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.expanded-content {
+  padding: 10px 0;
+  font-size: 15px;
+  text-align: left;
+}
+
+.course-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 6px;
+}
+
+.course-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.course-icon {
+  font-size: 18px;
+  color: #009579;
+}
+
+.status-cell span {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  text-transform: capitalize;
+}
+
+.status-green {
+  background-color: #e6f4ea;
+  color: #0a8754;
+}
+
+.status-red {
+  background-color: #fdecea;
+  color: #d7263d;
+}
+
+.status-blue {
+  background-color: #e8f1ff;
+  color: #1e3d59;
+}
+
+.status-yellow {
+  background-color: #fff9db;
+  color: #7a5c00;
+}
+
+.status-reject-red {
+  background-color: #fbeaea;
+  color: #b00020;
+}
+
+
+.no-enrollments-message {
+  font-style: italic;
+  color: gray;
+}
+
+td.status {
+  min-width: 100px;
+  vertical-align: middle;
+}
+
+.accept-icon {
+  color: #1976d2;
+}
+
+.reject-icon {
+  color: #d32f2f;
+}
+
+.accept-icon,
+.reject-icon {
+  vertical-align: middle;
+}

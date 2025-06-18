@@ -18,11 +18,15 @@ export class EnrollmentService {
     return this.http.get<ApiResponse<Enrollment[]>>(this.enrollmentEndpoint.GET_ALL);
   }
 
+  getPendingEnrollments(): Observable<ApiResponse<Enrollment[]>> {
+    return this.http.get<ApiResponse<Enrollment[]>>(this.enrollmentEndpoint.GET_PENDING);
+  }
+
   enroll(enrollment: any): Observable<ApiResponse<any>>{
     return this.http.post<ApiResponse<any>>(this.enrollmentEndpoint.ENROLL, enrollment);
   }
 
-  dropEnroll(enrollment: Enrollment): Observable<ApiResponse<any>>{
+  updateEnroll(enrollment: Enrollment): Observable<ApiResponse<any>>{
     return this.http.post<ApiResponse<any>>(this.enrollmentEndpoint.UPDATE, enrollment);
   }
 }

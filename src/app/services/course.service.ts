@@ -23,6 +23,10 @@ export class CourseService {
     return this.http.get<ApiResponse<Course[]>>(this.courseEndpoints.GET_ALL_COURSE);
   }
 
+  getCoursesBasedOnRole(): Observable<ApiResponse<Course[]>> {
+    return this.http.get<ApiResponse<Course[]>>(this.courseEndpoints.GET_COURSE_BASED_ON_ROLE);
+  }
+
   getPendingCourses(): Observable<ApiResponse<Course[]>> {
     return this.http.get<ApiResponse<any>>(this.courseEndpoints.PENDING_COURSE);
   }
@@ -31,8 +35,8 @@ export class CourseService {
     return this.http.post<ApiResponse<any>>(this.courseEndpoints.ADD_COURSE, course);
   }
 
-  deleteCourse(code: string): Observable<ApiResponse<any>> {
-    return this.http.delete<ApiResponse<any>>(this.courseEndpoints.DELETE_COURSE +`/${code}`);
+  deleteCourse(code: string, remarks: string): Observable<ApiResponse<any>> {
+    return this.http.post<ApiResponse<any>>(this.courseEndpoints.DELETE_COURSE +`/${code}`,remarks);
   }
 
   updateCourse(course: Course): Observable<ApiResponse<any>> {

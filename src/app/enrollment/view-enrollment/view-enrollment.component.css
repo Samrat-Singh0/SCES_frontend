@@ -29,12 +29,11 @@
   border-spacing: 10px 10px;
 }
 
-
 .custom-table th,
 .custom-table td {
   padding: 20px 15px;
   text-align: center;
-
+  font-size: 0.95rem;
 }
 
 .custom-table tr {
@@ -46,19 +45,15 @@
   vertical-align: middle;
 }
 
-.status-cell {
-  text-align: center;
-  vertical-align: middle;
+.status-cell span, .paid-cell span {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  text-transform: capitalize;
 }
 
-.status-running,
-.status-dropped,
-.status-graduated {
-  padding: 4px 10px;
-  border-radius: 12px;
-  font-weight: 500;
-  text-align: center;
-}
 
 .status-green {
   background-color: #e6f4ea;
@@ -74,6 +69,17 @@
   background-color: #e8f1ff;
   color: #1e3d59;
 }
+
+.status-yellow {
+  background-color: #fff9db;
+  color: #7a5c00;
+}
+
+.status-reject-red {
+    background-color: #fbeaea;
+    color: #b00020;
+}
+
 
 .enrollment-row {
   cursor: pointer;

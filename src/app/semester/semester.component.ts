@@ -2,7 +2,7 @@ import {Component} from '@angular/core';
 import {Semester} from '../model/semester.model';
 import {SemesterService} from '../services/semester.service';
 import {MatSnackBar} from '@angular/material/snack-bar';
-import {NgForOf, NgIf} from '@angular/common';
+import {NgForOf} from '@angular/common';
 import {MatIcon} from '@angular/material/icon';
 import {FormsModule} from '@angular/forms';
 import {MatMiniFabButton} from '@angular/material/button';
@@ -15,8 +15,7 @@ import {SemesterStateService} from '../shared/semester-state.service';
     NgForOf,
     MatIcon,
     FormsModule,
-    MatMiniFabButton,
-    NgIf
+    MatMiniFabButton
   ],
   templateUrl: './semester.component.html',
   styleUrl: './semester.component.css'

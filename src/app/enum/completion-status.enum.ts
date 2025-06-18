@@ -1,5 +1,7 @@
 export enum CompletionStatus {
+  PENDING = 'PENDING',
   RUNNING = 'RUNNING',
   COMPLETED = 'COMPLETED',
-  DROPPED = 'DROPPED'
+  DROPPED = 'DROPPED',
+  REJECTED = 'REJECTED'
 }

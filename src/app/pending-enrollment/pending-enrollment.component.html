@@ -1,1 +1,65 @@
-<p>pending-enrollment works!</p>
+<h4 class="title text-center">Pending Enrollments</h4>
+
+<div class="pending-container">
+  <table class="custom-table">
+    <thead>
+    <tr>
+      <th>S.N.</th>
+      <th>Student</th>
+      <th>Semester</th>
+      <th>Enrollment Status</th>
+      <th>Enrolled Date</th>
+      <th>Action</th>
+    </tr>
+    </thead>
+    <tbody>
+    <ng-container *ngFor="let enrollment of pendingEnrollments; let i = index">
+      <tr  class="enrollment-row" (click)="toggleRow(i)">
+        <td>{{ i + 1 }}</td>
+        <td>
+          {{
+            joinName.getFullName(
+              enrollment.student.user.firstName,
+              enrollment.student.user.middleName,
+              enrollment.student.user.lastName
+            )
+          }}
+        </td>
+        <td>{{ enrollment.semester.label }}</td>
+        <td class="status-cell">
+            <span [ngClass]="getStatusClass(enrollment.student.enrollStatus)">
+              {{ enrollment.student.enrollStatus }}
+            </span>
+        </td>
+        <td>{{ enrollment.enrolledDate }}</td>
+        <td class="status">
+          <button mat-icon-button class="accept-icon" (click)="acceptEnroll(enrollment); $event.stopPropagation();">
+            <mat-icon>check_circle</mat-icon>
+          </button>
+
+          <button mat-icon-button class="reject-icon" (click)="rejectEnroll(enrollment); $event.stopPropagation();">
+            <mat-icon>cancel</mat-icon>
+          </button>
+        </td>
+      </tr>
+      <tr *ngIf="expandedRowIndex === i">
+        <td colspan="6">
+          <div class="expanded-content">
+            <strong>Enrolled Courses:</strong>
+            <div class="course-list">
+              <div class="course-item" *ngFor="let course of enrollment.courses">
+                <mat-icon class="course-icon">school</mat-icon>
+                <span>{{ course.name }}</span>
+              </div>
+            </div>
+          </div>
+        </td>
+      </tr>
+    </ng-container>
+    </tbody>
+  </table>
+</div>
+
+<div *ngIf="pendingEnrollments?.length === 0" class="no-enrollments-message text-center mt-4">
+  <p>No Pending enrollments found. </p>
+</div>

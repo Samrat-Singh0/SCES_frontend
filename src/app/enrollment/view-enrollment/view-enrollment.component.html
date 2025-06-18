@@ -1,6 +1,6 @@
 <h3 class="mt-2 text-center">Enrolled Courses</h3>
 
-<div class="add-container" *ngIf="userRole === 'STUDENT'">
+<div class="add-container" *ngIf="userRole === Role.STUDENT">
   <button class="add-btn" (click)="enroll()">
     <mat-icon>add</mat-icon>
     Enroll
@@ -13,22 +13,29 @@
   <table class="mt-5 custom-table">
     <tr>
       <th>S.N.</th>
+      <th *ngIf="userRole === Role.SUPER_ADMIN">Student</th>
       <th>Semester</th>
-      <th>Enrolled Date</th>
-      <th>Status</th>
+      <th>Completion Status</th>
       <th>Paid/Unpaid</th>
       <th>Outstanding Fee</th>
+      <th>Enrolled Date</th>
       <th>Completion Date</th>
-      <th *ngIf="userRole === 'STUDENT'">Drop</th>
-      <th *ngIf="userRole === 'SUPER_ADMIN'">Mark Complete</th>
+      <th *ngIf="userRole === Role.STUDENT">Drop</th>
+      <th *ngIf="userRole === Role.SUPER_ADMIN">Mark Complete</th>
 <!--      <th class="action-column">Action</th>-->
     </tr>
 
     <ng-container *ngFor="let enrollment of enrollments; let i = index">
       <tr class="enrollment-row" (click)="toggleRow(i)">
         <td>{{ i + 1 }}</td>
+        <td *ngIf="userRole === Role.SUPER_ADMIN">
+          {{joinName.getFullName(
+            enrollment.student.user.firstName,
+            enrollment.student.user.middleName,
+            enrollment.student.user.lastName
+          )}}
+        </td>
         <td>{{ enrollment.semester.label }}</td>
-        <td>{{ enrollment.enrolledDate }}</td>
         <td class="status-cell">
           <span [ngClass]="getStatusClass(enrollment.completionStatus)">
             {{enrollment.completionStatus}}
@@ -40,21 +47,22 @@
           </span>
         </td>
         <td>{{ 'Rs. ' + enrollment.outstandingFee }}</td>
+        <td>{{ enrollment.enrolledDate }}</td>
         <td>{{ enrollment.completionDate || '-'}}</td>
-        <td class="delete-cell" *ngIf="userRole === 'STUDENT'">
+        <td class="delete-cell" *ngIf="userRole === Role.STUDENT">
           <button mat-mini-fab aria-label="Drop Enrollment"
                   class="btn-delete"
                   (click)="dropEnroll(enrollment); $event.stopPropagation();"
-                  [disabled]="isDroppedorComplete(enrollment)"
+                  [disabled]="isDisabled(enrollment)"
           >
             <mat-icon>delete</mat-icon>
           </button>
         </td>
-        <td class="delete-cell" *ngIf="userRole === 'SUPER_ADMIN'">
+        <td class="delete-cell" *ngIf="userRole === Role.SUPER_ADMIN">
           <button mat-mini-fab aria-label="Mark Complete"
                   class="btn-complete"
                   (click)="completeEnroll(enrollment); $event.stopPropagation();"
-                  [disabled]="isDroppedorComplete(enrollment)"
+                  [disabled]="isDisabled(enrollment)"
           >
             <mat-icon>check</mat-icon>
           </button>
@@ -63,7 +71,7 @@
       </tr>
 
       <tr *ngIf="expandedRowIndex === i">
-        <td colspan="7">
+        <td colspan="10">
           <div class="expanded-content">
             <strong>Enrolled Courses:</strong>
             <div class="course-list">
