@@ -1,0 +1,24 @@
+<h4 class="text-center text-xl font-semibold mt-2 mb-6">Your Grades</h4>
+
+<div class="mt-5 grade-data">
+  <table class="grade-table">
+    <tr>
+      <th>S.N.</th>
+      <th>Course Name</th>
+      <th>Grade</th>
+      <th>Remarks</th>
+    </tr>
+    <tr *ngFor="let grade of grades; let i = index" class="grade-data">
+      <td>{{i + 1}}</td>
+      <td>{{grade.course.name}}</td>
+      <td>
+        <span [ngClass]="getGradeClass(grade.grade)" class="grade-cell">
+          {{grade.grade}}
+        </span>
+      </td>
+      <td>{{grade.remark}}</td>
+    </tr>
+  </table>
+</div>
+
+

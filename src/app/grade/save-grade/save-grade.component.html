@@ -1,0 +1,58 @@
+<div class="header-div">
+  <button mat-icon-button (click)="goBack()">
+    <mat-icon>arrow_back</mat-icon>
+  </button>
+  <h4 class="header-title">Grade a Student</h4>
+</div>
+
+<div class="student-div">
+  <table class="student-table">
+    <thead>
+    <tr>
+      <th>S.N.</th>
+      <th>Name</th>
+      <th>Grade</th>
+      <th>Remarks</th>
+      <th>Confirm</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let student of students; let i = index">
+      <td>{{ i + 1 }}</td>
+      <td>
+        {{ joinName.getFullName(
+        student?.user?.firstName,
+        student?.user?.middleName,
+        student?.user?.lastName
+      ) }}
+      </td>
+      <td >
+        <mat-form-field appearance="outline" class="grade-input">
+          <input matInput
+                 type="number"
+                 [placeholder]="''"
+                 [(ngModel)]="gradeInput[i]"
+
+                 min="0"
+                 max="60" />
+          <span matSuffix class="suffix-grade">/ 60</span>
+
+        </mat-form-field>
+      </td>
+      <td>
+        {{ grades[i].remark }}
+      </td>
+      <td>
+        <button mat-mini-fab
+                aria-label="Confirm Grade"
+                color="primary"
+                class="btn-confirm"
+                (click)="openSaveDialog(student, i)">
+          <mat-icon>check</mat-icon>
+        </button>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+

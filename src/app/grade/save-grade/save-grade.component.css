@@ -1,0 +1,44 @@
+.header-div {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  margin-top: 20px;
+  margin-bottom: 5rem;
+}
+
+.header-title {
+  text-align: center;
+  flex: 1;
+  margin: 0;
+}
+
+.header-div button {
+  position: absolute;
+  left: 0;
+}
+
+.student-div {
+  padding: 1.5rem;
+  overflow-x: auto;
+}
+
+.student-table {
+  width: 100%;
+  text-align: center;
+}
+
+th, td {
+  padding: 10px;
+  border-bottom: #ccc 1px solid;
+}
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,63 @@
+.attendance-modal {
+  position: relative;
+  padding: 24px;
+  /*background-color: #fff;*/
+  border-radius: 12px;
+  /*box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);*/
+  max-width: 100%;
+}
+
+.close-button {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  color: #555;
+}
+
+.modal-header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.date-text {
+  font-size: 14px;
+  color: #888;
+  margin: 0;
+}
+
+.modal-title {
+  font-size: 22px;
+  margin: 5px 0 0;
+  color: #333;
+  font-weight: 600;
+}
+
+.attendance-div {
+  overflow-x: auto;
+}
+
+.attendance-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+
+.attendance-table th,
+.attendance-table td {
+  padding: 12px 16px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+.attendance-table th {
+  background-color: #f5f5f5;
+  font-weight: 600;
+}
+
+.attendance-table tr:hover {
+  background-color: #f9f9f9;
+}
+
+.confirm-btn {
+  color:	#b2dfdb;
+}

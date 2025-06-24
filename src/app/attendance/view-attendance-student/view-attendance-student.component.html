@@ -1,0 +1,40 @@
+<h4 class="text-center text-xl font-semibold mt-2 mb-6">Your Attendance</h4>
+
+<div class="mt-5 date-div">
+  <mat-form-field appearance="fill">
+    <input matInput [matDatepicker]="picker" [(ngModel)]="selectedDate">
+    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+    <mat-datepicker #picker></mat-datepicker>
+  </mat-form-field>
+  <button class="view-btn" (click)="populateAttendance()">
+    View
+  </button>
+</div>
+
+<div class="mt-5 grade-data">
+  <table class="grade-table">
+    <thead>
+      <th>S.N.</th>
+      <th>Course Name</th>
+      <th>Attendance</th>
+    </thead>
+    <tbody >
+      <tr *ngFor="let attendance of attendances; let i = index">
+        <td>{{i + 1}}</td>
+        <td>{{attendance.course.name}}</td>
+        <td class="attendance-cell">
+          <span [ngClass]="getAttendanceClass(attendance.attendanceStatus)">
+            {{attendance.attendanceStatus}}
+          </span>
+        </td>
+      </tr>
+
+    </tbody>
+  </table>
+</div>
+
+<div *ngIf="isAttendanceEmpty()" class="mt-5 text-center no-attendance-div">
+  <p class="no-attendance-msg">No attendance of this date exist.</p>
+</div>
+
+

@@ -1,0 +1,55 @@
+<div class="attendance-modal">
+
+  <div class="modal-header">
+    <button mat-icon-button
+            aria-label="Close"
+            class="close-button"
+            (click)="dialogRef.close()">
+      <mat-icon>close</mat-icon>
+    </button>
+    <p class="date-text">{{ getTodayDate() }}</p>
+  </div>
+
+  <h5 class="text-center modal-title">Mark Attendance</h5>
+  <div class="attendance-div">
+    <table class="attendance-table">
+      <thead>
+        <th>S.N.</th>
+        <th>Student Name</th>
+        <th>Mark</th>
+      </thead>
+      <tbody *ngFor="let student of students; let i = index;">
+        <td>{{i + 1}}</td>
+        <td>
+          {{ joinService.getFullName(
+          student?.user?.firstName,
+          student?.user?.middleName,
+          student?.user?.lastName
+        ) }}
+        </td>
+        <td>
+          <mat-button-toggle-group
+            aria-label="Toggle attendance"
+            (change)="markAttendance($event, student)">
+            <mat-button-toggle value="present">Present</mat-button-toggle>
+            <mat-button-toggle value="absent">Absent</mat-button-toggle>
+          </mat-button-toggle-group>
+        </td>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="confirm-div">
+    <button mat-flat-button
+            [ngStyle]="{ 'background-color': '#009579',
+                         'color': 'white' }"
+            class="mt-5 confirm-btn"
+            (click)="confirmAttendance()"
+    >
+      <mat-icon>check</mat-icon>
+      Confirm
+    </button>
+
+  </div>
+</div>
+
