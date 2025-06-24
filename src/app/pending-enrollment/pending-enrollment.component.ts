@@ -54,7 +54,7 @@ export class PendingEnrollmentComponent implements OnInit{
       ...enrollment,
       completionStatus: CompletionStatus.RUNNING,
     };
-    this.updateEnroll(acceptedEnrollment);
+    this.updateEnroll(acceptedEnrollment, true);
 
   }
 
@@ -63,14 +63,18 @@ export class PendingEnrollmentComponent implements OnInit{
       ...enrollment,
       completionStatus: CompletionStatus.REJECTED,
     };
-    this.updateEnroll(rejectedEnroll);
+    this.updateEnroll(rejectedEnroll, false);
   }
 
-  updateEnroll(enrollment: Enrollment){
+  updateEnroll(enrollment: Enrollment, status: boolean){
     this.enrollmentService.updateEnroll(enrollment).subscribe({
       next: res=> {
         this.ngOnInit();
-        this.snackBar.open("Enrollment Accepted", "Close", {duration: 3000});
+        if(status){
+          this.snackBar.open("Enrollment Accepted", "Close", {duration: 3000});
+        }else {
+          this.snackBar.open(res.message, "Close", {duration: 3000});
+        }
       }, error:err => {
         this.snackBar.open(err.message, "Close", {duration: 3000});
       }

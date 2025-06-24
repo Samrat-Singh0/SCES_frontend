@@ -29,6 +29,9 @@ import {ConfirmationComponent} from '../../shared/confirmation/confirmation.comp
 export class ViewCourseComponent implements OnInit {
   searchForm: FormGroup;
   courses: Course[];
+  totalPages: number = 0;
+  currentPage: number = 0;
+  pageSize: number = 5;
 
   constructor(
     private courseService: CourseService,
@@ -43,14 +46,16 @@ export class ViewCourseComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.renderContent();
+    this.renderContent(this.currentPage);
     this.buildForm();
   }
 
-  renderContent() {
-    this.courseService.getCourses().subscribe({
+  renderContent(page: number) {
+    this.courseService.getPagedCourses(page, this.pageSize).subscribe({
       next: res => {
-        this.courses = res.body;
+        this.courses = res.body.content;
+        this.totalPages = res.body.totalPages;
+        this.currentPage = res.body.number;
       }, error: err => {
         this.snackBar.open(err.message, "Close", {duration: 3000})
       }
@@ -59,9 +64,9 @@ export class ViewCourseComponent implements OnInit {
 
   buildForm() {
     this.searchForm = this.builder.group({
-      name: [undefined, Validators.pattern("^[a-zA-Z]*$")],
-      instructor: [undefined, Validators.pattern("^[a-zA-Z]*$")],
-      semester: [undefined, Validators.pattern("^\\d+$")]
+      name: [undefined, Validators.pattern("^[a-zA-Z\\s]+$\n")],
+      instructor: [undefined, Validators.pattern("^[a-zA-Z\\s]+$")],
+      semester: [undefined, Validators.pattern("^[a-zA-Z]*$")]
     });
   }
 
@@ -127,14 +132,22 @@ export class ViewCourseComponent implements OnInit {
         console.log(err.message);
       }
     });
+
   }
 
   resetSearchForm() {
     this.searchForm.reset();
-    this.searchCourse();
+    this.renderContent(this.currentPage);
   }
 
-  getFullName(firstName: string, lastName: string, middleName?: string): string {
-    return [firstName, middleName, lastName].filter(Boolean).join(' ');
+  goToPage(page: number): void {
+    if(page >= 0 && page < this.totalPages){
+      this.renderContent(page);
+    }
+  }
+
+  isSearchDisabled(): boolean {
+    const values = this.searchForm.value;
+    return !values.name && !values.instructor && !values.semester;
   }
 }

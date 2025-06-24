@@ -5,6 +5,7 @@ import {ApiResponse} from '../model/api-response.model';
 import {Course} from '../model/course.model';
 import {CourseEndpoints} from '../shared/api-endpoints';
 import {SearchCourse} from '../model/search.model';
+import {PageResponse} from '../model/page-response.model';
 
 @Injectable({
   providedIn: 'root'
@@ -21,6 +22,10 @@ export class CourseService {
 
   getCourses():Observable<ApiResponse<Course[]>> {
     return this.http.get<ApiResponse<Course[]>>(this.courseEndpoints.GET_ALL_COURSE);
+  }
+
+  getPagedCourses(page: number, size: number): Observable<ApiResponse<PageResponse<Course>>> {
+    return this.http.get<ApiResponse<PageResponse<Course>>>(this.courseEndpoints.GET_PAGED_LIST+`?page=${page}&size=${size}&sort=name,asc`);
   }
 
   getCoursesBasedOnRole(): Observable<ApiResponse<Course[]>> {

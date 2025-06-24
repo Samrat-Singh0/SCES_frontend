@@ -33,6 +33,7 @@ export class ViewUserComponent implements OnInit {
   totalPages: number = 0;
   currentPage: number = 0;
   pageSize: number = 5;
+  isPageDisabled: boolean = false;
 
   constructor(
     private userService: UserService,
@@ -45,6 +46,7 @@ export class ViewUserComponent implements OnInit {
 
   ngOnInit(): void {
     this.renderContent(this.currentPage);
+    this.buildSearchForm();
   }
 
   renderContent(page: number) {
@@ -58,7 +60,6 @@ export class ViewUserComponent implements OnInit {
         this.snackbar.open(err.message, "Close", {duration: 3000} )
       }
     });
-    this.buildSearchForm();
   }
 
   buildSearchForm() {
@@ -126,33 +127,42 @@ export class ViewUserComponent implements OnInit {
 
   searchUser() {
     const formValue = this.searchForm.value;
+    this.isPageDisabled = true;
 
-    const searchCriteria: SearchUser = {
-      firstName: formValue.firstName?.trim() || undefined,
-      middleName: formValue.middleName?.trim() || undefined,
-      lastName: formValue.lastName?.trim() || undefined,
-      role: formValue.role?.trim() || undefined,
-      phoneNumber: formValue.phoneNumber?.trim() || undefined
+    if(this.searchForm.valid){
+      const searchCriteria: SearchUser = {
+        firstName: formValue.firstName?.trim() || undefined,
+        middleName: formValue.middleName?.trim() || undefined,
+        lastName: formValue.lastName?.trim() || undefined,
+        role: formValue.role?.trim() || undefined,
+        phoneNumber: formValue.phoneNumber?.trim() || undefined
+      }
+
+      this.userService.searchUser(searchCriteria).subscribe({
+        next: (res) => {
+          this.users = res.body;
+
+        }, error: (err) => {
+          console.log(err.message);
+        }
+      })
     }
 
-    this.userService.searchUser(searchCriteria).subscribe({
-      next: (res) => {
-        this.users = res.body;
-
-      }, error: (err) => {
-        console.log(err.message);
-      }
-    })
 
   }
 
   resetSearchForm() {
-    this.renderContent(this.currentPage)
+    this.searchForm.reset();
+    this.renderContent(this.currentPage);
   }
 
   getFullName(firstName: string, lastName: string, middleName?: string): string {
     return [firstName, middleName, lastName].filter(Boolean).join(' ');
   }
 
+  isSearchDisabled(): boolean {
+    const values = this.searchForm.value;
+    return !values.firstName && !values.middleName && !values.lastName && !values.role && !values.phoneNumber;
+  }
 
 }

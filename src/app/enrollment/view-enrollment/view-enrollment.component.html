@@ -22,7 +22,6 @@
       <th>Completion Date</th>
       <th *ngIf="userRole === Role.STUDENT">Drop</th>
       <th *ngIf="userRole === Role.SUPER_ADMIN">Mark Complete</th>
-<!--      <th class="action-column">Action</th>-->
     </tr>
 
     <ng-container *ngFor="let enrollment of enrollments; let i = index">
@@ -42,9 +41,21 @@
           </span>
         </td>
         <td class="paid-cell">
-          <span [ngClass]="getStatusClass(enrollment.paidStatus)">
-            {{ enrollment.paidStatus }}
-          </span>
+          <div class="paid-status-container">
+            <span [ngClass]="getStatusClass(enrollment.paidStatus)">
+              {{ enrollment.paidStatus }}
+            </span>
+
+            <button *ngIf="userRole === Role.STUDENT && (enrollment.paidStatus === 'UNPAID' || enrollment.paidStatus === 'PARTIALLY_PAID')"
+                    mat-icon-button
+                    class="pay-btn"
+                    (click)="payFee(enrollment); $event.stopPropagation()"
+                    matTooltip="Pay now"
+                    [disabled]="isNotPayable(enrollment)"
+            >
+              <mat-icon>payment</mat-icon>
+            </button>
+          </div>
         </td>
         <td>{{ 'Rs. ' + enrollment.outstandingFee }}</td>
         <td>{{ enrollment.enrolledDate }}</td>

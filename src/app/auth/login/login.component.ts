@@ -56,7 +56,6 @@ export class LoginComponent implements OnInit{
           if(token){
             localStorage.setItem('token',token);
             localStorage.setItem('role', body.body.role);
-            console.log(body.body.role);
           }
 
           this.errorMessage = '';
@@ -78,11 +77,11 @@ export class LoginComponent implements OnInit{
               break;
             }
             case "INSTRUCTOR": {
-              this.router.navigate(['admin']);
+              this.router.navigate(['instructor']);
               break;
             }
             case "STUDENT":{
-              this.router.navigate(['user'])
+              this.router.navigate(['student'])
               break;
             }
           }

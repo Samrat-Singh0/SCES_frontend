@@ -5,25 +5,32 @@
       <li class="nav-item mb-2">
         <a class="nav-link text-dark d-flex align-items-center px-3" routerLink="enroll/view"
            routerLinkActive="active-tab" >
-          <i class="bi bi-person-circle sidebar-icon" style="margin-left: -4px"></i>
+          <i class="bi bi-box-arrow-in-down" style="margin-left: -4px"></i>
           <span class="flex-grow-1">Enroll</span>
         </a>
       </li>
       <li class="nav-item mb-2">
         <a class="nav-link text-dark d-flex align-items-center px-3" routerLink="grade/view"
            routerLinkActive="active-tab" >
-          <i class="bi bi-person-circle sidebar-icon" style="margin-left: -4px"></i>
+          <i class="bi bi-star-fill sidebar-icon" style="margin-left: -4px"></i>
           <span class="flex-grow-1">Grade</span>
+        </a>
+      </li>
+      <li class="nav-item mb-2">
+        <a class="nav-link text-dark d-flex align-items-center px-3" routerLink="attendance/view"
+           routerLinkActive="active-tab" >
+          <i class="bi bi-clock-fill sidebar-icon" style="margin-left: -4px"></i>
+          <span class="flex-grow-1">Attendance</span>
         </a>
       </li>
     </ul>
 
     <button class="btn btn-outline-danger mt-auto logout-btn">
-      <i class="bi bi-box-arrow-right sidebar-icon" style="margin-left: -4px"></i> Logout
+      <i class="bi bi-box-arrow-right sidebar-icon" style="margin-left: -10px"></i> Logout
     </button>
   </nav>
 
   <main class="main-content">
     <router-outlet></router-outlet>
-  </main>s
+  </main>
 </div>

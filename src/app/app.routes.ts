@@ -20,6 +20,20 @@ import {ViewEnrollmentComponent} from './enrollment/view-enrollment/view-enrollm
 import {SaveEnrollmentComponent} from './enrollment/save-enrollment/save-enrollment.component';
 import {PendingEnrollmentComponent} from './pending-enrollment/pending-enrollment.component';
 import {ViewGradesComponent} from './grade/view-grades/view-grades.component';
+import {
+  ViewGradeInstructorComponent
+} from './grade/view-grade-instructor/view-grade-instructor.component';
+import {SaveGradeComponent} from './grade/save-grade/save-grade.component';
+import {
+  ViewAttendanceInstructorComponent
+} from './attendance/view-attendance-instructor/view-attendance-instructor.component';
+import {
+  ViewAttendanceStudentComponent
+} from './attendance/view-attendance-student/view-attendance-student.component';
+import {SaveAttendanceComponent} from './attendance/save-attendance/save-attendance.component';
+import {
+  PopupMarkAttendanceComponent
+} from './attendance/popup-mark-attendance/popup-mark-attendance.component';
 
 export const routes: Routes = [
   {path: "", component: LoginComponent},
@@ -39,16 +53,21 @@ export const routes: Routes = [
       {path: "enroll/view", component: ViewEnrollmentComponent},
       {path: "enroll/pending", component: PendingEnrollmentComponent},
       {path:"", component: ViewUserComponent},
-
     ]},
-  {path: "admin", component:AdminDashboardComponent,children:[
-      {path: "grade/view", component: ViewGradesComponent},
+  {path: "instructor", component:AdminDashboardComponent,children:[
+      {path: "grade/view", component: ViewGradeInstructorComponent},
+      {path: "grade/save/:code", component: SaveGradeComponent},
+      {path: "attendance/view", component: ViewAttendanceInstructorComponent},
+      {path: "attendance/save/:code", component: SaveAttendanceComponent},
+      {path: "attendance/mark", component: PopupMarkAttendanceComponent},
+      {path: "", component: ViewGradeInstructorComponent}
     ]},
 
-  {path: "user", component: UserDashboardComponent, children:[
+  {path: "student", component: UserDashboardComponent, children:[
       {path: "enroll/view", component: ViewEnrollmentComponent},
       {path: "enroll/save", component: SaveEnrollmentComponent},
       {path: "grade/view", component: ViewGradesComponent},
+      {path: "attendance/view", component: ViewAttendanceStudentComponent},
       {path: "", component: ViewEnrollmentComponent}
     ]}
 ];

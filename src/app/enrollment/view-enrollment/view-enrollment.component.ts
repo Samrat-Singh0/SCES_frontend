@@ -7,10 +7,13 @@ import {MatSnackBar} from '@angular/material/snack-bar';
 import {Router} from '@angular/router';
 import {CompletionStatus} from '../../enum/completion-status.enum';
 import {PaidStatus} from '../../enum/paid-status.enum';
-import {MatMiniFabButton} from '@angular/material/button';
+import {MatIconButton, MatMiniFabButton} from '@angular/material/button';
 import {Role} from '../../enum/role.enum';
 import {JoinNameService} from '../../shared/join-name.service';
 import {EnrollmentStatus} from '../../enum/enrollment-status.enum';
+import {MatTooltip} from '@angular/material/tooltip';
+import {MatDialog} from '@angular/material/dialog';
+import {FeePopupComponent} from '../../fee-popup/fee-popup.component';
 
 @Component({
   selector: 'app-view-enrollment',
@@ -20,6 +23,8 @@ import {EnrollmentStatus} from '../../enum/enrollment-status.enum';
     NgClass,
     NgIf,
     MatMiniFabButton,
+    MatIconButton,
+    MatTooltip,
   ],
   templateUrl: './view-enrollment.component.html',
   styleUrl: './view-enrollment.component.css'
@@ -28,12 +33,14 @@ export class ViewEnrollmentComponent implements OnInit{
   enrollments: Enrollment[];
   expandedRowIndex: number | null = null;
   userRole: string = '';
+  protected readonly Role = Role;
 
   constructor(
     private enrollmentService: EnrollmentService,
     private snackBar : MatSnackBar,
     private router: Router,
-    public joinName: JoinNameService
+    public joinName: JoinNameService,
+    private dialogRef: MatDialog
   ) {
     this.enrollments = [];
   }
@@ -58,7 +65,7 @@ export class ViewEnrollmentComponent implements OnInit{
     if(this.isCurrentlyEnrolled()){
       this.snackBar.open("You are currently enrolled or have a pending enrollment.", "Close", {duration: 3000});
     }else{
-      this.router.navigate(['user/enroll/save'])
+      this.router.navigate(['student/enroll/save'])
     }
   }
 
@@ -137,6 +144,19 @@ export class ViewEnrollmentComponent implements OnInit{
     )
   }
 
+  isNotPayable(enrollment: Enrollment): boolean {
+    return (enrollment.completionStatus === CompletionStatus.DROPPED || enrollment.completionStatus === CompletionStatus.REJECTED);
+  }
 
-  protected readonly Role = Role;
+  payFee(enrollment: Enrollment) {
+    const dialogRef = this.dialogRef.open(FeePopupComponent, {
+      width: '400px',
+      data: { enrollment }
+    });
+
+    dialogRef.afterClosed().subscribe(res=>{
+      this.renderContent();
+    });
+  }
+
 }

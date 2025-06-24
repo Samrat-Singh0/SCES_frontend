@@ -9,7 +9,7 @@
           <i class="bi bi-search name-search-icon"></i>
           <input type="text" class="search-input" placeholder="First Name" formControlName="firstName">
           <div class = "error" *ngIf="this.searchForm.get('firstName')?.invalid && this.searchForm.get('firstName')?.touched">
-            <small *ngIf="this.searchForm.get('firstName')?.errors?.['pattern']"></small>
+            <small *ngIf="this.searchForm.get('firstName')?.errors?.['pattern']">Only Alphabets</small>
           </div>
         </div>
 
@@ -17,7 +17,7 @@
           <i class="bi bi-search name-search-icon"></i>
           <input type="text" class="search-input" placeholder="Middle Name" formControlName="middleName">
           <div class = "error" *ngIf="this.searchForm.get('middleName')?.invalid && this.searchForm.get('middleName')?.touched">
-            <small *ngIf="this.searchForm.get('middleName')?.errors?.['pattern']"></small>
+            <small *ngIf="this.searchForm.get('middleName')?.errors?.['pattern']">Only Alphabets</small>
           </div>
         </div>
 
@@ -25,7 +25,7 @@
           <i class="bi bi-search name-search-icon"></i>
           <input type="text" class="search-input" placeholder="Last Name" formControlName="lastName">
           <div class = "error" *ngIf="this.searchForm.get('lastName')?.invalid && this.searchForm.get('lastName')?.touched">
-            <small *ngIf="this.searchForm.get('lastName')?.errors?.['pattern']"></small>
+            <small *ngIf="this.searchForm.get('lastName')?.errors?.['pattern']">Only Alphabets</small>
           </div>
         </div>
 
@@ -33,7 +33,7 @@
           <i class="bi bi-search role-search-icon"></i>
           <input type="text" class="search-input" placeholder="Role" formControlName="role">
           <div class = "error" *ngIf="this.searchForm.get('role')?.invalid && this.searchForm.get('role')?.touched">
-            <small *ngIf="this.searchForm.get('role')?.errors?.['pattern']"></small>
+            <small *ngIf="this.searchForm.get('role')?.errors?.['pattern']">Only Alphabets</small>
           </div>
         </div>
 
@@ -41,14 +41,14 @@
           <i class="bi bi-search contact-search-icon"></i>
           <input type="text" class="search-input" placeholder="Phone" formControlName="phoneNumber">
           <div class = "error" *ngIf="this.searchForm.get('phoneNumber')?.invalid && this.searchForm.get('phoneNumber')?.touched">
-            <small *ngIf="this.searchForm.get('phoneNumber')?.errors?.['pattern']"></small>
+            <small *ngIf="this.searchForm.get('phoneNumber')?.errors?.['pattern']">Only numbers</small>
           </div>
         </div>
       </div>
 
       <div class="buttons-wrap">
-        <button class="search-btn" type="submit">Search</button>
-        <button class="reset-btn" (click)="resetSearchForm()">Reset</button>
+        <button class="search-btn" type="submit" [disabled]="isSearchDisabled()">Search</button>
+        <button type="button" class="reset-btn" (click)="resetSearchForm()">Reset</button>
       </div>
     </form>
 
@@ -110,7 +110,7 @@
 </table>
 
 
-<div class="pagination-container">
+<div *ngIf="users.length > 0 || isPageDisabled" class="pagination-container">
   <button [disabled]="currentPage === 0" (click)="goToPage(currentPage - 1)">
     Prev
   </button>

@@ -55,6 +55,7 @@
 }
 
 
+
 .status-green {
   background-color: #e6f4ea;
   color: #0a8754;
@@ -94,17 +95,6 @@
   animation: expandFade 0.3s ease-in-out;
 }
 
-@keyframes expandFade {
-  from {
-    opacity: 0;
-    transform: translateY(-5px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
 .expanded-content {
   padding: 10px 0;
   font-size: 15px;
@@ -138,5 +128,18 @@
   font-style: italic;
   color: gray;
 }
+
+.paid-status-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+}
+
+.pay-btn {
+  margin-left: 8px;
+  color: #009579;
+}
+
 
 

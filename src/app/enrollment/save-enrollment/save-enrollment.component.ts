@@ -107,7 +107,7 @@ export class SaveEnrollmentComponent implements OnInit{
   }
 
   goBack() {
-    this.router.navigate(['user/enroll/view']);
+    this.router.navigate(['student/enroll/view']);
   }
 
   onSemesterChange(semester: Semester){

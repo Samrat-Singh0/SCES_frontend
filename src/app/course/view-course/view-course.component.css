@@ -56,6 +56,10 @@
   margin-right: 10px;
 }
 
+.input-wrap {
+  height: 50px;
+}
+
 .search-btn {
   background-color: #009579;
   color: white;
@@ -150,6 +154,36 @@ th,td {
 }
 
 .no-courses-message {
+  font-style: italic;
+  color: gray;
+}
+
+.pagination-container {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 20px;
+}
+
+.pagination-container button {
+  padding: 8px 14px;
+  border: none;
+  background-color: #e0e0e0;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.pagination-container button.active {
+  background-color: #009579;
+  color: white;
+}
+
+.pagination-container button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.no-user-message {
   font-style: italic;
   color: gray;
 }
