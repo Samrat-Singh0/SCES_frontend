@@ -8,6 +8,7 @@ import {FormsModule} from '@angular/forms';
 import {MatMiniFabButton} from '@angular/material/button';
 import {Router} from '@angular/router';
 import {SemesterStateService} from '../shared/semester-state.service';
+import {MatTooltip} from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-semester',
@@ -15,7 +16,8 @@ import {SemesterStateService} from '../shared/semester-state.service';
     NgForOf,
     MatIcon,
     FormsModule,
-    MatMiniFabButton
+    MatMiniFabButton,
+    MatTooltip
   ],
   templateUrl: './semester.component.html',
   styleUrl: './semester.component.css'

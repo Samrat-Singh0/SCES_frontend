@@ -11,6 +11,7 @@ import {MatSnackBar} from '@angular/material/snack-bar';
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import {SearchUser} from '../../model/search.model';
 import {ConfirmationComponent} from '../../shared/confirmation/confirmation.component';
+import {MatTooltip} from '@angular/material/tooltip';
 
 
 @Component({
@@ -21,7 +22,8 @@ import {ConfirmationComponent} from '../../shared/confirmation/confirmation.comp
     MatMiniFabButton,
     ReactiveFormsModule,
     NgIf,
-    NgForOf
+    NgForOf,
+    MatTooltip,
   ],
   templateUrl: './view-user.component.html',
   styleUrl: './view-user.component.css'

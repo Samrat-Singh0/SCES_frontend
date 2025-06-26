@@ -137,12 +137,17 @@
   padding: 0.5rem;
 }
 
-.btn-delete, .btn-edit {
+.btn-delete, .btn-edit, .btn-grade {
   margin-right: 8px;
 }
 
 .btn-delete {
   background-color: #ff0000 ;
+  color: white;
+}
+
+.btn-grade {
+  background-color: #009579;
   color: white;
 }
 
@@ -158,10 +163,40 @@ th,td {
   color: gray;
 }
 
+.footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-top: 30px;
+  padding: 10px;
+}
+
+.download-btn {
+  height: 50px;
+  display: flex;
+  gap: 10px;
+}
+
+.btn-download {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 4px;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.btn-download:hover {
+  background-color: #0056b3;
+}
+
 .pagination-container {
   display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
   justify-content: center;
-  gap: 8px;
   margin-top: 20px;
 }
 

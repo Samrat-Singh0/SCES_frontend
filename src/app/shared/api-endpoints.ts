@@ -13,6 +13,7 @@ export const ENROLLMENT_API_URL = USER_API_URL + '/enrollment';
 export const GRADE_API_URL = API_BASE_URL + '/grade';
 export const ATTENDANCE_API_URL = API_BASE_URL + '/attendance';
 export const FEE_API_URL = API_BASE_URL + '/fee';
+export const REPORT_API_URL = API_BASE_URL + '/report/get';
 
 export const AuthEndpoints = {
   LOGIN: `${API_AUTH_URL}/login`,
@@ -82,4 +83,9 @@ export const AttendanceEndpoints = {
 
 export const FeeEndpoints = {
   PAY_FEE: FEE_API_URL + '/pay'
+}
+
+export const ReportEndpoints = {
+  GET_COURSE_REPORT: REPORT_API_URL + '/course',
+  GET_GRADE_REPORT: REPORT_API_URL + '/grade'
 }

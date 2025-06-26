@@ -74,11 +74,26 @@
       <td>{{joinName.getFullName(course.instructor.user.firstName, course.instructor.user.middleName, course.instructor.user.lastName)}}</td>
       <td>{{ course.semester.label }}</td>
       <td class="edit-delete-btn">
-        <button mat-mini-fab aria-label="Edit User" class="btn-edit" (click)="updateCourse(course.code)">
+        <button mat-mini-fab
+                matTooltip="Update"
+                aria-label="Edit Course"
+                class="btn-edit"
+                (click)="updateCourse(course.code)">
           <mat-icon>edit</mat-icon>
         </button>
-        <button mat-mini-fab aria-label="Delete User" class="btn-delete" (click) = "deleteCourse(course.code)">
+        <button mat-mini-fab
+                matTooltip="Delete"
+                aria-label="Delete Course"
+                class="btn-delete"
+                (click) = "deleteCourse(course.code)">
           <mat-icon>delete</mat-icon>
+        </button>
+        <button mat-mini-fab
+                matTooltip="Download Grade Report"
+                aria-label="Grade Report"
+                class="btn-grade"
+                (click)="openDownloadDialog(course)">
+          <mat-icon>file_download</mat-icon>
         </button>
       </td>
     </tr>
@@ -93,23 +108,39 @@
   <p>No courses found. Please add a course.</p>
 </div>
 
-<div *ngIf="courses.length > 0" class="pagination-container">
-  <button [disabled]="currentPage === 0" (click)="goToPage(currentPage - 1)">
-    Prev
-  </button>
+<div class="footer">
+
+  <div class="download-btn">
+    <button class="btn-download" (click)="download('PDF')">
+      <i class="bi bi-download"></i>Download PDF
+    </button>
+
+    <button class="btn-download" (click)="download('XLSX')">
+      <i class="bi bi-download"></i>Download XLSX
+    </button>
+  </div>
+
+  <div *ngIf="courses.length > 0" class="pagination-container">
 
 
-  <!--  [].constructor(totalPages): empty array create garxa, of size: totalPAges-->
-  <button
-    *ngFor="let page of [].constructor(totalPages); let i = index"
-    [class.active]="i === currentPage"
-    (click)="goToPage(i)">
-    {{ i + 1 }}
-  </button>
+    <button [disabled]="currentPage === 0" (click)="goToPage(currentPage - 1)">
+      Prev
+    </button>
 
-  <button [disabled]="currentPage === totalPages - 1" (click)="goToPage(currentPage + 1)">
-    Next
-  </button>
+    <!--  [].constructor(totalPages): empty array create garxa, of size: totalPAges-->
+    <button
+      *ngFor="let page of [].constructor(totalPages); let i = index"
+      [class.active]="i === currentPage"
+      (click)="goToPage(i)">
+      {{ i + 1 }}
+    </button>
+
+    <button [disabled]="currentPage === totalPages - 1" (click)="goToPage(currentPage + 1)">
+      Next
+    </button>
+  </div>
+
 </div>
+
 
 
