@@ -11,7 +11,7 @@ import {MatDialog, MatDialogConfig} from '@angular/material/dialog';
 import {
   PopupMarkAttendanceComponent
 } from '../popup-mark-attendance/popup-mark-attendance.component';
-import {AttendanceStatus} from '../../enum/attendance-status.enum';
+import {FormatDateService} from '../../shared/format-date.service';
 
 @Component({
   selector: 'app-view-attendance-instructor',
@@ -34,7 +34,8 @@ export class ViewAttendanceInstructorComponent implements OnInit{
     private snackBar: MatSnackBar,
     private router: Router,
     private attendanceService: AttendanceService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private formatDate: FormatDateService
   ) {
   }
 
@@ -53,7 +54,7 @@ export class ViewAttendanceInstructorComponent implements OnInit{
   }
 
   populateAttendance(course: Course) {
-    const formattedTodayDate = this.formatDateWithoutTimezone(new Date());
+    const formattedTodayDate = this.formatDate.formatDateWithoutTimezone(new Date());
     this.attendanceService.getAttendanceOfDate(course.code, formattedTodayDate).subscribe({
       next: res => {
         this.attendance = res.body;
@@ -64,7 +65,7 @@ export class ViewAttendanceInstructorComponent implements OnInit{
           const dialogConfig = new MatDialogConfig();
           dialogConfig.width = '2000px';
           dialogConfig.height = '756px';
-          dialogConfig.backdropClass = 'cdk-overlay-dark-backdrop';
+          dialogConfig.backdropClass = 'cdk-overlay-dark-backdrop';       //dark-shade in the background.
           dialogConfig.disableClose = true;
           dialogConfig.data = {
             courseCode : course.code
@@ -72,7 +73,6 @@ export class ViewAttendanceInstructorComponent implements OnInit{
           this.dialog.open(PopupMarkAttendanceComponent, dialogConfig);
           this.attendance.length = 0;
 
-          // this.router.navigate(['instructor/attendance/mark']);
         }
       }, error: err => {
         this.snackBar.open(err.message, "Close", {duration: 3000});
@@ -86,13 +86,6 @@ export class ViewAttendanceInstructorComponent implements OnInit{
 
   isAttendanceDone():boolean {
     return this.attendance.length > 0;
-  }
-
-  formatDateWithoutTimezone(date: Date): string {
-    const year = date.getFullYear();
-    const month = (date.getMonth() + 1).toString().padStart(2, '0');
-    const day = date.getDate().toString().padStart(2, '0');
-    return year + '-' + month + '-' + day;
   }
 
 }

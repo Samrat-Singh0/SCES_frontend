@@ -14,6 +14,7 @@
   align-items: center;
 }
 
+
 .inputs-wrap {
   display: flex;
   flex-wrap: wrap;
@@ -175,5 +176,34 @@ th,td {
 .no-user-message {
   font-style: italic;
   color: gray;
+}
+
+.role-badge {
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  display: inline-block;
+}
+
+.badge-admin {
+  background-color: #e0f3ff;
+  color: #007bff;
+}
+
+.badge-student {
+  background-color: #e8f5e9;
+  color: #2e7d32;
+}
+
+.badge-instructor {
+  background-color: #fff3e0;
+  color: #ef6c00;
+}
+
+.badge-default {
+  background-color: #f0f0f0;
+  color: #666;
 }
 

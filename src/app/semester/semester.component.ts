@@ -52,27 +52,15 @@ export class SemesterComponent {
     if(this.semesters.length >= 8){
       this.snackBar.open("Cannot add more than 8 semesters.", "Close", {duration: 3000});
     }else{
-      this.router.navigate(['super/add']);
+      this.router.navigate(['super/semester/add']);
     }
   }
 
 
   updateSemester(semester: Semester) {
     this.semesterState.setSemester(semester);
-    this.router.navigate(['super/edit'],{
+    this.router.navigate(['super/semester/edit'],{
       queryParams: {label: semester.label}
-    });
-  }
-
-
-  deleteSemester(label: string) {
-    this.semesterService.delete(label).subscribe({
-      next: res => {
-        this.ngOnInit();
-        this.snackBar.open(res.message, "Close", {duration: 3000});
-      }, error: err=> {
-        this.snackBar.open(err.message, "Close", {duration: 3000});
-      }
     });
   }
 

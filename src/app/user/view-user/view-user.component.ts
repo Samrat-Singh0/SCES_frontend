@@ -2,16 +2,18 @@ import {Component, OnInit} from '@angular/core';
 import {MatTableModule} from '@angular/material/table';
 import {UserService} from '../../services/user.service';
 import {User} from '../../model/user.model';
-import {NgForOf, NgIf} from '@angular/common';
+import {NgClass, NgForOf, NgIf} from '@angular/common';
 import {MatMiniFabButton} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
 import {SaveUserComponent} from '../save-user/save-user.component';
 import {MatDialog} from '@angular/material/dialog';
 import {MatSnackBar} from '@angular/material/snack-bar';
-import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
+import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
 import {SearchUser} from '../../model/search.model';
 import {ConfirmationComponent} from '../../shared/confirmation/confirmation.component';
 import {MatTooltip} from '@angular/material/tooltip';
+import {JoinNameService} from '../../shared/join-name.service';
+import {Role} from '../../enum/role.enum';
 
 
 @Component({
@@ -24,6 +26,8 @@ import {MatTooltip} from '@angular/material/tooltip';
     NgIf,
     NgForOf,
     MatTooltip,
+    NgClass,
+    FormsModule,
   ],
   templateUrl: './view-user.component.html',
   styleUrl: './view-user.component.css'
@@ -42,6 +46,7 @@ export class ViewUserComponent implements OnInit {
     private dialog: MatDialog,
     private snackbar: MatSnackBar,
     private fb: FormBuilder,
+    public joinName: JoinNameService
   ) {
     this.searchForm = new FormGroup({});
   }
@@ -57,7 +62,6 @@ export class ViewUserComponent implements OnInit {
           this.users = data.body.content;
           this.totalPages = data.body.totalPages;
           this.currentPage = data.body.number;
-          // this.snackbar.open(data.message, "Close", {duration: 3000})
       }, error: err => {
         this.snackbar.open(err.message, "Close", {duration: 3000} )
       }
@@ -149,8 +153,6 @@ export class ViewUserComponent implements OnInit {
         }
       })
     }
-
-
   }
 
   resetSearchForm() {
@@ -158,13 +160,37 @@ export class ViewUserComponent implements OnInit {
     this.renderContent(this.currentPage);
   }
 
-  getFullName(firstName: string, lastName: string, middleName?: string): string {
-    return [firstName, middleName, lastName].filter(Boolean).join(' ');
-  }
-
   isSearchDisabled(): boolean {
     const values = this.searchForm.value;
     return !values.firstName && !values.middleName && !values.lastName && !values.role && !values.phoneNumber;
   }
+
+  getUserRole(role: Role):string {
+    switch (role) {
+      case Role.SUPER_ADMIN:
+        return 'Super Admin';
+      case Role.INSTRUCTOR:
+        return 'Instructor';
+      case Role.STUDENT:
+        return 'Student';
+      default:
+        return '';
+    }
+  }
+
+  getRoleStyle(role: string): string {
+    switch (role) {
+      case 'ADMIN':
+        return 'badge-admin';
+      case 'STUDENT':
+        return 'badge-student';
+      case 'INSTRUCTOR':
+        return 'badge-instructor';
+      default:
+        return 'badge-default';
+    }
+  }
+
+
 
 }

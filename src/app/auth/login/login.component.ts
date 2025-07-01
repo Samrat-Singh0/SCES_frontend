@@ -56,6 +56,7 @@ export class LoginComponent implements OnInit{
           if(token){
             localStorage.setItem('token',token);
             localStorage.setItem('role', body.body.role);
+            localStorage.setItem('loggedInUser', JSON.stringify(body.body));
           }
 
           this.errorMessage = '';

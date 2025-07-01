@@ -10,6 +10,6 @@ export function futureDateValidator(): ValidatorFn {
     if(selectedDate > today){
       return null;
     }
-    return {futureDate: true};
+    return {'futureDate': true};
   }
 }

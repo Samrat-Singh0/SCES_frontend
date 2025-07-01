@@ -43,23 +43,24 @@ export class AddSemesterComponent implements OnInit {
       label: ['', [Validators.required, Validators.pattern("^[A-Za-z]+$"), Validators.minLength(5)]],
       fee: ['', [Validators.required, Validators.pattern("^[0-9]+$")]],
       startDate: [today, [Validators.required, futureDateValidator()]],
-      endDate: [today, [Validators.required]],
+      endDate: [today, [Validators.required, futureDateValidator()]],
     });
   }
 
   add() {
-
-    this.semesterService.add(this.addForm.value).subscribe({
-      next: res => {
-        this.router.navigate(['super/semester'])
-        this.snackBar.open(res.message, "Close", {duration: 3000});
-      }, error: err => {
-        this.snackBar.open(err.message, "Close", {duration: 3000});
-      }
-    });
+    if(!this.addForm.invalid){
+      this.semesterService.add(this.addForm.value).subscribe({
+        next: res => {
+          this.router.navigate(['super/semester/view']);
+          this.snackBar.open(res.message, "Close", {duration: 3000});
+        }, error: err => {
+          this.snackBar.open(err.message, "Close", {duration: 3000});
+        }
+      });
+    }
   }
 
   goBack() {
-    this.router.navigate(['super/semester']);
+    this.router.navigate(['super/semester/view']);
   }
 }

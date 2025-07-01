@@ -54,6 +54,10 @@
       id="endDate"
       class="form-control"
       formControlName="endDate">
+    <div class="error" *ngIf="this.addForm.get('endDate')?.invalid && this.addForm.get('endDate')?.touched">
+      <small *ngIf="this.addForm.get('endDate')?.errors?.['required']">Enter a valid date.</small>
+      <small *ngIf="this.addForm.get('endDate')?.errors?.['futureDate']">Enter a valid date.</small>
+    </div>
   </div>
 
   <div class="mt-4">

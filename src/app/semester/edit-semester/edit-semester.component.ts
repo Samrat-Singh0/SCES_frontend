@@ -8,6 +8,7 @@ import {MatSnackBar} from '@angular/material/snack-bar';
 import {ActivatedRoute, Router} from '@angular/router';
 import {MatIconButton} from '@angular/material/button';
 import {NgIf} from '@angular/common';
+import {futureDateValidator} from '../../auth/validators/future-date.validator';
 
 @Component({
   selector: 'app-edit-semester',
@@ -38,14 +39,19 @@ export class EditSemesterComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.renderContent();
+  }
+
+  renderContent() {
     if (this.isFormEmpty()) {
       this.route.queryParamMap.subscribe(params => {
         this.label = params.get('label');
+        this.getSemester();
       });
-      this.getSemester();
     }else{
       this.getSemAndBuildForm();
     }
+
   }
 
   getSemester() {
@@ -66,10 +72,10 @@ export class EditSemesterComponent implements OnInit {
 
   buildForm() {
     this.editForm = this.formBuilder.group({
-      label: [{value: this.semester?.label, disabled: true}, [Validators.required,Validators.pattern("^[A-Za-z]+$")]],
+      label: [{value: this.semester?.label, disabled: true}, [Validators.required,Validators.pattern("^[A-Za-z]+$"), Validators.minLength(5)]],
       fee: [this.semester?.fee, [Validators.required, Validators.pattern("^[0-9]+$")]],
-      startDate: [this.semester?.startDate, Validators.required],
-      endDate: [this.semester?.endDate, Validators.required]
+      startDate: [this.semester?.startDate, [Validators.required, futureDateValidator()]],
+      endDate: [this.semester?.endDate, [Validators.required, futureDateValidator()]]
     });
 
     const formattedStartDate = this.editForm.get('startDate')?.value;
@@ -117,7 +123,7 @@ export class EditSemesterComponent implements OnInit {
   }
 
   goBack() {
-    this.router.navigate(['super/semester']);
+    this.router.navigate(['super/semester/view']);
   }
 
 

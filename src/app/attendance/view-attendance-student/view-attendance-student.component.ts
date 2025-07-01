@@ -9,6 +9,7 @@ import {AttendanceStatus} from '../../enum/attendance-status.enum';
 import {MatFormField, MatInput, MatSuffix} from '@angular/material/input';
 import {MatDatepicker, MatDatepickerInput, MatDatepickerToggle} from '@angular/material/datepicker';
 import {FormsModule} from '@angular/forms';
+import {FormatDateService} from '../../shared/format-date.service';
 
 @Component({
   selector: 'app-view-attendance-student',
@@ -35,7 +36,8 @@ export class ViewAttendanceStudentComponent implements OnInit{
   constructor(
     private courseService: CourseService,
     private snackBar: MatSnackBar,
-    private attendanceService: AttendanceService
+    private attendanceService: AttendanceService,
+    private formatDate: FormatDateService
   ) {
   }
 
@@ -55,7 +57,7 @@ export class ViewAttendanceStudentComponent implements OnInit{
   }
 
   populateAttendance() {
-    const formattedDate = this.formatDateWithoutTimezone(this.selectedDate);
+    const formattedDate = this.formatDate.formatDateWithoutTimezone(this.selectedDate);
     this.attendanceService.getAttendanceOfDate('', formattedDate).subscribe({
       next: res => {
         this.attendances = res.body;
@@ -63,13 +65,6 @@ export class ViewAttendanceStudentComponent implements OnInit{
         this.snackBar.open(err.message, "Close", {duration: 3000});
     }
     });
-  }
-
-  formatDateWithoutTimezone(date: Date): string {
-    const year = date.getFullYear();
-    const month = (date.getMonth() + 1).toString().padStart(2, '0');
-    const day = date.getDate().toString().padStart(2, '0');
-    return year + '-' + month + '-' + day;
   }
 
   getAttendanceClass(status: AttendanceStatus): string {

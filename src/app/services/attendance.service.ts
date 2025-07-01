@@ -4,7 +4,7 @@ import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {ApiResponse} from '../model/api-response.model';
 import {Attendance} from '../model/attendance.model';
-import {Course} from '../model/course.model';
+import {AttendanceRate} from '../model/attendanceRate.model';
 
 @Injectable({
   providedIn: 'root'
@@ -25,5 +25,9 @@ export class AttendanceService {
     };
 
     return this.http.get<ApiResponse<Attendance[]>>(this.attendanceEndpoints.GET_ATTENDANCE_DATE, { params });
+  }
+
+  getAttendanceRate(courseCode: string): Observable<ApiResponse<AttendanceRate[]>> {
+    return this.http.get<ApiResponse<AttendanceRate[]>>(this.attendanceEndpoints.GET_RATE+`/${courseCode}`);
   }
 }

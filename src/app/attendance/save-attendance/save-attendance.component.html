@@ -8,8 +8,8 @@
 <div class="mt-5 date-div">
   <mat-form-field appearance="fill">
     <input matInput [matDatepicker]="picker" [(ngModel)]="selectedDate">
-    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-    <mat-datepicker #picker></mat-datepicker>
+    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>    <!--calendar icon-->
+    <mat-datepicker #picker></mat-datepicker>   <!--actual date picker component-->
   </mat-form-field>
   <button class="view-btn" (click)="populateAttendance()">
     View
@@ -22,6 +22,7 @@
       <th>S.N.</th>
       <th>Student Name</th>
       <th>Status</th>
+      <th>Presence Rate(%)</th>
     </tr>
     <tr *ngFor="let student of students; let i = index">
       <td>{{ i + 1}}</td>
@@ -37,6 +38,7 @@
           {{ getStatus(student)}}
         </span>
       </td>
+      <td>{{getAttendanceRate(student.code)}}</td>
     </tr>
   </table>
 </div>

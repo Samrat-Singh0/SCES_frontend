@@ -15,6 +15,8 @@ import {AttendanceService} from '../../services/attendance.service';
 import {MatFormField, MatInput, MatSuffix} from '@angular/material/input';
 import {MatDatepicker, MatDatepickerInput, MatDatepickerToggle} from '@angular/material/datepicker';
 import {FormsModule} from '@angular/forms';
+import {FormatDateService} from '../../shared/format-date.service';
+import {AttendanceRate} from '../../model/attendanceRate.model';
 
 @Component({
   selector: 'app-save-attendance',
@@ -41,6 +43,7 @@ export class SaveAttendanceComponent implements OnInit{
   attendance: Attendance[] = [];
   selectedDate: Date = new Date();
   attendanceMap = new Map<string, AttendanceStatus>();
+  attendanceRate: AttendanceRate[] = [];
 
 
   constructor(
@@ -50,7 +53,8 @@ export class SaveAttendanceComponent implements OnInit{
     private studentService: StudentService,
     private route: ActivatedRoute,
     private courseService: CourseService,
-    private attendanceService: AttendanceService
+    private attendanceService: AttendanceService,
+    private formatDate: FormatDateService
   ) {
   }
 
@@ -71,10 +75,23 @@ export class SaveAttendanceComponent implements OnInit{
     });
   }
 
+  populateAttendance() {
+    const formattedDate = this.formatDate.formatDateWithoutTimezone(this.selectedDate);
+    this.attendanceService.getAttendanceOfDate(this.course.code, formattedDate).subscribe({
+      next: res => {
+        this.attendance = res.body;
+        this.populateStudent();
+        this.populateAttendanceRate();
+      }, error: err => {
+        this.snackBar.open(err.message, "Close", {duration: 3000});
+    }
+    });
+  }
+
   populateStudent() {
     this.studentService.getStudentsPerCourse(this.course).subscribe({
       next: res => {
-        this.students = res.body ?? [];
+        this.students = res.body;
         this.attendanceMap = new Map(
           this.attendance.map(a => [a.student.code, a.attendanceStatus])
         )
@@ -86,23 +103,14 @@ export class SaveAttendanceComponent implements OnInit{
     });
   }
 
-  populateAttendance() {
-    const formattedDate = this.formatDateWithoutTimezone(this.selectedDate);
-    this.attendanceService.getAttendanceOfDate(this.course.code, formattedDate).subscribe({
+  populateAttendanceRate() {
+    this.attendanceService.getAttendanceRate(this.course.code).subscribe({
       next: res => {
-        this.attendance = res.body;
-        this.populateStudent();
+        this.attendanceRate = res.body;
       }, error: err => {
         this.snackBar.open(err.message, "Close", {duration: 3000});
-    }
+      }
     });
-  }
-
-  formatDateWithoutTimezone(date: Date): string {
-    const year = date.getFullYear();
-    const month = (date.getMonth() + 1).toString().padStart(2, '0');
-    const day = date.getDate().toString().padStart(2, '0');
-    return year + '-' + month + '-' + day;
   }
 
   goBack() {
@@ -130,5 +138,15 @@ export class SaveAttendanceComponent implements OnInit{
       default:
         return '';
     }
+  }
+
+  getAttendanceRate(studentCode: string): number {
+
+    const student = this.attendanceRate.find(student => student.studentCode === studentCode);
+
+    if(!student || student?.totalDays === 0){
+      return 0;
+    }
+    return (student.presentDays / student.totalDays) * 100;
   }
 }

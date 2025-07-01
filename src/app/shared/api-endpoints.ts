@@ -13,7 +13,10 @@ export const ENROLLMENT_API_URL = USER_API_URL + '/enrollment';
 export const GRADE_API_URL = API_BASE_URL + '/grade';
 export const ATTENDANCE_API_URL = API_BASE_URL + '/attendance';
 export const FEE_API_URL = API_BASE_URL + '/fee';
-export const REPORT_API_URL = API_BASE_URL + '/report/get';
+export const REPORT_API_URL = API_BASE_URL + '/main/report';
+export const ANALYTICS_API_URL = API_BASE_URL + '/main/analytics';
+
+export const TEST_REPORT_API_URL = API_BASE_URL + '/main/report/';
 
 export const AuthEndpoints = {
   LOGIN: `${API_AUTH_URL}/login`,
@@ -79,6 +82,7 @@ export const AttendanceEndpoints = {
   GET_ATTENDANCE_TODAY: ATTENDANCE_API_URL + "/get/today",
   GET_ATTENDANCE_DATE: ATTENDANCE_API_URL + "/get/date",
   SAVE_ATTENDANCE : ATTENDANCE_API_URL + "/save",
+  GET_RATE : ATTENDANCE_API_URL + '/rate'
 }
 
 export const FeeEndpoints = {
@@ -86,6 +90,11 @@ export const FeeEndpoints = {
 }
 
 export const ReportEndpoints = {
+  GET_COURSE_REPORT_TEST: 'http:localhost:8081/api/main/report/course',
   GET_COURSE_REPORT: REPORT_API_URL + '/course',
   GET_GRADE_REPORT: REPORT_API_URL + '/grade'
+}
+
+export const AnalyticsEndpoints = {
+  GET_ANALYTICS_DATA: ANALYTICS_API_URL + '/list'
 }

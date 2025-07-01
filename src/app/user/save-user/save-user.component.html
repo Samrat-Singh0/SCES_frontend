@@ -62,6 +62,7 @@
       <div class="error" *ngIf="myForm.get('phoneNumber')?.invalid && myForm.get('phoneNumber')?.touched">
         <small *ngIf="myForm.get('phoneNumber')?.errors?.['required']">Phone number is required.</small>
         <small *ngIf="myForm.get('phoneNumber')?.errors?.['minlength']">At least 10</small>
+        <small *ngIf="myForm.get('phoneNumber')?.errors?.['pattern']"> Must be digits and start with '98'</small>
 
       </div>
     </div>
@@ -69,6 +70,7 @@
     <div class="form-group">
       <label for="role">Role</label>
       <select class="role" formControlName="role" [disabled]="isEditMode">
+        <option value="SUPER_ADMIN">Super Admin</option>
         <option value="INSTRUCTOR">Instructor</option>
         <option value="STUDENT">Student</option>
       </select>

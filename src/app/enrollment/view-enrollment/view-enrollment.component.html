@@ -17,7 +17,7 @@
       <th>Semester</th>
       <th>Completion Status</th>
       <th>Paid/Unpaid</th>
-      <th>Outstanding Fee</th>
+      <th>Outstanding Fee (Rs.)</th>
       <th>Enrolled Date</th>
       <th>Completion Date</th>
       <th *ngIf="userRole === Role.STUDENT">Drop</th>
@@ -57,7 +57,7 @@
             </button>
           </div>
         </td>
-        <td>{{ 'Rs. ' + enrollment.outstandingFee }}</td>
+        <td>{{ enrollment.outstandingFee }}</td>
         <td>{{ enrollment.enrolledDate }}</td>
         <td>{{ enrollment.completionDate || '-'}}</td>
         <td class="delete-cell" *ngIf="userRole === Role.STUDENT">
