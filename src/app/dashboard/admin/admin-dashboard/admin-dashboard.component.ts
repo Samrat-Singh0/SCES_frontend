@@ -40,6 +40,8 @@ export class AdminDashboardComponent {
 
   logout() {
     localStorage.setItem('token', '');
+    localStorage.setItem('role','');
+    localStorage.setItem('loggedInUser','');
     this.router.navigate(['/login']);
   }
 }

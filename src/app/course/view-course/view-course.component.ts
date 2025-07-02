@@ -73,7 +73,7 @@ export class ViewCourseComponent implements OnInit {
 
   buildForm() {
     this.searchForm = this.builder.group({
-      name: [undefined, Validators.pattern("^[a-zA-Z\\s]+$\n")],
+      name: [undefined, Validators.pattern("^[a-zA-Z\\s]+$")],
       instructor: [undefined, Validators.pattern("^[a-zA-Z\\s]+$")],
       semester: [undefined, Validators.pattern("^[a-zA-Z]*$")]
     });
@@ -176,15 +176,19 @@ export class ViewCourseComponent implements OnInit {
   }
 
   openDownloadDialog(course: Course) {
-    const dialogRef = this.dialog.open(ReportDownloadDialogComponent);
+    const dialogRef = this.dialog.open(ReportDownloadDialogComponent,{
+      disableClose: true
+    });
 
     dialogRef.afterClosed().subscribe(format => {
       this.reportService.downloadGrade(format, course.code).subscribe({
         next: value => {
           if(format === 'PDF'){
             this.generateDownloadLinkService.generateLink(value, 'grade-report.pdf');
-          }else{
+          }else if(format === 'XLSX'){
             this.generateDownloadLinkService.generateLink(value, 'grade-report.xlsx');
+          }else {
+            return;
           }
           this.snackBar.open('Download Complete', "Close", {duration: 3000});
         }, error: err => {

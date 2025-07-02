@@ -61,7 +61,7 @@ export class SaveUserComponent implements OnInit {
         ]],
       email: [{value: this.data?.email || '', disabled: this.isEditMode}, [Validators.required, Validators.email, Validators.pattern("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,4}$")]],
       address: [this.data?.address || '', [Validators.required, Validators.pattern("^[A-Za-z ]+$")]],
-      phoneNumber: [this.data?.phoneNumber || '', [Validators.required, Validators.minLength(10), Validators.pattern("^98\\d*$")]],
+      phoneNumber: [this.data?.phoneNumber || '', [Validators.required, Validators.minLength(10), Validators.pattern("^(98\|97)\\d*$")]],
       role: [this.data?.role || 'Student']
     })
   }

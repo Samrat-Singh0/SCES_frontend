@@ -15,6 +15,9 @@
       id="label"
       class="form-control"
       formControlName="label">
+    <div class="error" *ngIf="this.editForm.get('label')?.touched && this.editForm.get('label')?.invalid">
+      <small *ngIf="this.editForm.get('label')?.errors?.['pattern']">Only Alphabets. </small>
+    </div>
   </div>
 
   <div class="mb-3">
@@ -24,6 +27,10 @@
       id="fee"
       class="form-control"
       formControlName="fee">
+    <div class="error" *ngIf="this.editForm.get('fee')?.touched && this.editForm.get('fee')?.invalid">
+      <small *ngIf="this.editForm.get('fee')?.errors?.['pattern']">Only Numbers. </small>
+      <small *ngIf="this.editForm.get('fee')?.errors?.['required']">Data is required. </small>
+    </div>
   </div>
 
   <div class="mb-3">
@@ -33,6 +40,9 @@
       id="startDate"
       class="form-control"
       formControlName="startDate">
+    <div class="error" *ngIf="this.editForm.get('startDate')?.touched && this.editForm.get('startDate')?.invalid">
+      <small *ngIf="this.editForm.get('startDate')?.errors?.['required']">Data is required. </small>
+    </div>
   </div>
 
   <div class="mb-3">
@@ -42,6 +52,9 @@
       id="endDate"
       class="form-control"
       formControlName="endDate">
+    <div class="error" *ngIf="this.editForm.get('endDate')?.touched && this.editForm.get('endDate')?.invalid">
+      <small *ngIf="this.editForm.get('endDate')?.errors?.['required']">Data is required. </small>
+    </div>
   </div>
 
   <div class="mt-4">

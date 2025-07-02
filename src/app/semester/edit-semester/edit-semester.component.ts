@@ -74,22 +74,24 @@ export class EditSemesterComponent implements OnInit {
     this.editForm = this.formBuilder.group({
       label: [{value: this.semester?.label, disabled: true}, [Validators.required,Validators.pattern("^[A-Za-z]+$"), Validators.minLength(5)]],
       fee: [this.semester?.fee, [Validators.required, Validators.pattern("^[0-9]+$")]],
-      startDate: [this.semester?.startDate, [Validators.required, futureDateValidator()]],
-      endDate: [this.semester?.endDate, [Validators.required, futureDateValidator()]]
+      startDate: [this.semester?.startDate, [Validators.required]],
+      endDate: [this.semester?.endDate, [Validators.required]]
     });
 
-    const formattedStartDate = this.editForm.get('startDate')?.value;
-    const formattedEndDate = this.editForm.get('endDate')?.value;
+    // const formattedStartDate = this.editForm.get('startDate')?.value;
+    // const formattedEndDate = this.editForm.get('endDate')?.value;
 
-    if (formattedStartDate) {
-      const formatted = formattedStartDate.replace(/\//g, '-');
-      this.editForm.get('startDate')?.setValue(formatted);
-    }
-
-    if (formattedEndDate) {
-      const formatted = formattedEndDate.replace(/\//g, '-');
-      this.editForm.get('endDate')?.setValue(formatted);
-    }
+    // if (formattedStartDate) {
+    //   const formatted = formattedStartDate.replace(/\//g, '-');
+    //   console.log(formattedStartDate)
+    //   console.log(formatted);
+    //   this.editForm.get('startDate')?.setValue(formatted);
+    // }
+    //
+    // if (formattedEndDate) {
+    //   const formatted = formattedEndDate.replace(/\//g, '-');
+    //   this.editForm.get('endDate')?.setValue(formatted);
+    // }
   }
 
 
