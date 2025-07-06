@@ -32,6 +32,7 @@ import {Role} from '../../enum/role.enum';
   templateUrl: './view-user.component.html',
   styleUrl: './view-user.component.css'
 })
+
 export class ViewUserComponent implements OnInit {
   users: User[] = [];
   displayedColumns: string[] = ['index', 'email', 'fullName', 'address', 'phoneNumber', 'role', 'edit']
@@ -39,7 +40,7 @@ export class ViewUserComponent implements OnInit {
   totalPages: number = 0;
   currentPage: number = 0;
   pageSize: number = 5;
-  isPageDisabled: boolean = false;
+  isSearchNotActive: boolean = true;
 
   constructor(
     private userService: UserService,
@@ -133,7 +134,7 @@ export class ViewUserComponent implements OnInit {
 
   searchUser() {
     const formValue = this.searchForm.value;
-    this.isPageDisabled = true;
+    this.isSearchNotActive = false;
 
     if(this.searchForm.valid){
       const searchCriteria: SearchUser = {
@@ -157,6 +158,7 @@ export class ViewUserComponent implements OnInit {
 
   resetSearchForm() {
     this.searchForm.reset();
+    this.isSearchNotActive = true;
     this.renderContent(this.currentPage);
   }
 
@@ -190,7 +192,4 @@ export class ViewUserComponent implements OnInit {
         return 'badge-default';
     }
   }
-
-
-
 }

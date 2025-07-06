@@ -1,6 +1,7 @@
 <header> Users </header>
 
 <div class="control-container">
+  <div class="search-row">
 
     <form  class="search-container" [formGroup]="searchForm" (ngSubmit)="searchUser()" >
 
@@ -53,12 +54,14 @@
     </form>
 
 
-  <div class="add-container">
-    <button class="add-btn" (click)="openDialog()">
-      <mat-icon>add</mat-icon>
-      ADD USER
-    </button>
+    <div class="add-container">
+      <button class="add-btn" (click)="openDialog()">
+        <mat-icon>add</mat-icon>
+        ADD USER
+      </button>
+    </div>
   </div>
+
 </div>
 
 <table mat-table [dataSource]="users" class="mat-elevation-z24 container">
@@ -114,7 +117,7 @@
 </table>
 
 
-<div *ngIf="users.length > 0 || isPageDisabled" class="mt-5 pagination-container d-flex justify-content-end">
+<div *ngIf="isSearchNotActive" class="mt-5 pagination-container d-flex justify-content-end">
   <button [disabled]="currentPage === 0" (click)="goToPage(currentPage - 1)">
     Prev
   </button>

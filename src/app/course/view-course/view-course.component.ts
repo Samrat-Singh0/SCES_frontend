@@ -6,7 +6,7 @@ import {Course} from '../../model/course.model';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {NgForOf, NgIf} from '@angular/common';
 import {Router} from '@angular/router';
-import {MatButton, MatMiniFabButton} from '@angular/material/button';
+import {MatMiniFabButton} from '@angular/material/button';
 import {SearchCourse} from '../../model/search.model';
 import {JoinNameService} from '../../shared/join-name.service';
 import {MatDialog} from '@angular/material/dialog';
@@ -17,6 +17,7 @@ import {
   ReportDownloadDialogComponent
 } from '../../report-download-dialog/report-download-dialog.component';
 import {ReportService} from '../../services/report.service';
+import {ReportRequest} from '../../model/report-request.model';
 
 @Component({
   selector: 'app-view-course',
@@ -39,6 +40,7 @@ export class ViewCourseComponent implements OnInit {
   totalPages: number = 0;
   currentPage: number = 0;
   pageSize: number = 5;
+  isSearchNotActive: boolean = true;
 
   constructor(
     private courseService: CourseService,
@@ -137,6 +139,7 @@ export class ViewCourseComponent implements OnInit {
     this.courseService.searchCourse(searchCriteria).subscribe({
       next: res => {
         this.courses = res.body;
+        this.isSearchNotActive = false;
       }, error: err => {
         console.log(err.message);
       }
@@ -146,6 +149,7 @@ export class ViewCourseComponent implements OnInit {
 
   resetSearchForm() {
     this.searchForm.reset();
+    this.isSearchNotActive=true;
     this.renderContent(this.currentPage);
   }
 
@@ -160,14 +164,40 @@ export class ViewCourseComponent implements OnInit {
     return !values.name && !values.instructor && !values.semester;
   }
 
-  download(documentType: string) {
-    this.reportService.downloadCourse(documentType).subscribe({
+  downloadReport(documentType: string | null, course: Course | null) {
+    const reportDto: ReportRequest = {
+      documentType: documentType || null,
+      courseCode: course?.code || null,
+    }
+
+    if(course !== null) {
+      const dialogRef = this.dialog.open(ReportDownloadDialogComponent, {
+        disableClose: true
+      });
+      dialogRef.afterClosed().subscribe(format => {
+        reportDto.documentType = format
+        this.sendDownloadRequest(reportDto);
+      });
+    }else {
+      this.sendDownloadRequest(reportDto);
+    }
+  }
+
+  sendDownloadRequest(reportDto: ReportRequest) {
+    this.reportService.downloadReport(reportDto).subscribe({
       next: value => {
-        if(documentType === 'PDF'){
-          this.generateDownloadLinkService.generateLink(value, 'course-report.pdf');
-        }else{
-          this.generateDownloadLinkService.generateLink(value, 'course-report.xlsx');
+        if(value.status < 200 || value.status >=300) {
+          this.snackBar.open("Failed to download", "Close", {duration: 3000});
+          return;
         }
+        const file = value.body!;
+        let fileName: string = '';
+        if(reportDto.documentType === 'PDF'){
+          fileName = reportDto.courseCode !== null ? 'grade-report.pdf' : 'course-report.pdf';
+        }else{
+          fileName = reportDto.courseCode !== null ? 'grade-report.xlsx' : 'course-report.xlsx';
+        }
+        this.generateDownloadLinkService.generateLink(file, fileName);
         this.snackBar.open('Download Complete', "Close", {duration: 3000});
       }, error: err => {
         this.snackBar.open(err.message, "Close", {duration: 3000});
@@ -175,26 +205,4 @@ export class ViewCourseComponent implements OnInit {
     });
   }
 
-  openDownloadDialog(course: Course) {
-    const dialogRef = this.dialog.open(ReportDownloadDialogComponent,{
-      disableClose: true
-    });
-
-    dialogRef.afterClosed().subscribe(format => {
-      this.reportService.downloadGrade(format, course.code).subscribe({
-        next: value => {
-          if(format === 'PDF'){
-            this.generateDownloadLinkService.generateLink(value, 'grade-report.pdf');
-          }else if(format === 'XLSX'){
-            this.generateDownloadLinkService.generateLink(value, 'grade-report.xlsx');
-          }else {
-            return;
-          }
-          this.snackBar.open('Download Complete', "Close", {duration: 3000});
-        }, error: err => {
-          this.snackBar.open(err.message, "Close", {duration: 3000});
-        }
-      });
-    });
-  }
 }

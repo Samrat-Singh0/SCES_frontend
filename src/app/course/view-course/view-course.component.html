@@ -92,7 +92,7 @@
                 matTooltip="Download Grade Report"
                 aria-label="Grade Report"
                 class="btn-grade"
-                (click)="openDownloadDialog(course)">
+                (click)="downloadReport(null,course)">
           <mat-icon>file_download</mat-icon>
         </button>
       </td>
@@ -111,16 +111,16 @@
 <div class="footer">
 
   <div class="download-btn">
-    <button class="btn-download" (click)="download('PDF')">
+    <button class="btn-download" (click)="downloadReport('PDF',null)">
       <i class="bi bi-download"></i>Download PDF
     </button>
 
-    <button class="btn-download" (click)="download('XLSX')">
+    <button class="btn-download" (click)="downloadReport('XLSX',null)">
       <i class="bi bi-download"></i>Download XLSX
     </button>
   </div>
 
-  <div *ngIf="courses.length > 0" class="pagination-container">
+  <div *ngIf="isSearchNotActive" class="pagination-container">
 
 
     <button [disabled]="currentPage === 0" (click)="goToPage(currentPage - 1)">

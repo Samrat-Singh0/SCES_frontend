@@ -7,7 +7,7 @@ export class JoinNameService {
 
   constructor() { }
 
-  getFullName(firstName?: string, lastName?: string, middleName?: string): string {
+  getFullName(firstName?: string, middleName?: string, lastName?: string): string {
     return [firstName, middleName, lastName].filter(Boolean).join(' ');
   }
 }

@@ -92,7 +92,8 @@ export const FeeEndpoints = {
 export const ReportEndpoints = {
   GET_COURSE_REPORT_TEST: 'http:localhost:8081/api/main/report/course',
   GET_COURSE_REPORT: REPORT_API_URL + '/course',
-  GET_GRADE_REPORT: REPORT_API_URL + '/grade'
+  GET_GRADE_REPORT: REPORT_API_URL + '/grade',
+  GET_REPORT: REPORT_API_URL + '/get'
 }
 
 export const AnalyticsEndpoints = {

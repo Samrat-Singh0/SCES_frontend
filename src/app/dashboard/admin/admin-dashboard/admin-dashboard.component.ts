@@ -42,6 +42,7 @@ export class AdminDashboardComponent {
     localStorage.setItem('token', '');
     localStorage.setItem('role','');
     localStorage.setItem('loggedInUser','');
+    this.loggedInUser.setUserNull();
     this.router.navigate(['/login']);
   }
 }

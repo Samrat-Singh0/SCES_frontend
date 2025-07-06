@@ -5,6 +5,7 @@ import {Router} from '@angular/router';
 import {AuthService} from '../../services/auth.service';
 import {MatIconModule} from '@angular/material/icon';
 import {MatSnackBar} from '@angular/material/snack-bar';
+import {CurrentUserService} from '../../shared/current-user.service';
 
 @Component({
   selector: 'app-login',
@@ -28,7 +29,8 @@ export class LoginComponent implements OnInit{
   constructor(
     private authService: AuthService,
     private router: Router,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private currentUser: CurrentUserService
   ) {
     this.loginForm = new FormGroup({});
   }
@@ -57,6 +59,7 @@ export class LoginComponent implements OnInit{
             localStorage.setItem('token',token);
             localStorage.setItem('role', body.body.role);
             localStorage.setItem('loggedInUser', JSON.stringify(body.body));
+            this.currentUser.getUser();
           }
 
           this.errorMessage = '';

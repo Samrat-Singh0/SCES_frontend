@@ -18,9 +18,9 @@ import {JoinNameService} from '../../../shared/join-name.service';
   templateUrl: './super-admin-dashboard.component.html',
   styleUrl: './super-admin-dashboard.component.css'
 })
-export class SuperAdminDashboardComponent{
+export class SuperAdminDashboardComponent {
 
-  protected readonly currentUser: any;
+  protected currentUser: any;
 
   constructor(
     private router: Router,
@@ -34,6 +34,7 @@ export class SuperAdminDashboardComponent{
     localStorage.setItem('token', '');
     localStorage.setItem('role','');
     localStorage.setItem('loggedInUser','');
+    this.loggedInUser.setUserNull();
     this.router.navigate(['/login']);
   }
 
