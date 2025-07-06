@@ -1,0 +1,52 @@
+.analytics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+  padding: 1rem;
+}
+
+.analytics-alt-card {
+  padding: 1rem;
+  border-left: 5px solid #198754;
+  border-radius: 10px;
+  background-color: #f5f7fa;
+  transition: background-color 0.4s ease, transform 0.3s ease, box-shadow 0.3s ease;
+  color: #333;
+  cursor: pointer;
+}
+
+.analytics-alt-card:hover {
+  background: linear-gradient(135deg, #198754, #145c32);
+  color: #fff;
+  transform: translateY(-5px);
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.2);
+}
+
+.analytics-alt-card:hover .icon,
+.analytics-alt-card:hover .title,
+.analytics-alt-card:hover .value {
+  color: #fff;
+}
+
+
+.card-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.icon {
+  font-size: 2rem;
+  margin-right: 0.75rem;
+  color: #198754;
+}
+
+.title {
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.card-body .value {
+  font-size: 2rem;
+  font-weight: bold;
+}
