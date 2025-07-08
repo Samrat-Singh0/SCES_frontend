@@ -16,6 +16,7 @@ import {JoinNameService} from '../../shared/join-name.service';
 import {Role} from '../../enum/role.enum';
 import {MatFormField} from '@angular/material/input';
 import {MatOption, MatSelect} from '@angular/material/select';
+import {CurrentUserService} from '../../shared/current-user.service';
 
 
 @Component({
@@ -47,15 +48,18 @@ export class ViewUserComponent implements OnInit {
   isSearchEnabled: boolean = false;
   sizeSelect: number[] = [5,10,20,50,100]
   pageSize: number = this.sizeSelect[0];
+  user: User;
 
   constructor(
     private userService: UserService,
     private dialog: MatDialog,
     private snackbar: MatSnackBar,
     private fb: FormBuilder,
-    public joinName: JoinNameService
+    public joinName: JoinNameService,
+    private currentUser: CurrentUserService
   ) {
     this.searchForm = new FormGroup({});
+    this.user = this.currentUser.getUser();
   }
 
   ngOnInit(): void {
@@ -207,5 +211,9 @@ export class ViewUserComponent implements OnInit {
       default:
         return 'badge-default';
     }
+  }
+
+  isLoggedInUser(user: User): boolean {
+    return user.email === this.user.email;
   }
 }
