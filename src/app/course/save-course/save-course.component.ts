@@ -101,7 +101,7 @@ export class SaveCourseComponent implements OnInit{
 
   populateInstructor() {
     this.instructorService.getAll().subscribe({
-      next: res => {
+      next: res=> {
         this.instructors = res.body;
       }, error: err => {
         this.snackBar.open(err.message, "Close", {duration: 3000})

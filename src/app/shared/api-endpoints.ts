@@ -20,7 +20,8 @@ export const TEST_REPORT_API_URL = API_BASE_URL + '/main/report/';
 
 export const AuthEndpoints = {
   LOGIN: `${API_AUTH_URL}/login`,
-  CHANGE_PASSWORD: `${API_AUTH_URL}/change-password`
+  CHANGE_PASSWORD: `${API_AUTH_URL}/change-password`,
+  REFRESH_TOKEN: `${API_AUTH_URL}/refresh`
 }
 
 export const UserEndpoints = {

@@ -14,6 +14,8 @@ import {ConfirmationComponent} from '../../shared/confirmation/confirmation.comp
 import {MatTooltip} from '@angular/material/tooltip';
 import {JoinNameService} from '../../shared/join-name.service';
 import {Role} from '../../enum/role.enum';
+import {MatFormField} from '@angular/material/input';
+import {MatOption, MatSelect} from '@angular/material/select';
 
 
 @Component({
@@ -28,6 +30,9 @@ import {Role} from '../../enum/role.enum';
     MatTooltip,
     NgClass,
     FormsModule,
+    MatFormField,
+    MatSelect,
+    MatOption,
   ],
   templateUrl: './view-user.component.html',
   styleUrl: './view-user.component.css'
@@ -39,8 +44,9 @@ export class ViewUserComponent implements OnInit {
   searchForm: FormGroup;
   totalPages: number = 0;
   currentPage: number = 0;
-  pageSize: number = 5;
-  isSearchNotActive: boolean = true;
+  isSearchEnabled: boolean = false;
+  sizeSelect: number[] = [5,10,20,50,100]
+  pageSize: number = this.sizeSelect[0];
 
   constructor(
     private userService: UserService,
@@ -58,6 +64,9 @@ export class ViewUserComponent implements OnInit {
   }
 
   renderContent(page: number) {
+    if(this.isSearchEnabled) {
+      this.searchUser(page);
+    }
     this.userService.getPagedUsers(page,this.pageSize).subscribe({
       next: data => {
           this.users = data.body.content;
@@ -132,9 +141,9 @@ export class ViewUserComponent implements OnInit {
     })
   }
 
-  searchUser() {
+  searchUser(page: number = 0) {
     const formValue = this.searchForm.value;
-    this.isSearchNotActive = false;
+    this.isSearchEnabled = true;
 
     if(this.searchForm.valid){
       const searchCriteria: SearchUser = {
@@ -145,9 +154,11 @@ export class ViewUserComponent implements OnInit {
         phoneNumber: formValue.phoneNumber?.trim() || undefined
       }
 
-      this.userService.searchUser(searchCriteria).subscribe({
+      this.userService.searchUser(searchCriteria, page, this.currentPage).subscribe({
         next: (res) => {
-          this.users = res.body;
+          this.users = res.body.content;
+          this.totalPages = res.body.totalPages;
+          this.currentPage = res.body.number;
 
         }, error: (err) => {
           console.log(err.message);
@@ -156,9 +167,14 @@ export class ViewUserComponent implements OnInit {
     }
   }
 
+  onPageSizeChange(size: number) {
+    this.pageSize = size;
+    this.renderContent(this.currentPage);
+  }
+
   resetSearchForm() {
     this.searchForm.reset();
-    this.isSearchNotActive = true;
+    this.isSearchEnabled = false;
     this.renderContent(this.currentPage);
   }
 

@@ -120,7 +120,7 @@
     </button>
   </div>
 
-  <div *ngIf="isSearchNotActive" class="pagination-container">
+  <div class="pagination-container">
 
 
     <button [disabled]="currentPage === 0" (click)="goToPage(currentPage - 1)">
@@ -140,6 +140,16 @@
     </button>
   </div>
 
+</div>
+
+<div class="page-size-item">
+  <mat-form-field appearance="fill">
+    <mat-select [(ngModel)]="pageSize" (selectionChange)="onPageSizeChange(pageSize)">
+      <mat-option *ngFor="let size of sizeSelect" [value]="size">
+        {{size}}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
 </div>
 
 

@@ -5,18 +5,21 @@ import {AnalyticData} from '../../../model/analytic.model';
 import {AnalyticsService} from '../../../services/analytics.service';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {Router} from '@angular/router';
+import {NgIf} from '@angular/common';
 
 @Component({
   selector: 'app-analytic',
   imports: [
     MatIcon,
-    MatCard
+    MatCard,
+    NgIf
   ],
   templateUrl: './analytic.component.html',
   styleUrl: './analytic.component.css'
 })
 export class AnalyticComponent implements OnInit{
   analytics: AnalyticData | null = null;
+  isDataNotPopulated : boolean = true;
 
 
   constructor(
@@ -34,6 +37,15 @@ export class AnalyticComponent implements OnInit{
     this.analyticsService.getAnalyticData().subscribe({
       next: res => {
         this.analytics = res.body;
+        if (
+          this.analytics.totalCourse !== null &&
+          this.analytics.totalFee !== null &&
+          this.analytics.totalInstructor !== null &&
+          this.analytics.totalStudent !== null &&
+          this.analytics.totalOutstandingFee !== null
+        ){
+          this.isDataNotPopulated = false;
+        }
       }, error: err => {
         this.snackBar.open(err.message, "Close", {duration: 3000})
       }

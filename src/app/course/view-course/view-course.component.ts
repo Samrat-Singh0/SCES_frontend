@@ -18,6 +18,9 @@ import {
 } from '../../report-download-dialog/report-download-dialog.component';
 import {ReportService} from '../../services/report.service';
 import {ReportRequest} from '../../model/report-request.model';
+import {MatFormField} from '@angular/material/input';
+import {MatOption} from '@angular/material/core';
+import {MatSelect} from '@angular/material/select';
 
 @Component({
   selector: 'app-view-course',
@@ -30,6 +33,9 @@ import {ReportRequest} from '../../model/report-request.model';
     MatMiniFabButton,
     NgIf,
     MatTooltip,
+    MatFormField,
+    MatOption,
+    MatSelect,
   ],
   templateUrl: './view-course.component.html',
   styleUrl: './view-course.component.css'
@@ -40,7 +46,8 @@ export class ViewCourseComponent implements OnInit {
   totalPages: number = 0;
   currentPage: number = 0;
   pageSize: number = 5;
-  isSearchNotActive: boolean = true;
+  isSearchEnabled: boolean = false;
+  sizeSelect: number[] = [5,10,20,50,100]
 
   constructor(
     private courseService: CourseService,
@@ -62,15 +69,19 @@ export class ViewCourseComponent implements OnInit {
   }
 
   renderContent(page: number) {
-    this.courseService.getPagedCourses(page, this.pageSize).subscribe({
-      next: res => {
-        this.courses = res.body.content;
-        this.totalPages = res.body.totalPages;
-        this.currentPage = res.body.number;
-      }, error: err => {
-        this.snackBar.open(err.message, "Close", {duration: 3000})
-      }
-    });
+    if(this.isSearchEnabled){
+      this.searchCourse(page);
+    }else {
+      this.courseService.getPagedCourses(page, this.pageSize).subscribe({
+        next: res => {
+          this.courses = res.body.content;
+          this.totalPages = res.body.totalPages;
+          this.currentPage = res.body.number;
+        }, error: err => {
+          this.snackBar.open(err.message, "Close", {duration: 3000})
+        }
+      });
+    }
   }
 
   buildForm() {
@@ -125,10 +136,13 @@ export class ViewCourseComponent implements OnInit {
   }
 
 
-  searchCourse() {
+  searchCourse(page:number = 0) {
+    this.isSearchEnabled = true;
     let name: string = this.searchForm.value.name || undefined;
     let instructor: string = this.searchForm.value.instructor || undefined;
     let semester: string = this.searchForm.value.semester || undefined;
+
+
 
     const searchCriteria: SearchCourse = {
       name: name,
@@ -136,10 +150,11 @@ export class ViewCourseComponent implements OnInit {
       semester: semester
     }
 
-    this.courseService.searchCourse(searchCriteria).subscribe({
+    this.courseService.searchCourse(searchCriteria, page, this.pageSize).subscribe({
       next: res => {
-        this.courses = res.body;
-        this.isSearchNotActive = false;
+        this.courses = res.body.content;
+        this.totalPages = res.body.totalPages;
+        this.currentPage = res.body.number;
       }, error: err => {
         console.log(err.message);
       }
@@ -149,7 +164,7 @@ export class ViewCourseComponent implements OnInit {
 
   resetSearchForm() {
     this.searchForm.reset();
-    this.isSearchNotActive=true;
+    this.isSearchEnabled = false;
     this.renderContent(this.currentPage);
   }
 
@@ -203,6 +218,11 @@ export class ViewCourseComponent implements OnInit {
         this.snackBar.open(err.message, "Close", {duration: 3000});
       }
     });
+  }
+
+  onPageSizeChange(size: number) {
+    this.pageSize = size;
+    this.renderContent(this.currentPage);
   }
 
 }

@@ -50,3 +50,14 @@
   font-size: 2rem;
   font-weight: bold;
 }
+
+.no-data-msg-div {
+  margin-top: 20rem;
+  text-align: center;
+}
+
+.no-data-msg {
+  font-size: 1.25rem;
+  font-style: italic;
+  color: #4b5563;
+}

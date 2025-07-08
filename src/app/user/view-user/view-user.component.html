@@ -3,7 +3,7 @@
 <div class="control-container">
   <div class="search-row">
 
-    <form  class="search-container" [formGroup]="searchForm" (ngSubmit)="searchUser()" >
+    <form  class="search-container" [formGroup]="searchForm" (ngSubmit)="searchUser(0)" >
 
       <div class="inputs-wrap">
         <div class="input-wrap">
@@ -117,7 +117,8 @@
 </table>
 
 
-<div *ngIf="isSearchNotActive" class="mt-5 pagination-container d-flex justify-content-end">
+<div class="mt-5 pagination-container d-flex justify-content-end page-item">
+
   <button [disabled]="currentPage === 0" (click)="goToPage(currentPage - 1)">
     Prev
   </button>
@@ -132,6 +133,16 @@
   <button [disabled]="currentPage === totalPages - 1" (click)="goToPage(currentPage + 1)">
     Next
   </button>
+</div>
+
+<div class="page-size-item">
+  <mat-form-field class="select-size" appearance="fill">
+    <mat-select [(ngModel)]="pageSize" (selectionChange)="onPageSizeChange(pageSize)">
+      <mat-option *ngFor="let size of sizeSelect" [value]="size">
+        {{size}}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
 </div>
 
 <div *ngIf="users?.length === 0" class="no-user-message text-center mt-4">

@@ -25,11 +25,6 @@ export class UserService {
   getPagedUsers(page: number, size: number): Observable<ApiResponse<PageResponse<User>>> {
     return this.http.get<ApiResponse<PageResponse<User>>>(this.userEndpoints.GET_PAGED_USERS + `?page=${page}&size=${size}&sort=firstName,asc`);
   }
-
-  getAllUser(): Observable<ApiResponse<User[]>> {
-    return this.http.get<ApiResponse<User[]>>(this.userEndpoints.GET_ALL_USERS);
-  }
-
   updateUser(user: User): Observable<ApiResponse<any>> {
     return this.http.put<ApiResponse<any>>(this.userEndpoints.UPDATE_USER, user);
   }
@@ -38,7 +33,7 @@ export class UserService {
     return this.http.post<ApiResponse<any>>(this.userEndpoints.DELETE_USER+`/${code}`, remarks);
   }
 
-  searchUser(searchCriteria: SearchUser): Observable<ApiResponse<User[]>> {
-    return this.http.post<ApiResponse<User[]>>(this.userEndpoints.SEARCH_USER, searchCriteria);
+  searchUser(searchCriteria: SearchUser, page: number, size: number): Observable<ApiResponse<PageResponse<User>>> {
+    return this.http.post<ApiResponse<PageResponse<User>>>(this.userEndpoints.SEARCH_USER, searchCriteria);
   }
 }

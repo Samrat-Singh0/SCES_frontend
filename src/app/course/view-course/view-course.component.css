@@ -222,3 +222,14 @@ th,td {
   font-style: italic;
   color: gray;
 }
+
+page-size-item {
+  text-align: right;
+}
+
+.page-size-item {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 1rem;
+}
+

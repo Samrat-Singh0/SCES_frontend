@@ -52,14 +52,16 @@ export class LoginComponent implements OnInit{
     if(this.loginForm.valid){
       this.authService.login(this.loginForm.value.email!, this.loginForm.value.password!).subscribe({
         next: (response: any) => {
-          const token = response.headers.get('Authorization');
+          const accessToken = response.headers.get('Authorization');
+          const refreshToken = response.headers.get('X-Refresh-Token');
           const body = response.body;
 
-          if(token){
-            localStorage.setItem('token',token);
+          if(accessToken){
+            localStorage.setItem('accessToken',accessToken);
             localStorage.setItem('role', body.body.role);
+            localStorage.setItem('refreshToken', refreshToken);
             localStorage.setItem('loggedInUser', JSON.stringify(body.body));
-            this.currentUser.getUser();
+            this.currentUser.setUser(body.body);
           }
 
           this.errorMessage = '';
