@@ -2,7 +2,6 @@ import {Component, OnInit} from '@angular/core';
 import {NgClass, NgForOf, NgIf} from '@angular/common';
 import {Course} from '../../model/course.model';
 import {CourseService} from '../../services/course.service';
-import {MatSnackBar} from '@angular/material/snack-bar';
 import {Attendance} from '../../model/attendance.model';
 import {AttendanceService} from '../../services/attendance.service';
 import {AttendanceStatus} from '../../enum/attendance-status.enum';

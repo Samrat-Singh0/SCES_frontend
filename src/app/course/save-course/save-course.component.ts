@@ -6,7 +6,6 @@ import {Semester} from '../../model/semester.model';
 import {Instructor} from '../../model/instructor.model';
 import {SemesterService} from '../../services/semester.service';
 import {InstructorService} from '../../services/instructor.service';
-import {MatSnackBar} from '@angular/material/snack-bar';
 import {CourseService} from '../../services/course.service';
 import {ActivatedRoute, Router} from '@angular/router';
 import {MatIcon} from '@angular/material/icon';

@@ -1,7 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {Enrollment} from '../model/enrollment.model';
 import {EnrollmentService} from '../services/enrollment.service';
-import {MatSnackBar} from '@angular/material/snack-bar';
 import {NgClass, NgForOf, NgIf} from '@angular/common';
 import {JoinNameService} from '../shared/join-name.service';
 import {EnrollmentStatus} from '../enum/enrollment-status.enum';
