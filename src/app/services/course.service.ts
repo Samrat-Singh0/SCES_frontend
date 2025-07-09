@@ -49,6 +49,6 @@ export class CourseService {
   }
 
   searchCourse(searchCriteria: SearchCourse, page: number, size: number): Observable<ApiResponse<PageResponse<Course>>> {
-    return this.http.post<ApiResponse<PageResponse<Course>>>(this.courseEndpoints.SEARCH_COURSE + `?page=${page}&size=${size}&sort=name,asc`, searchCriteria);
+    return this.http.post<ApiResponse<PageResponse<Course>>>(this.courseEndpoints.SEARCH_COURSE + `?page=${page}&size=${size}`, searchCriteria);
   }
 }

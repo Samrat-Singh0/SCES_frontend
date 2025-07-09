@@ -1,6 +1,6 @@
 import {Component, Inject, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
-import {NgIf} from '@angular/common';
+import {NgClass, NgIf} from '@angular/common';
 import {MatIconModule} from '@angular/material/icon';
 import {User} from '../../model/user.model';
 import {UserService} from '../../services/user.service';
@@ -14,6 +14,7 @@ import {MatSnackBar} from '@angular/material/snack-bar';
     NgIf,
     MatIconModule,
     FormsModule,
+    NgClass,
 
   ],
   templateUrl: './save-user.component.html',
@@ -22,7 +23,6 @@ import {MatSnackBar} from '@angular/material/snack-bar';
 export class SaveUserComponent implements OnInit {
   myForm: FormGroup;
   isEditMode = false;
-  parts: string[] = [];
   fullName!: string;
   middleName!: string;
   lastName!: string;
@@ -62,7 +62,7 @@ export class SaveUserComponent implements OnInit {
       email: [{value: this.data?.email || '', disabled: this.isEditMode}, [Validators.required, Validators.email, Validators.pattern("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,4}$")]],
       address: [this.data?.address || '', [Validators.required, Validators.pattern("^[A-Za-z ]+$")]],
       phoneNumber: [this.data?.phoneNumber || '', [Validators.required, Validators.minLength(10), Validators.pattern("^(98\|97)\\d*$")]],
-      role: [this.data?.role || 'Student']
+      role: [this.data?.role || 'SUPER_ADMIN']
     })
   }
 
@@ -101,7 +101,6 @@ export class SaveUserComponent implements OnInit {
             this.dialogRef.close();
           }, error: (err) =>{
             this.snackBar.open(err.message, "Close", {duration: 3000});
-            this.dialogRef.close();
           }
         });
       }

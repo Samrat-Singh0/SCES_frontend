@@ -3,7 +3,6 @@ import {CourseService} from '../../services/course.service';
 import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
 import {MatIcon, MatIconModule} from '@angular/material/icon';
 import {Course} from '../../model/course.model';
-import {MatSnackBar} from '@angular/material/snack-bar';
 import {NgForOf, NgIf} from '@angular/common';
 import {Router} from '@angular/router';
 import {MatMiniFabButton} from '@angular/material/button';
@@ -21,6 +20,7 @@ import {ReportRequest} from '../../model/report-request.model';
 import {MatFormField} from '@angular/material/input';
 import {MatOption} from '@angular/material/core';
 import {MatSelect} from '@angular/material/select';
+import {ToastrMsgService} from '../../shared/toastr-msg.service';
 
 @Component({
   selector: 'app-view-course',
@@ -52,7 +52,7 @@ export class ViewCourseComponent implements OnInit {
   constructor(
     private courseService: CourseService,
     private builder: FormBuilder,
-    private snackBar: MatSnackBar,
+    private toastr: ToastrMsgService,
     private router: Router,
     public joinName: JoinNameService,
     private dialog: MatDialog,
@@ -78,7 +78,7 @@ export class ViewCourseComponent implements OnInit {
           this.totalPages = res.body.totalPages;
           this.currentPage = res.body.number;
         }, error: err => {
-          this.snackBar.open(err.message, "Close", {duration: 3000})
+          this.toastr.error('');
         }
       });
     }
@@ -126,9 +126,9 @@ export class ViewCourseComponent implements OnInit {
         this.courseService.deleteCourse(code, result?.remarks).subscribe({
           next: res => {
             this.ngOnInit();
-            this.snackBar.open(res.message, "Close", {duration: 3000});
+            this.toastr.success(res.message);
           }, error: err => {
-            this.snackBar.open(err.message, "Close", {duration: 3000});
+            this.toastr.error('');
           }
         });
       }
@@ -202,7 +202,7 @@ export class ViewCourseComponent implements OnInit {
     this.reportService.downloadReport(reportDto).subscribe({
       next: value => {
         if(value.status < 200 || value.status >=300) {
-          this.snackBar.open("Failed to download", "Close", {duration: 3000});
+          this.toastr.error('');
           return;
         }
         const file = value.body!;
@@ -213,9 +213,9 @@ export class ViewCourseComponent implements OnInit {
           fileName = reportDto.courseCode !== null ? 'grade-report.xlsx' : 'course-report.xlsx';
         }
         this.generateDownloadLinkService.generateLink(file, fileName);
-        this.snackBar.open('Download Complete', "Close", {duration: 3000});
+        this.toastr.success("Download Complete");
       }, error: err => {
-        this.snackBar.open(err.message, "Close", {duration: 3000});
+        this.toastr.error('');
       }
     });
   }

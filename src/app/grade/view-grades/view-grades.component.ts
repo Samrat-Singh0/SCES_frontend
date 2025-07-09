@@ -1,11 +1,11 @@
 import {Component, OnInit} from '@angular/core';
 import {Course} from '../../model/course.model';
 import {CourseService} from '../../services/course.service';
-import {MatSnackBar} from '@angular/material/snack-bar';
 import {NgClass, NgForOf} from '@angular/common';
 import {Grade} from '../../model/grade.model';
 import {Semester} from '../../model/semester.model';
 import {GradeService} from '../../services/grade.service';
+import {ToastrMsgService} from '../../shared/toastr-msg.service';
 
 @Component({
   selector: 'app-view-grades',
@@ -23,7 +23,7 @@ export class ViewGradesComponent implements OnInit{
 
   constructor(
     private courseService: CourseService,
-    private snackBar: MatSnackBar,
+    private toastr: ToastrMsgService,
     private gradeService: GradeService
   ) {
   }
@@ -39,7 +39,7 @@ export class ViewGradesComponent implements OnInit{
         this.courses = res.body;
 
       }, error: err => {
-        this.snackBar.open(err.message, "Close", {duration: 3000});
+        this.toastr.error('');
       }
     });
   }
@@ -49,7 +49,7 @@ export class ViewGradesComponent implements OnInit{
       next: value => {
         this.grades = value.body;
       }, error: err => {
-        this.snackBar.open(err.message, "Close", {duration: 3000});
+        this.toastr.error('');
       }
     });
   }

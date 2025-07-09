@@ -1,7 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {Course} from '../../model/course.model';
 import {CourseService} from '../../services/course.service';
-import {MatSnackBar} from '@angular/material/snack-bar';
 import {Router} from '@angular/router';
 import {MatCard, MatCardContent, MatCardTitle} from '@angular/material/card';
 import {NgForOf} from '@angular/common';
@@ -12,6 +11,7 @@ import {
   PopupMarkAttendanceComponent
 } from '../popup-mark-attendance/popup-mark-attendance.component';
 import {FormatDateService} from '../../shared/format-date.service';
+import {ToastrMsgService} from '../../shared/toastr-msg.service';
 
 @Component({
   selector: 'app-view-attendance-instructor',
@@ -31,7 +31,7 @@ export class ViewAttendanceInstructorComponent implements OnInit{
 
   constructor(
     private courseService: CourseService,
-    private snackBar: MatSnackBar,
+    private toastr: ToastrMsgService,
     private router: Router,
     private attendanceService: AttendanceService,
     private dialog: MatDialog,
@@ -48,7 +48,7 @@ export class ViewAttendanceInstructorComponent implements OnInit{
       next: res => {
         this.courses = res.body;
       }, error: err => {
-        this.snackBar.open(err.message, "Close", {duration: 3000});
+        this.toastr.error('');
       }
     });
   }
@@ -75,7 +75,7 @@ export class ViewAttendanceInstructorComponent implements OnInit{
 
         }
       }, error: err => {
-        this.snackBar.open(err.message, "Close", {duration: 3000});
+        this.toastr.error('');
       }
     });
   }

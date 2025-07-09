@@ -4,11 +4,10 @@ import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/
 import {SemesterStateService} from '../../shared/semester-state.service';
 import {MatIcon} from '@angular/material/icon';
 import {SemesterService} from '../../services/semester.service';
-import {MatSnackBar} from '@angular/material/snack-bar';
 import {ActivatedRoute, Router} from '@angular/router';
 import {MatIconButton} from '@angular/material/button';
 import {NgIf} from '@angular/common';
-import {futureDateValidator} from '../../auth/validators/future-date.validator';
+import {ToastrMsgService} from '../../shared/toastr-msg.service';
 
 @Component({
   selector: 'app-edit-semester',
@@ -32,7 +31,7 @@ export class EditSemesterComponent implements OnInit {
     private semesterState: SemesterStateService,
     private formBuilder: FormBuilder,
     private semesterService: SemesterService,
-    private snackBar: MatSnackBar,
+    private toastr: ToastrMsgService,
     private router: Router,
   ) {
     this.editForm = new FormGroup({});
@@ -60,7 +59,7 @@ export class EditSemesterComponent implements OnInit {
         this.semesterState.setSemester(res.body);
         this.getSemAndBuildForm();
       }, error: err => {
-        this.snackBar.open(err.message,"Close", {duration:3000});
+        this.toastr.error(err.message);
       }
     });
   }
@@ -77,28 +76,13 @@ export class EditSemesterComponent implements OnInit {
       startDate: [this.semester?.startDate, [Validators.required]],
       endDate: [this.semester?.endDate, [Validators.required]]
     });
-
-    // const formattedStartDate = this.editForm.get('startDate')?.value;
-    // const formattedEndDate = this.editForm.get('endDate')?.value;
-
-    // if (formattedStartDate) {
-    //   const formatted = formattedStartDate.replace(/\//g, '-');
-    //   console.log(formattedStartDate)
-    //   console.log(formatted);
-    //   this.editForm.get('startDate')?.setValue(formatted);
-    // }
-    //
-    // if (formattedEndDate) {
-    //   const formatted = formattedEndDate.replace(/\//g, '-');
-    //   this.editForm.get('endDate')?.setValue(formatted);
-    // }
   }
 
 
 
   update() {
     if(!this.semester) {
-      this.snackBar.open("Semester data is missing", "Close", {duration: 3000});
+      this.toastr.error("Semester data is missing");
       return;
     }
 
@@ -111,10 +95,10 @@ export class EditSemesterComponent implements OnInit {
     this.semesterService.update(updatedSemester).subscribe({
         next: (res) => {
           this.router.navigate(['super/semester']);
-          this.snackBar.open(res.message, "Close", {duration: 3000});
+          this.toastr.success(res.message);
 
         }, error: (err) => {
-          this.snackBar.open(err.message, "Close", {duration: 3000});
+          this.toastr.error(err.message);
         }
       });
   }

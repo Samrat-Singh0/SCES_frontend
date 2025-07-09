@@ -35,14 +35,13 @@
       </div>
     </div>
 
-    <div class="form-group">
+    <div class="form-group" *ngIf="!isEditMode">
       <label for="email">Email</label>
       <input type="email" placeholder="e.g. 'johndoe@gmail.com'" formControlName="email">
       <div class="error" *ngIf="myForm.get('email')?.invalid && myForm.get('email')?.touched">
         <small *ngIf="myForm.get('email')?.errors?.['required']">Email is required. </small>
         <small *ngIf="myForm.get('email')?.errors?.['pattern']">Please provide a valid
           email.</small>
-
       </div>
     </div>
 
@@ -67,7 +66,7 @@
       </div>
     </div>
 
-    <div class="form-group">
+    <div class="form-group" *ngIf="!isEditMode">
       <label for="role">Role</label>
       <select class="role" formControlName="role" [disabled]="isEditMode">
         <option value="SUPER_ADMIN">Super Admin</option>
@@ -76,6 +75,6 @@
       </select>
     </div>
 
-    <button type="submit" class="submit-btn">Submit</button>
+    <button [ngClass]="this.myForm.valid ? 'submit-btn-active' : 'submit-btn-inactive'" type="submit" >Submit</button>
   </form>
 </div>

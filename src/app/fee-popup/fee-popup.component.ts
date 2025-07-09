@@ -1,17 +1,19 @@
 import {Component, Inject} from '@angular/core';
 import {
   MAT_DIALOG_DATA,
-  MatDialogActions, MatDialogClose,
-  MatDialogContent, MatDialogRef,
+  MatDialogActions,
+  MatDialogClose,
+  MatDialogContent,
+  MatDialogRef,
   MatDialogTitle
 } from '@angular/material/dialog';
 import {Enrollment} from '../model/enrollment.model';
 import {MatFormField, MatInput, MatLabel} from '@angular/material/input';
 import {FormsModule} from '@angular/forms';
 import {MatButton} from '@angular/material/button';
-import {MatSnackBar} from '@angular/material/snack-bar';
 import {FeeService} from '../services/fee.service';
 import {Fee} from '../model/fee.model';
+import {ToastrMsgService} from '../shared/toastr-msg.service';
 
 @Component({
   selector: 'app-fee-popup',
@@ -34,7 +36,7 @@ export class FeePopupComponent {
   amount: number = 0;
 
   constructor(
-    private snackBar: MatSnackBar,
+    private toastr: ToastrMsgService,
     private feeService: FeeService,
     private dialogRef: MatDialogRef<FeePopupComponent>,
     @Inject(MAT_DIALOG_DATA)public data: {enrollment: Enrollment}
@@ -51,7 +53,7 @@ export class FeePopupComponent {
         next: res => {
           this.dialogRef.close();
         }, error: err => {
-          this.snackBar.open(err.message, "Close", {duration: 3000});
+          this.toastr.error('');
         }
       });
     }
@@ -59,7 +61,7 @@ export class FeePopupComponent {
 
   validateAmount(): boolean {
     if(!this.amount || !/^\d+$/.test(this.amount.toString()) || this.amount < 0 || this.amount > this.data.enrollment.outstandingFee){
-      this.snackBar.open("Please enter a valid numeric amount.", "Close", {duration: 3000});
+      this.toastr.error('Please enter a valid numeric amount');
       return false;
     }
     return true;

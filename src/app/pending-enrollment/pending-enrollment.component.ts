@@ -8,6 +8,7 @@ import {EnrollmentStatus} from '../enum/enrollment-status.enum';
 import {MatIcon} from '@angular/material/icon';
 import {MatIconButton} from '@angular/material/button';
 import {CompletionStatus} from '../enum/completion-status.enum';
+import {ToastrMsgService} from '../shared/toastr-msg.service';
 
 @Component({
   selector: 'app-pending-enrollment',
@@ -28,7 +29,7 @@ export class PendingEnrollmentComponent implements OnInit{
 
   constructor(
     private enrollmentService: EnrollmentService,
-    private snackBar: MatSnackBar,
+    private toastr: ToastrMsgService,
     public joinName: JoinNameService
   ) {
     this.userRole = localStorage.getItem('role') || '' ;
@@ -44,7 +45,7 @@ export class PendingEnrollmentComponent implements OnInit{
       next: res => {
         this.pendingEnrollments = res.body;
       }, error: err => {
-        this.snackBar.open(err.message, "Close", {duration: 3000});
+        this.toastr.error('');
       }
     });
   }
@@ -71,12 +72,12 @@ export class PendingEnrollmentComponent implements OnInit{
       next: res=> {
         this.ngOnInit();
         if(status){
-          this.snackBar.open("Enrollment Accepted", "Close", {duration: 3000});
+          this.toastr.success("Enrollment Accepted");
         }else {
-          this.snackBar.open(res.message, "Close", {duration: 3000});
+          this.toastr.error('');
         }
       }, error:err => {
-        this.snackBar.open(err.message, "Close", {duration: 3000});
+        this.toastr.error('');
       }
     });
   }

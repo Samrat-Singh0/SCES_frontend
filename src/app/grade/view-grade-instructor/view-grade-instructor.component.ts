@@ -1,10 +1,10 @@
 import {Component, OnInit} from '@angular/core';
 import {Course} from '../../model/course.model';
 import {CourseService} from '../../services/course.service';
-import {MatSnackBar} from '@angular/material/snack-bar';
 import {MatCard, MatCardContent, MatCardTitle} from '@angular/material/card';
 import {NgForOf} from '@angular/common';
 import {Router} from '@angular/router';
+import {ToastrService} from 'ngx-toastr';
 
 @Component({
   selector: 'app-view-grade-instructor',
@@ -22,7 +22,7 @@ export class ViewGradeInstructorComponent implements OnInit{
 
   constructor(
     private courseService: CourseService,
-    private snackBar: MatSnackBar,
+    private toastr: ToastrService,
     private router: Router,
   ) {
   }
@@ -36,7 +36,7 @@ export class ViewGradeInstructorComponent implements OnInit{
       next: res => {
         this.courses = res.body;
       }, error: err => {
-        this.snackBar.open(err.message, "Close", {duration: 3000});
+        this.toastr.error("Something went wrong!!", "Oops", {timeOut: 3000});
       }
     });
   }

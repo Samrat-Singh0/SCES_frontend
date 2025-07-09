@@ -4,8 +4,8 @@ import {NgClass, NgIf} from '@angular/common';
 import {Router} from '@angular/router';
 import {AuthService} from '../../services/auth.service';
 import {MatIconModule} from '@angular/material/icon';
-import {MatSnackBar} from '@angular/material/snack-bar';
 import {CurrentUserService} from '../../shared/current-user.service';
+import {ToastrMsgService} from '../../shared/toastr-msg.service';
 
 @Component({
   selector: 'app-login',
@@ -29,7 +29,7 @@ export class LoginComponent implements OnInit{
   constructor(
     private authService: AuthService,
     private router: Router,
-    private snackBar: MatSnackBar,
+    private toastr: ToastrMsgService,
     private currentUser: CurrentUserService
   ) {
     this.loginForm = new FormGroup({});
@@ -67,9 +67,11 @@ export class LoginComponent implements OnInit{
           this.errorMessage = '';
 
           if(body.body === null){
-            this.snackBar.open(response.body.message, "Close", {duration: 3000});
+            // this.snackBar.open(response.body.message, "Close", {duration: 3000});
+            this.toastr.error('');
             return;
           }
+          this.toastr.success("Login Success");
 
 
           if(body.body.mustChangePassword){

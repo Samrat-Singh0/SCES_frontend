@@ -40,27 +40,6 @@ select {
   height: 60px;
 }
 
-.submit-btn {
-  height: 50px;
-  width: 100%;
-  padding: 0.8rem;
-  margin-top: 1rem;
-  font-size: 17px;
-  letter-spacing: 1px;
-  border: none;
-  background-color: #006653;
-  color: white;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
-}
-
-.submit-btn:hover {
-  background-color: #009579;
-}
-
-
-
 .error {
   color: red;
   font-size: 0.9rem;

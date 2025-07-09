@@ -10,6 +10,7 @@ import {MatFormField, MatInput, MatSuffix} from '@angular/material/input';
 import {MatDatepicker, MatDatepickerInput, MatDatepickerToggle} from '@angular/material/datepicker';
 import {FormsModule} from '@angular/forms';
 import {FormatDateService} from '../../shared/format-date.service';
+import {ToastrMsgService} from '../../shared/toastr-msg.service';
 
 @Component({
   selector: 'app-view-attendance-student',
@@ -35,7 +36,7 @@ export class ViewAttendanceStudentComponent implements OnInit{
 
   constructor(
     private courseService: CourseService,
-    private snackBar: MatSnackBar,
+    private toastr: ToastrMsgService,
     private attendanceService: AttendanceService,
     private formatDate: FormatDateService
   ) {
@@ -51,7 +52,7 @@ export class ViewAttendanceStudentComponent implements OnInit{
         this.courses = res.body;
         this.populateAttendance();
       }, error: err => {
-        this.snackBar.open(err.message, "Close", {duration: 3000});
+        this.toastr.error('');
       }
     });
   }
@@ -62,7 +63,7 @@ export class ViewAttendanceStudentComponent implements OnInit{
       next: res => {
         this.attendances = res.body;
       }, error: err => {
-        this.snackBar.open(err.message, "Close", {duration: 3000});
+        this.toastr.error('');
     }
     });
   }

@@ -4,9 +4,9 @@ import {PasswordPolicyService} from '../services/password-policy.service';
 import {NgForOf, NgIf} from '@angular/common';
 import {MatCheckbox} from '@angular/material/checkbox';
 import {MatIcon} from '@angular/material/icon';
-import {MatSnackBar} from '@angular/material/snack-bar';
 import {UpdatePasswordPolicy} from '../model/update-password-policy.model';
 import {MatMiniFabButton} from '@angular/material/button';
+import {ToastrMsgService} from '../shared/toastr-msg.service';
 
 @Component({
   selector: 'app-password-policy',
@@ -26,7 +26,9 @@ export class PasswordPolicyComponent implements OnInit {
   oldPolicies: PasswordPolicy[] = [];
   policies: PasswordPolicy[] = [];
 
-  constructor(private passwordPolicyService: PasswordPolicyService, private snackBar: MatSnackBar) {
+  constructor(
+    private passwordPolicyService: PasswordPolicyService,
+    private toastr: ToastrMsgService) {
   }
 
   ngOnInit() {
@@ -64,9 +66,9 @@ export class PasswordPolicyComponent implements OnInit {
     this.passwordPolicyService.updatePolicies(modifiedPolicies).subscribe({
       next: (res) => {
         this.loadPasswordPolicies();
-        this.snackBar.open('Policies updated Successfully.', 'Close', {duration: 3000} );
+        this.toastr.success("Policies updated successfully");
       }, error: (err) => {
-        this.snackBar.open('Updates Failed!', 'Close', {duration: 3000});
+        this.toastr.error('');
       }
     })
   }

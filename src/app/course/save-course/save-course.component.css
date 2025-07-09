@@ -21,6 +21,7 @@
 .course-form {
   margin: 0 auto;
   padding: 2rem;
+  max-width: 50%;
 }
 
 .form-title {

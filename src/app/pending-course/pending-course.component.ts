@@ -2,10 +2,10 @@ import {Component} from '@angular/core';
 import {NgForOf, NgIf} from '@angular/common';
 import {Course} from '../model/course.model';
 import {CourseService} from '../services/course.service';
-import {MatSnackBar} from '@angular/material/snack-bar';
 import {JoinNameService} from '../shared/join-name.service';
 import {MatIcon} from '@angular/material/icon';
 import {MatIconButton} from '@angular/material/button';
+import {ToastrMsgService} from '../shared/toastr-msg.service';
 
 @Component({
   selector: 'app-pending-course',
@@ -23,7 +23,7 @@ export class PendingCourseComponent {
 
   constructor(
     private courseService: CourseService,
-    private snackBar: MatSnackBar,
+    private toastr: ToastrMsgService,
     public joinName: JoinNameService
   ) {
     this.courses = [];
@@ -38,7 +38,7 @@ export class PendingCourseComponent {
       next: res => {
         this.courses = res.body;
       }, error: err => {
-        this.snackBar.open(err.message, "Close", {duration: 3000})
+        this.toastr.error('');
       }
     });
   }
@@ -65,7 +65,7 @@ export class PendingCourseComponent {
       next: res => {
         this.ngOnInit();
       }, error: err =>{
-        this.snackBar.open(err.message, "Close", {duration: 3000});
+        this.toastr.error('');
       }
     });
   }

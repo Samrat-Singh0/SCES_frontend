@@ -8,7 +8,6 @@ import {SpinnerService} from '../spinner.service';
   imports: [
     NgIf,
     MatProgressSpinner,
-
   ],
   templateUrl: './spinner.component.html',
   styleUrl: './spinner.component.css'

@@ -24,25 +24,22 @@ export class InitialLoginComponent implements OnInit {
   hide: Boolean = false;
   email!: string;
   regexPattern: string = '';
-
-  changePasswordForm = new FormGroup({
-      newPassword: new FormControl(''),
-      confirmPassword: new FormControl('', [Validators.required])
-    }, {
-      validators: passwordMatchValidator()
-    }
-  );
+  changePasswordForm: FormGroup;
 
   constructor(private authService: AuthService,
               private route: ActivatedRoute,
               private router: Router,
               private passwordPolicyService: PasswordPolicyService) {
+    this.changePasswordForm = new FormGroup({});
   }
 
   ngOnInit() {
-
     this.email = this.route.snapshot.paramMap.get('email')!;
+    this.buildForm();
+    this.getPasswordPolicies();
+  }
 
+  getPasswordPolicies() {
     this.passwordPolicyService.getActivePolicies().subscribe(
       data => {
         this.passwordPolicies = data.body;
@@ -52,6 +49,16 @@ export class InitialLoginComponent implements OnInit {
           Validators.pattern(this.regexPattern)
         ]);
         this.changePasswordForm.get('newPassword')?.updateValueAndValidity();
+      }
+    );
+  }
+
+  buildForm() {
+    this.changePasswordForm = new FormGroup({
+        newPassword: new FormControl(''),
+        confirmPassword: new FormControl('', [Validators.required])
+      }, {
+        validators: passwordMatchValidator()
       }
     );
   }
@@ -100,6 +107,18 @@ export class InitialLoginComponent implements OnInit {
       }
     });
 
+    if(failedPolicies.length === 0){
+    }
+
     return failedPolicies;
   }
+
+  getActiveStatus() {
+    if(this.changePasswordForm.valid) {
+      return "submit-btn-active";
+    }else {
+      return "submit-btn-inactive";
+    }
+  }
+
 }

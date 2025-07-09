@@ -13,6 +13,7 @@ import {MatIcon} from '@angular/material/icon';
 import {MatOption} from '@angular/material/core';
 import {MatSelect} from '@angular/material/select';
 import {JoinNameService} from '../../shared/join-name.service';
+import {ToastrMsgService} from '../../shared/toastr-msg.service';
 
 @Component({
   selector: 'app-save-course',
@@ -40,7 +41,7 @@ export class SaveCourseComponent implements OnInit{
     private builder: FormBuilder,
     private semesterService: SemesterService,
     private instructorService: InstructorService,
-    private snackBar: MatSnackBar,
+    private toastr: ToastrMsgService,
     private courseService: CourseService,
     private router: Router,
     private route: ActivatedRoute,
@@ -94,7 +95,7 @@ export class SaveCourseComponent implements OnInit{
       next: res => {
         this.semesters = res.body;
       }, error: err => {
-        this.snackBar.open(err.message, "CLose", {duration: 3000});
+        this.toastr.error('');
       }
     });
   }
@@ -104,7 +105,7 @@ export class SaveCourseComponent implements OnInit{
       next: res=> {
         this.instructors = res.body;
       }, error: err => {
-        this.snackBar.open(err.message, "Close", {duration: 3000})
+        this.toastr.error('');
       }
     });
   }
@@ -124,7 +125,7 @@ export class SaveCourseComponent implements OnInit{
         next: res => {
           this.router.navigate(['super/course/view']);
         }, error: err => {
-          this.snackBar.open(err.message, "Close", {duration: 3000});
+          this.toastr.error('');
         }
       });
     } else {
@@ -132,9 +133,9 @@ export class SaveCourseComponent implements OnInit{
         this.courseService.addCourse(this.courseForm.value).subscribe({
           next: res => {
             this.router.navigate(['super/course/view']);
-            this.snackBar.open(res.message, "Close", {duration: 3000});
+            this.toastr.success(res.message);
           }, error: err => {
-            this.snackBar.open(err.message, "Close", {duration: 3000});
+            this.toastr.error('');
           }
         });
       }

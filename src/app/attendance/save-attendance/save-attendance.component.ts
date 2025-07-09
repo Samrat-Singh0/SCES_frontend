@@ -7,7 +7,6 @@ import {Student} from '../../model/student.model';
 import {StudentService} from '../../services/student.service';
 import {Course} from '../../model/course.model';
 import {CourseService} from '../../services/course.service';
-import {MatSnackBar} from '@angular/material/snack-bar';
 import {NgClass, NgForOf} from '@angular/common';
 import {Attendance} from '../../model/attendance.model';
 import {AttendanceStatus} from '../../enum/attendance-status.enum';
@@ -17,6 +16,7 @@ import {MatDatepicker, MatDatepickerInput, MatDatepickerToggle} from '@angular/m
 import {FormsModule} from '@angular/forms';
 import {FormatDateService} from '../../shared/format-date.service';
 import {AttendanceRate} from '../../model/attendanceRate.model';
+import {ToastrService} from 'ngx-toastr';
 
 @Component({
   selector: 'app-save-attendance',
@@ -48,7 +48,7 @@ export class SaveAttendanceComponent implements OnInit{
 
   constructor(
     private router: Router,
-    private snackBar: MatSnackBar,
+    private toastr: ToastrService,
     public joinName: JoinNameService,
     private studentService: StudentService,
     private route: ActivatedRoute,
@@ -70,7 +70,7 @@ export class SaveAttendanceComponent implements OnInit{
         this.course = res.body;
         this.populateAttendance();
       }, error: err=>{
-        this.snackBar.open(err.message, "Close", {duration: 3000});
+        this.toastr.error('');
       }
     });
   }
@@ -83,7 +83,7 @@ export class SaveAttendanceComponent implements OnInit{
         this.populateStudent();
         this.populateAttendanceRate();
       }, error: err => {
-        this.snackBar.open(err.message, "Close", {duration: 3000});
+        this.toastr.error('');
     }
     });
   }
@@ -98,7 +98,7 @@ export class SaveAttendanceComponent implements OnInit{
 
         this.students.sort((a,b)=>a.user.firstName.localeCompare(b.user.firstName));
       }, error: err => {
-        this.snackBar.open(err.message, "Close", {duration: 3000});
+        this.toastr.error('');
       }
     });
   }
@@ -108,7 +108,7 @@ export class SaveAttendanceComponent implements OnInit{
       next: res => {
         this.attendanceRate = res.body;
       }, error: err => {
-        this.snackBar.open(err.message, "Close", {duration: 3000});
+        this.toastr.error('');
       }
     });
   }

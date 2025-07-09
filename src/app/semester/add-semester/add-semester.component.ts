@@ -4,9 +4,9 @@ import {Router} from '@angular/router';
 import {MatIcon} from '@angular/material/icon';
 import {MatIconButton} from '@angular/material/button';
 import {SemesterService} from '../../services/semester.service';
-import {MatSnackBar} from '@angular/material/snack-bar';
 import {NgIf} from '@angular/common';
 import {futureDateValidator} from '../../auth/validators/future-date.validator';
+import {ToastrMsgService} from '../../shared/toastr-msg.service';
 
 @Component({
   selector: 'app-add-semester',
@@ -27,7 +27,7 @@ export class AddSemesterComponent implements OnInit {
     private router: Router,
     private builder: FormBuilder,
     private semesterService: SemesterService,
-    private snackBar: MatSnackBar
+    private toastr: ToastrMsgService
   ) {
     this.addForm = new FormGroup({});
   }
@@ -52,9 +52,9 @@ export class AddSemesterComponent implements OnInit {
       this.semesterService.add(this.addForm.value).subscribe({
         next: res => {
           this.router.navigate(['super/semester/view']);
-          this.snackBar.open(res.message, "Close", {duration: 3000});
+          this.toastr.error(res.message);
         }, error: err => {
-          this.snackBar.open(err.message, "Close", {duration: 3000});
+          this.toastr.error(err.message);
         }
       });
     }

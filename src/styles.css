@@ -13,4 +13,37 @@ body {
   background: #009579 !important;
 }
 
+.submit-btn-active {
+  height: 50px;
+  width: 100%;
+  padding: 0.8rem;
+  margin-top: 1rem;
+  font-size: 17px;
+  letter-spacing: 1px;
+  border: none;
+  background-color: #006653;
+  color: white;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.submit-btn-active:hover {
+  background-color: #218838;
+}
+
+.submit-btn-inactive {
+  height: 50px;
+  width: 100%;
+  padding: 0.8rem;
+  margin-top: 1rem;
+  font-size: 17px;
+  letter-spacing: 1px;
+  border: none;
+  background-color: gray;
+  color: white;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
 

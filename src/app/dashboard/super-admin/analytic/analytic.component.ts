@@ -3,9 +3,9 @@ import {MatCard} from '@angular/material/card';
 import {MatIcon} from '@angular/material/icon';
 import {AnalyticData} from '../../../model/analytic.model';
 import {AnalyticsService} from '../../../services/analytics.service';
-import {MatSnackBar} from '@angular/material/snack-bar';
 import {Router} from '@angular/router';
 import {NgIf} from '@angular/common';
+import {ToastrMsgService} from '../../../shared/toastr-msg.service';
 
 @Component({
   selector: 'app-analytic',
@@ -24,7 +24,7 @@ export class AnalyticComponent implements OnInit{
 
   constructor(
     private analyticsService: AnalyticsService,
-    private snackBar: MatSnackBar,
+    private toastr: ToastrMsgService,
     private router: Router
   ) {
   }
@@ -47,7 +47,7 @@ export class AnalyticComponent implements OnInit{
           this.isDataNotPopulated = false;
         }
       }, error: err => {
-        this.snackBar.open(err.message, "Close", {duration: 3000})
+        this.toastr.error(err.message);
       }
     });
   }

@@ -1,7 +1,6 @@
 import {Component} from '@angular/core';
 import {Semester} from '../model/semester.model';
 import {SemesterService} from '../services/semester.service';
-import {MatSnackBar} from '@angular/material/snack-bar';
 import {NgForOf} from '@angular/common';
 import {MatIcon} from '@angular/material/icon';
 import {FormsModule} from '@angular/forms';
@@ -9,6 +8,7 @@ import {MatMiniFabButton} from '@angular/material/button';
 import {Router} from '@angular/router';
 import {SemesterStateService} from '../shared/semester-state.service';
 import {MatTooltip} from '@angular/material/tooltip';
+import {ToastrMsgService} from '../shared/toastr-msg.service';
 
 @Component({
   selector: 'app-semester',
@@ -28,7 +28,7 @@ export class SemesterComponent {
 
   constructor(
     private semesterService: SemesterService,
-    private snackBar: MatSnackBar,
+    private toastr: ToastrMsgService,
     private router: Router,
     private semesterState: SemesterStateService
     ) {
@@ -43,14 +43,14 @@ export class SemesterComponent {
       next: (data) => {
         this.semesters = data.body;
       }, error: (err) => {
-          this.snackBar.open(err.message,"Close", {duration: 3000});
+          this.toastr.error('');
       }
     });
   }
 
   addSemester() {
     if(this.semesters.length >= 8){
-      this.snackBar.open("Cannot add more than 8 semesters.", "Close", {duration: 3000});
+      this.toastr.error('Cannot add more than 8 semesters.')
     }else{
       this.router.navigate(['super/semester/add']);
     }

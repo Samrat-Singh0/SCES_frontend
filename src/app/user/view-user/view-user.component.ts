@@ -17,6 +17,7 @@ import {Role} from '../../enum/role.enum';
 import {MatFormField} from '@angular/material/input';
 import {MatOption, MatSelect} from '@angular/material/select';
 import {CurrentUserService} from '../../shared/current-user.service';
+import {ToastrService} from 'ngx-toastr';
 
 
 @Component({
@@ -33,7 +34,7 @@ import {CurrentUserService} from '../../shared/current-user.service';
     FormsModule,
     MatFormField,
     MatSelect,
-    MatOption,
+    MatOption
   ],
   templateUrl: './view-user.component.html',
   styleUrl: './view-user.component.css'
@@ -56,13 +57,15 @@ export class ViewUserComponent implements OnInit {
     private snackbar: MatSnackBar,
     private fb: FormBuilder,
     public joinName: JoinNameService,
-    private currentUser: CurrentUserService
+    private currentUser: CurrentUserService,
+    private toaster : ToastrService
   ) {
     this.searchForm = new FormGroup({});
     this.user = this.currentUser.getUser();
   }
 
   ngOnInit(): void {
+    this.toaster.success("This is a test", "test");
     this.renderContent(this.currentPage);
     this.buildSearchForm();
   }

@@ -7,7 +7,6 @@ import {StudentService} from '../../services/student.service';
 import {CourseService} from '../../services/course.service';
 import {Course} from '../../model/course.model';
 import {ActivatedRoute} from '@angular/router';
-import {MatSnackBar} from '@angular/material/snack-bar';
 import {NgForOf, NgStyle} from '@angular/common';
 import {JoinNameService} from '../../shared/join-name.service';
 import {FormsModule} from '@angular/forms';
@@ -19,6 +18,7 @@ import {
 import {AttendanceStatus} from '../../enum/attendance-status.enum';
 import {Attendance} from '../../model/attendance.model';
 import {AttendanceService} from '../../services/attendance.service';
+import {ToastrMsgService} from '../../shared/toastr-msg.service';
 
 @Component({
   selector: 'app-popup-mark-attendance',
@@ -46,7 +46,7 @@ export class PopupMarkAttendanceComponent implements OnInit{
     private studentService: StudentService,
     private courseService: CourseService,
     public dialogRef: MatDialogRef<PopupMarkAttendanceComponent>,
-    private snackBar: MatSnackBar,
+    private toastr: ToastrMsgService,
     private route: ActivatedRoute,
     public joinService: JoinNameService,
     private attendanceService: AttendanceService,
@@ -66,7 +66,7 @@ export class PopupMarkAttendanceComponent implements OnInit{
         this.course = res.body;
         this.populateStudent();
       }, error: err=>{
-        this.snackBar.open(err.message, "Close", {duration: 3000});
+        this.toastr.error('');
       }
     });
   }
@@ -77,7 +77,7 @@ export class PopupMarkAttendanceComponent implements OnInit{
         this.students = res.body;
         this.students.sort((a,b)=>a.user.firstName.localeCompare(b.user.firstName));
       }, error: err => {
-        this.snackBar.open(err.message, "Close", {duration: 3000});
+        this.toastr.error('');
       }
     });
   }
@@ -106,9 +106,9 @@ export class PopupMarkAttendanceComponent implements OnInit{
     this.attendanceService.saveAttendance(Array.from(this.attendanceMap.values())).subscribe({
       next: res => {
         this.dialogRef.close();
-        this.snackBar.open(res.message, "Close", {duration: 3000});
+        this.toastr.success(res.message);
       }, error: err => {
-        this.snackBar.open(err.message, "Close", {duration: 3000});
+        this.toastr.error('');
       }
     });
   }

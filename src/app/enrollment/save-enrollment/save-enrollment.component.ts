@@ -3,7 +3,6 @@ import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/
 import {Semester} from '../../model/semester.model';
 import {Course} from '../../model/course.model';
 import {SemesterService} from '../../services/semester.service';
-import {MatSnackBar} from '@angular/material/snack-bar';
 import {MatSelectModule} from '@angular/material/select';
 import {CourseService} from '../../services/course.service';
 import {MatIconModule} from '@angular/material/icon';
@@ -12,6 +11,7 @@ import {MatIconButton} from '@angular/material/button';
 import {NgClass, NgForOf} from '@angular/common';
 import {JoinNameService} from '../../shared/join-name.service';
 import {EnrollmentService} from '../../services/enrollment.service';
+import {ToastrMsgService} from '../../shared/toastr-msg.service';
 
 @Component({
   selector: 'app-add-enrollment',
@@ -40,7 +40,7 @@ export class SaveEnrollmentComponent implements OnInit{
     private semesterService: SemesterService,
     private courseService: CourseService,
     private enrollmentService: EnrollmentService,
-    private snackBar: MatSnackBar,
+    private toastr: ToastrMsgService,
     public joinName: JoinNameService,
     private router: Router
   ) {
@@ -71,7 +71,7 @@ export class SaveEnrollmentComponent implements OnInit{
 
       },
       error: err =>
-        this.snackBar.open(err.message, 'Close', { duration: 3000 }),
+        this.toastr.error(''),
     });
   }
 
@@ -85,7 +85,7 @@ export class SaveEnrollmentComponent implements OnInit{
           this.onSemesterChange(selectedSem);
         }
       }, error: err => {
-        this.snackBar.open(err.message, "Close", {duration: 3000});
+        this.toastr.error('');
       }
     });
   }
@@ -98,10 +98,10 @@ export class SaveEnrollmentComponent implements OnInit{
 
     this.enrollmentService.enroll(enrolledData).subscribe({
       next: res => {
-        this.snackBar.open(res.message, "Close", {duration: 3000});
+        this.toastr.success(res.message);
         this.goBack();
       }, error: err => {
-        this.snackBar.open(err.message, "Close", {duration: 3000});
+        this.toastr.error('');
       }
     });
   }

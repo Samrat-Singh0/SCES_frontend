@@ -3,7 +3,6 @@ import {NgClass, NgForOf, NgIf} from "@angular/common";
 import {MatIcon} from '@angular/material/icon';
 import {Enrollment} from '../../model/enrollment.model';
 import {EnrollmentService} from '../../services/enrollment.service';
-import {MatSnackBar} from '@angular/material/snack-bar';
 import {Router} from '@angular/router';
 import {CompletionStatus} from '../../enum/completion-status.enum';
 import {PaidStatus} from '../../enum/paid-status.enum';
@@ -14,6 +13,7 @@ import {EnrollmentStatus} from '../../enum/enrollment-status.enum';
 import {MatTooltip} from '@angular/material/tooltip';
 import {MatDialog} from '@angular/material/dialog';
 import {FeePopupComponent} from '../../fee-popup/fee-popup.component';
+import {ToastrMsgService} from '../../shared/toastr-msg.service';
 
 @Component({
   selector: 'app-view-enrollment',
@@ -37,7 +37,7 @@ export class ViewEnrollmentComponent implements OnInit{
 
   constructor(
     private enrollmentService: EnrollmentService,
-    private snackBar : MatSnackBar,
+    private toastr : ToastrMsgService,
     private router: Router,
     public joinName: JoinNameService,
     private dialogRef: MatDialog
@@ -56,14 +56,14 @@ export class ViewEnrollmentComponent implements OnInit{
         this.enrollments = res.body;
 
       },error: err => {
-        this.snackBar.open(err.message, "Close", {duration: 3000});
+        this.toastr.error('');
       }
     });
   }
 
   enroll() {
     if(this.isCurrentlyEnrolled()){
-      this.snackBar.open("You are currently enrolled or have a pending enrollment.", "Close", {duration: 3000});
+      this.toastr.error("You are currently enrolled or have a pending enrollment");
     }else{
       this.router.navigate(['student/enroll/save'])
     }
@@ -78,9 +78,9 @@ export class ViewEnrollmentComponent implements OnInit{
     this.enrollmentService.updateEnroll(droppedEnrollment).subscribe({
       next: value => {
         this.ngOnInit();
-        this.snackBar.open(value.message, "Close", {duration: 3000});
+        this.toastr.success(value.message);
       }, error: err => {
-        this.snackBar.open(err.message, "Close", {duration: 3000});
+        this.toastr.error('');
       }
     });
   }
@@ -94,9 +94,9 @@ export class ViewEnrollmentComponent implements OnInit{
     this.enrollmentService.updateEnroll(completedEnrollment).subscribe({
       next: value => {
         this.ngOnInit();
-        this.snackBar.open(value.message, "Close", {duration: 3000});
+        this.toastr.success(value.message);
       }, error: err => {
-        this.snackBar.open(err.message, "Close", {duration: 3000});
+        this.toastr.success('(err.message');
       }
     });
   }
