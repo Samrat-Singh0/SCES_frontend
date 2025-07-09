@@ -72,7 +72,7 @@ export class SaveUserComponent implements OnInit {
 
   onSubmit() {
     if (this.myForm.valid) {
-      const form = this.myForm.value;
+      const form = this.myForm.getRawValue();
       const user: User = {
         code: this.data?.code || '',
         email: form.email,
