@@ -16,17 +16,19 @@
       <th *ngIf="userRole === Role.SUPER_ADMIN">Student</th>
       <th>Semester</th>
       <th>Completion Status</th>
-      <th>Paid/Unpaid</th>
+      <th>Pay Status</th>
       <th>Outstanding Fee (Rs.)</th>
       <th>Enrolled Date</th>
       <th>Completion Date</th>
-      <th *ngIf="userRole === Role.STUDENT">Drop</th>
-      <th *ngIf="userRole === Role.SUPER_ADMIN">Mark Complete</th>
+      <th *ngIf="userRole === Role.STUDENT">Actions</th>
+      <th *ngIf="userRole === Role.SUPER_ADMIN">Actions</th>
     </tr>
 
     <ng-container *ngFor="let enrollment of enrollments; let i = index">
-      <tr class="enrollment-row" (click)="toggleRow(i)">
+      <tr class="enrollment-row">
+
         <td>{{ i + 1 }}</td>
+
         <td *ngIf="userRole === Role.SUPER_ADMIN">
           {{joinName.getFullName(
             enrollment.student.user.firstName,
@@ -34,51 +36,67 @@
             enrollment.student.user.lastName
           )}}
         </td>
+
         <td>{{ enrollment.semester.label }}</td>
+
         <td class="status-cell">
           <span [ngClass]="getStatusClass(enrollment.completionStatus)">
-            {{enrollment.completionStatus}}
+            {{getCompletionStatus(enrollment.completionStatus)}}
           </span>
         </td>
+
         <td class="paid-cell">
           <div class="paid-status-container">
             <span [ngClass]="getStatusClass(enrollment.paidStatus)">
-              {{ enrollment.paidStatus }}
+              {{ getPayStatus(enrollment.paidStatus) }}
             </span>
-
-            <button *ngIf="userRole === Role.STUDENT && (enrollment.paidStatus === 'UNPAID' || enrollment.paidStatus === 'PARTIALLY_PAID')"
-                    mat-icon-button
-                    class="pay-btn"
-                    (click)="payFee(enrollment); $event.stopPropagation()"
-                    matTooltip="Pay now"
-                    [disabled]="isNotPayable(enrollment)"
-            >
-              <mat-icon>payment</mat-icon>
-            </button>
           </div>
         </td>
+
         <td>{{ enrollment.outstandingFee }}</td>
+
         <td>{{ enrollment.enrolledDate }}</td>
+
         <td>{{ enrollment.completionDate || '-'}}</td>
-        <td class="delete-cell" *ngIf="userRole === Role.STUDENT">
-          <button mat-mini-fab aria-label="Drop Enrollment"
-                  class="btn-delete"
-                  (click)="dropEnroll(enrollment); $event.stopPropagation();"
-                  [disabled]="isDisabled(enrollment)"
-          >
-            <mat-icon>delete</mat-icon>
-          </button>
-        </td>
-        <td class="delete-cell" *ngIf="userRole === Role.SUPER_ADMIN">
+
+        <td class="actions-cell">
           <button mat-mini-fab aria-label="Mark Complete"
+                  matTooltip="Complete Enrollment"
                   class="btn-complete"
-                  (click)="completeEnroll(enrollment); $event.stopPropagation();"
-                  [disabled]="isDisabled(enrollment)"
-          >
+                  *ngIf="userRole === Role.SUPER_ADMIN"
+                  (click)="completeEnroll(enrollment)"
+                  [disabled]="isDisabled(enrollment)">
             <mat-icon>check</mat-icon>
           </button>
+          <button mat-mini-fab aria-label="Drop Enrollment"
+                  class="btn-delete"
+                  *ngIf="userRole === Role.STUDENT"
+                  matTooltip="Drop Enrollment"
+                  (click)="dropEnroll(enrollment)"
+                  [disabled]="isDisabled(enrollment)">
+            <mat-icon>delete</mat-icon>
+          </button>
+          <button mat-mini-fab aria-label="Show Course"
+                  matTooltip = "Show Courses"
+                  class="btn-show-course"
+                  (click)="toggleRow(i)">
+            <mat-icon>preview</mat-icon>
+          </button>
+          <button mat-mini-fab aria-label="Pay Fee"
+                  *ngIf="userRole === Role.STUDENT"
+                  class="pay-btn"
+                  (click)="payFee(enrollment);"
+                  matTooltip="Pay now"
+                  [disabled]="isNotPayable(enrollment)">
+            <mat-icon>payment</mat-icon>
+          </button>
+          <button mat-mini-fab aria-label="Get Fee History"
+                  matTooltip = "Show Fee History"
+                  class="btn-show-history"
+                  (click)="getFeeHistory(enrollment)">
+            <mat-icon>receipt</mat-icon>
+          </button>
         </td>
-
       </tr>
 
       <tr *ngIf="expandedRowIndex === i">
@@ -98,6 +116,6 @@
   </table>
 </div>
 
-<div *ngIf="enrollments?.length === 0" class="no-enrollments-message text-center mt-4">
-  <p>No enrollments found. Please enroll in a course.</p>
+<div *ngIf="enrollments?.length === 0" class="no-data-message text-center mt-4">
+  <p>No data found.</p>
 </div>

@@ -44,6 +44,7 @@ export class SaveAttendanceComponent implements OnInit{
   selectedDate: Date = new Date();
   attendanceMap = new Map<string, AttendanceStatus>();
   attendanceRate: AttendanceRate[] = [];
+  today: Date = new Date();
 
 
   constructor(
@@ -140,13 +141,13 @@ export class SaveAttendanceComponent implements OnInit{
     }
   }
 
-  getAttendanceRate(studentCode: string): number {
+  getAttendanceRate(studentCode: string): string {
 
     const student = this.attendanceRate.find(student => student.studentCode === studentCode);
 
     if(!student || student?.totalDays === 0){
-      return 0;
+      return '0.00';
     }
-    return (student.presentDays / student.totalDays) * 100;
+    return ((student.presentDays / student.totalDays) * 100).toFixed(2);
   }
 }

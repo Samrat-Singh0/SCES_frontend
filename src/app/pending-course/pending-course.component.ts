@@ -6,6 +6,7 @@ import {JoinNameService} from '../shared/join-name.service';
 import {MatIcon} from '@angular/material/icon';
 import {MatIconButton} from '@angular/material/button';
 import {ToastrMsgService} from '../shared/toastr-msg.service';
+import {CurrentUserService} from '../shared/current-user.service';
 
 @Component({
   selector: 'app-pending-course',
@@ -19,14 +20,18 @@ import {ToastrMsgService} from '../shared/toastr-msg.service';
   styleUrl: './pending-course.component.css'
 })
 export class PendingCourseComponent {
+
   courses: Course[];
+  user:any ;
 
   constructor(
     private courseService: CourseService,
     private toastr: ToastrMsgService,
-    public joinName: JoinNameService
+    public joinName: JoinNameService,
+    public currentUser: CurrentUserService
   ) {
     this.courses = [];
+    this.currentUser.getUser();
   }
 
   ngOnInit() {
@@ -48,7 +53,8 @@ export class PendingCourseComponent {
       ...course,
       checked: 'CHECKED'
     }
-    this.updateCourse(updatedCourse);
+    console.log("ACCEPT")
+    // this.updateCourse(updatedCourse);
 
   }
 
@@ -57,7 +63,8 @@ export class PendingCourseComponent {
       ...course,
       checked: 'REJECTED'
     }
-    this.updateCourse(updatedCourse);
+    console.log("REJECT")
+    // this.updateCourse(updatedCourse);
   }
 
   updateCourse(updatedCourse: Course) {
@@ -68,5 +75,10 @@ export class PendingCourseComponent {
         this.toastr.error('');
       }
     });
+  }
+
+  isCourseAddedByLoggedInUser(instructorName: string): boolean {
+    console.log(this.user);
+    return false;
   }
 }

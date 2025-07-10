@@ -20,4 +20,8 @@ export class ToastrMsgService {
     }
       this.toastr.error(message, "Oops", {timeOut: 3000});
   }
+
+  info(message: string) {
+    this.toastr.info(message, "Info", {timeOut: 3000});
+  }
 }

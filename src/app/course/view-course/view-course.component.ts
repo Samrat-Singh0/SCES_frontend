@@ -142,8 +142,6 @@ export class ViewCourseComponent implements OnInit {
     let instructor: string = this.searchForm.value.instructor || undefined;
     let semester: string = this.searchForm.value.semester || undefined;
 
-
-
     const searchCriteria: SearchCourse = {
       name: name,
       instructor: instructor,
@@ -190,8 +188,12 @@ export class ViewCourseComponent implements OnInit {
         disableClose: true
       });
       dialogRef.afterClosed().subscribe(format => {
-        reportDto.documentType = format
-        this.sendDownloadRequest(reportDto);
+        if(format) {
+          reportDto.documentType = format
+          if(format !== 'cancel'){
+            this.sendDownloadRequest(reportDto);
+          }
+        }
       });
     }else {
       this.sendDownloadRequest(reportDto);
@@ -209,7 +211,7 @@ export class ViewCourseComponent implements OnInit {
         let fileName: string = '';
         if(reportDto.documentType === 'PDF'){
           fileName = reportDto.courseCode !== null ? 'grade-report.pdf' : 'course-report.pdf';
-        }else{
+        }else {
           fileName = reportDto.courseCode !== null ? 'grade-report.xlsx' : 'course-report.xlsx';
         }
         this.generateDownloadLinkService.generateLink(file, fileName);

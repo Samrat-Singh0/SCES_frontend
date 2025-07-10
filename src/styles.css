@@ -13,19 +13,27 @@ body {
   background: #009579 !important;
 }
 
-.submit-btn-active {
+.btn-div {
+  display: flex;
+  gap: 1rem;
+}
+
+.submit-btn-active,
+.submit-btn-inactive,
+.reset-btn {
+  flex: 1;
   height: 50px;
-  width: 100%;
-  padding: 0.8rem;
-  margin-top: 1rem;
   font-size: 17px;
   letter-spacing: 1px;
   border: none;
-  background-color: #006653;
-  color: white;
   border-radius: 6px;
   cursor: pointer;
   transition: background-color 0.2s ease;
+}
+
+.submit-btn-active {
+  background-color: #006653;
+  color: white;
 }
 
 .submit-btn-active:hover {
@@ -33,17 +41,26 @@ body {
 }
 
 .submit-btn-inactive {
-  height: 50px;
-  width: 100%;
-  padding: 0.8rem;
-  margin-top: 1rem;
-  font-size: 17px;
-  letter-spacing: 1px;
-  border: none;
   background-color: gray;
   color: white;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
+  cursor: not-allowed;
+}
+
+.reset-btn {
+  background-color: #f5f5f5;
+  color: #333;
+  border: 1px solid #ccc;
+}
+
+.reset-btn:hover {
+  background-color: #e0e0e0;
+}
+
+.no-data-message {
+  margin-top: 20px;
+  font-size: 1.2rem;
+  font-style: italic;
+  color: gray;
+  text-align: center;
 }
 

@@ -34,8 +34,8 @@
                  [(ngModel)]="gradeInput[i]"
 
                  min="0"
-                 max="60" />
-          <span matSuffix class="suffix-grade">/ 60</span>
+                 [max]="course.fullMarks" />
+          <span matSuffix class="suffix-grade">/ {{ this.course.fullMarks }}</span>
 
         </mat-form-field>
       </td>

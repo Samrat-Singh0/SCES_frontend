@@ -1,6 +1,7 @@
 import {Component, Inject} from '@angular/core';
 import {
   MAT_DIALOG_DATA,
+  MatDialog,
   MatDialogActions,
   MatDialogClose,
   MatDialogContent,
@@ -14,6 +15,8 @@ import {MatButton} from '@angular/material/button';
 import {FeeService} from '../services/fee.service';
 import {Fee} from '../model/fee.model';
 import {ToastrMsgService} from '../shared/toastr-msg.service';
+import {ConfirmationComponent} from '../shared/confirmation/confirmation.component';
+import {PayFee} from '../model/pay-fee.model';
 
 @Component({
   selector: 'app-fee-popup',
@@ -33,37 +36,76 @@ import {ToastrMsgService} from '../shared/toastr-msg.service';
 })
 export class FeePopupComponent {
 
-  amount: number = 0;
+  amount: number | null= null;
+  isAmountValid: boolean = false;
 
   constructor(
     private toastr: ToastrMsgService,
     private feeService: FeeService,
     private dialogRef: MatDialogRef<FeePopupComponent>,
+    private dialog: MatDialog,
     @Inject(MAT_DIALOG_DATA)public data: {enrollment: Enrollment}
   ) {
   }
 
   confirmPayment() {
-    if(this.validateAmount()){
-      const fee: Fee = {
+    if(this.isAmountValid){
+      const fee: PayFee = {
         enrollmentPayload: this.data.enrollment,
-        amount: this.amount
+        amount: this.amount!
       }
-      this.feeService.payFee(fee).subscribe({
-        next: res => {
-          this.dialogRef.close();
-        }, error: err => {
-          this.toastr.error('');
+
+      const dialog = this.dialog.open(ConfirmationComponent, {
+        width: '600px',
+        maxWidth: 'none',
+        disableClose: true,
+        data: {
+          title: 'Payment',
+          message:"Are you sure you want to pay the specified amount?",
+          requireRemarks: false
+        }
+      });
+
+      dialog.afterClosed().subscribe(result => {
+        if(result?.confirmed){
+          this.feeService.payFee(fee).subscribe({
+            next: res => {
+              this.dialogRef.close();
+            }, error: err => {
+              this.toastr.error('');
+            }
+          });
         }
       });
     }
   }
 
   validateAmount(): boolean {
-    if(!this.amount || !/^\d+$/.test(this.amount.toString()) || this.amount < 0 || this.amount > this.data.enrollment.outstandingFee){
+    if(this.amount! < 0){
+      this.toastr.error("Please add a positive numeric amount");
+      return false;
+    }
+    if(!this.amount || !/^\d+$/.test(this.amount.toString())){
       this.toastr.error('Please enter a valid numeric amount');
+      return false;
+    }
+    if(this.amount > this.data.enrollment.outstandingFee) {
+      this.toastr.error("You amount cannot exceed the outstanding amount");
       return false;
     }
     return true;
   }
+
+  getColor(): string {
+    if(this.isAmountValid) {
+      return "primary";
+    }else {
+      return "warn";
+    }
+  }
+
+  updateButtonValidity() {
+    this.isAmountValid = this.validateAmount();
+  }
+
 }

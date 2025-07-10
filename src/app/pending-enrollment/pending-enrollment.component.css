@@ -112,12 +112,6 @@
   color: #b00020;
 }
 
-
-.no-enrollments-message {
-  font-style: italic;
-  color: gray;
-}
-
 td.status {
   min-width: 100px;
   vertical-align: middle;

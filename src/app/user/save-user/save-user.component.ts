@@ -107,6 +107,9 @@ export class SaveUserComponent implements OnInit {
     }
   }
 
+  resetForm() {
+    this.buildForm();
+  }
 
 
 }

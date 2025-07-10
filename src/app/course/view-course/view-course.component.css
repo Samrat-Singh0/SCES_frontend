@@ -158,11 +158,6 @@ th,td {
   font-size: 0.95rem;
 }
 
-.no-courses-message {
-  font-style: italic;
-  color: gray;
-}
-
 .footer {
   display: flex;
   justify-content: space-between;

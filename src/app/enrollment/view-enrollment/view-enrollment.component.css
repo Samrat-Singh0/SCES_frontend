@@ -124,11 +124,6 @@
   color: white;
 }
 
-.no-enrollments-message {
-  font-style: italic;
-  color: gray;
-}
-
 .paid-status-container {
   display: flex;
   justify-content: center;
@@ -141,5 +136,10 @@
   color: #009579;
 }
 
+.actions-cell {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+}
 
 

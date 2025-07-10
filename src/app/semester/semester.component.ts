@@ -1,7 +1,7 @@
 import {Component} from '@angular/core';
 import {Semester} from '../model/semester.model';
 import {SemesterService} from '../services/semester.service';
-import {NgForOf} from '@angular/common';
+import {NgForOf, NgIf} from '@angular/common';
 import {MatIcon} from '@angular/material/icon';
 import {FormsModule} from '@angular/forms';
 import {MatMiniFabButton} from '@angular/material/button';
@@ -17,7 +17,8 @@ import {ToastrMsgService} from '../shared/toastr-msg.service';
     MatIcon,
     FormsModule,
     MatMiniFabButton,
-    MatTooltip
+    MatTooltip,
+    NgIf
   ],
   templateUrl: './semester.component.html',
   styleUrl: './semester.component.css'

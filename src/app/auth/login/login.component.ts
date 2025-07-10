@@ -68,7 +68,7 @@ export class LoginComponent implements OnInit{
 
           if(body.body === null){
             // this.snackBar.open(response.body.message, "Close", {duration: 3000});
-            this.toastr.error('');
+            this.toastr.error('Invalid Username/Password');
             return;
           }
           this.toastr.success("Login Success");

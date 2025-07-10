@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {MatIconButton} from '@angular/material/button';
-import {NgIf} from '@angular/common';
+import {NgClass, NgIf} from '@angular/common';
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import {Semester} from '../../model/semester.model';
 import {Instructor} from '../../model/instructor.model';
@@ -23,6 +23,7 @@ import {ToastrMsgService} from '../../shared/toastr-msg.service';
     MatSelect,
     NgIf,
     ReactiveFormsModule,
+    NgClass,
 
   ],
   templateUrl: './save-course.component.html',
@@ -93,6 +94,10 @@ export class SaveCourseComponent implements OnInit{
     this.semesterService.getAll().subscribe({
       next: res => {
         this.semesters = res.body;
+
+        if(!this.isEditable && this.semesters.length > 0){
+          this.courseForm.patchValue({semester: this.semesters[0]})
+        }
       }, error: err => {
         this.toastr.error('');
       }
@@ -103,6 +108,9 @@ export class SaveCourseComponent implements OnInit{
     this.instructorService.getAll().subscribe({
       next: res=> {
         this.instructors = res.body;
+        if(!this.isEditable && this.instructors.length > 0) {
+          this.courseForm.patchValue({instructor: this.instructors[0]})
+        }
       }, error: err => {
         this.toastr.error('');
       }
@@ -110,25 +118,26 @@ export class SaveCourseComponent implements OnInit{
   }
 
   onSubmit() {
-    if (this.isEditable) {
-      const updatedCourse = {
-        code: this.code,
-        name: this.courseForm.value.name,
-        creditHours: this.courseForm.value.creditHours,
-        fullMarks: this.courseForm.value.fullMarks,
-        instructor: this.courseForm.value.instructor,
-        semester: this.courseForm.value.semester,
-        checked: this.courseForm.value.checked
-      }
-      this.courseService.updateCourse(updatedCourse).subscribe({
-        next: res => {
-          this.router.navigate(['super/course/view']);
-        }, error: err => {
-          this.toastr.error('');
+    if (this.courseForm.valid) {
+      if (this.isEditable) {
+        const updatedCourse = {
+          code: this.code,
+          name: this.courseForm.value.name,
+          creditHours: this.courseForm.value.creditHours,
+          fullMarks: this.courseForm.value.fullMarks,
+          instructor: this.courseForm.value.instructor,
+          semester: this.courseForm.value.semester,
+          checked: this.courseForm.value.checked
         }
-      });
-    } else {
-      if (this.courseForm.valid) {
+        this.courseService.updateCourse(updatedCourse).subscribe({
+          next: res => {
+            this.router.navigate(['super/course/view']);
+            this.toastr.success(res.message);
+          }, error: err => {
+            this.toastr.error('');
+          }
+        });
+      } else {
         this.courseService.addCourse(this.courseForm.value).subscribe({
           next: res => {
             this.router.navigate(['super/course/view']);
@@ -152,5 +161,9 @@ export class SaveCourseComponent implements OnInit{
 
   semesterMapper(a: Semester, b: Semester): boolean {
     return(a.label === b.label);
+  }
+
+  resetForm() {
+    this.ngOnInit();
   }
 }

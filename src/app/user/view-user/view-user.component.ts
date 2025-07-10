@@ -65,7 +65,6 @@ export class ViewUserComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.toaster.success("This is a test", "test");
     this.renderContent(this.currentPage);
     this.buildSearchForm();
   }
@@ -161,7 +160,7 @@ export class ViewUserComponent implements OnInit {
         phoneNumber: formValue.phoneNumber?.trim() || undefined
       }
 
-      this.userService.searchUser(searchCriteria, page, this.currentPage).subscribe({
+      this.userService.searchUser(searchCriteria, page, this.pageSize).subscribe({
         next: (res) => {
           this.users = res.body.content;
           this.totalPages = res.body.totalPages;

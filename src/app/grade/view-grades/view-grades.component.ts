@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {Course} from '../../model/course.model';
 import {CourseService} from '../../services/course.service';
-import {NgClass, NgForOf} from '@angular/common';
+import {NgClass, NgForOf, NgIf} from '@angular/common';
 import {Grade} from '../../model/grade.model';
 import {Semester} from '../../model/semester.model';
 import {GradeService} from '../../services/grade.service';
@@ -11,14 +11,14 @@ import {ToastrMsgService} from '../../shared/toastr-msg.service';
   selector: 'app-view-grades',
   imports: [
     NgForOf,
-    NgClass
+    NgClass,
+    NgIf
   ],
   templateUrl: './view-grades.component.html',
   styleUrl: './view-grades.component.css'
 })
 export class ViewGradesComponent implements OnInit{
   courses: Course[] = [];
-  semesters: Semester[] = [];
   grades: Grade[] = [];
 
   constructor(

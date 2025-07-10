@@ -40,7 +40,6 @@ export class PopupMarkAttendanceComponent implements OnInit{
   students: Student[] = [];
   course!: Course;
   attendanceMap: Map<string, Attendance>;
-  toggleValue: string = 'absent';
 
   constructor(
     private studentService: StudentService,
@@ -103,14 +102,19 @@ export class PopupMarkAttendanceComponent implements OnInit{
   }
 
   confirmAttendance() {
-    this.attendanceService.saveAttendance(Array.from(this.attendanceMap.values())).subscribe({
-      next: res => {
-        this.dialogRef.close();
-        this.toastr.success(res.message);
-      }, error: err => {
-        this.toastr.error('');
-      }
-    });
+    if(this.students.length === this.attendanceMap.size) {
+      this.attendanceService.saveAttendance(Array.from(this.attendanceMap.values())).subscribe({
+        next: res => {
+          this.dialogRef.close();
+          this.toastr.success(res.message);
+        }, error: err => {
+          this.toastr.error('');
+        }
+      });
+    }else {
+      this.toastr.error("Some are not marked!!")
+    }
+
   }
 
 }

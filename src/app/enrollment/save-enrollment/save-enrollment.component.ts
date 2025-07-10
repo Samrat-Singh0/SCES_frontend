@@ -12,6 +12,8 @@ import {NgClass, NgForOf} from '@angular/common';
 import {JoinNameService} from '../../shared/join-name.service';
 import {EnrollmentService} from '../../services/enrollment.service';
 import {ToastrMsgService} from '../../shared/toastr-msg.service';
+import {MatDialog} from '@angular/material/dialog';
+import {ConfirmationComponent} from '../../shared/confirmation/confirmation.component';
 
 @Component({
   selector: 'app-add-enrollment',
@@ -42,7 +44,8 @@ export class SaveEnrollmentComponent implements OnInit{
     private enrollmentService: EnrollmentService,
     private toastr: ToastrMsgService,
     public joinName: JoinNameService,
-    private router: Router
+    private router: Router,
+    private dialogRef: MatDialog
   ) {
     this.enrollForm = new FormGroup({});
     this.coursesMap = new Map<string, Course>();
@@ -96,14 +99,32 @@ export class SaveEnrollmentComponent implements OnInit{
       courses: this.selectedCourses,
     };
 
-    this.enrollmentService.enroll(enrolledData).subscribe({
-      next: res => {
-        this.toastr.success(res.message);
-        this.goBack();
-      }, error: err => {
-        this.toastr.error('');
+    const dialog = this.dialogRef.open(ConfirmationComponent, {
+      width: '600px',
+      maxWidth: 'none',
+      disableClose: true,
+      data: {
+        title: 'Confirm Enroll',
+        message:"Are you sure you want to enroll in this semester?",
+        requireRemarks: false
       }
     });
+
+    dialog.afterClosed().subscribe(result=>{
+      if(result?.confirmed) {
+        this.enrollmentService.enroll(enrolledData).subscribe({
+          next: res => {
+
+            this.toastr.info(res.message);
+            this.goBack();
+          }, error: err => {
+            this.toastr.error('');
+          }
+        });
+
+      }
+    });
+
   }
 
   goBack() {

@@ -36,6 +36,7 @@ export class SaveGradeComponent implements OnInit {
   course!: Course;
   gradeInput: number[] = [];
   grades: Grade[] = [];
+  isGradesValid: boolean = false;
 
   constructor(
     private router: Router,
@@ -94,6 +95,10 @@ export class SaveGradeComponent implements OnInit {
   }
 
   openSaveDialog(student: Student, i: number) {
+    if(!this.checkGradeValidity()){
+      this.toastr.error("Grade Invalid!!")
+      return;
+    }
     const dialogRef = this.dialogRef.open(ConfirmationComponent, {
       width: '600px',
       maxWidth: 'none',
@@ -113,6 +118,7 @@ export class SaveGradeComponent implements OnInit {
   }
 
   saveGrade(student: Student, position: number, remarks: string){
+
 
     const grade: Grade = {
       code: undefined,
@@ -135,6 +141,19 @@ export class SaveGradeComponent implements OnInit {
 
   goBack() {
     this.router.navigate(['instructor/grade/view']);
+  }
+
+  checkGradeValidity() {
+    if(this.gradeInput.some(grade => grade < 0)) {
+      return false;
+    }
+    if(this.gradeInput.some(grade => grade === null || undefined)){
+      return false;
+    }
+    if(this.gradeInput.some(grade => grade > 60)) {
+      return false;
+    }
+    return true;
   }
 
 }

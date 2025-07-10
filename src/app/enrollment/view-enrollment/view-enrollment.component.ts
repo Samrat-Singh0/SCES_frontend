@@ -6,7 +6,7 @@ import {EnrollmentService} from '../../services/enrollment.service';
 import {Router} from '@angular/router';
 import {CompletionStatus} from '../../enum/completion-status.enum';
 import {PaidStatus} from '../../enum/paid-status.enum';
-import {MatIconButton, MatMiniFabButton} from '@angular/material/button';
+import {MatMiniFabButton} from '@angular/material/button';
 import {Role} from '../../enum/role.enum';
 import {JoinNameService} from '../../shared/join-name.service';
 import {EnrollmentStatus} from '../../enum/enrollment-status.enum';
@@ -14,6 +14,9 @@ import {MatTooltip} from '@angular/material/tooltip';
 import {MatDialog} from '@angular/material/dialog';
 import {FeePopupComponent} from '../../fee-popup/fee-popup.component';
 import {ToastrMsgService} from '../../shared/toastr-msg.service';
+import {ConfirmationComponent} from '../../shared/confirmation/confirmation.component';
+import {FeeService} from '../../services/fee.service';
+import {FeeHistoryComponent} from '../../fee-history/fee-history.component';
 
 @Component({
   selector: 'app-view-enrollment',
@@ -23,7 +26,6 @@ import {ToastrMsgService} from '../../shared/toastr-msg.service';
     NgClass,
     NgIf,
     MatMiniFabButton,
-    MatIconButton,
     MatTooltip,
   ],
   templateUrl: './view-enrollment.component.html',
@@ -40,7 +42,8 @@ export class ViewEnrollmentComponent implements OnInit{
     private toastr : ToastrMsgService,
     private router: Router,
     public joinName: JoinNameService,
-    private dialogRef: MatDialog
+    private dialogRef: MatDialog,
+    private feeService: FeeService
   ) {
     this.enrollments = [];
   }
@@ -75,12 +78,27 @@ export class ViewEnrollmentComponent implements OnInit{
       completionStatus: CompletionStatus.DROPPED
     }
 
-    this.enrollmentService.updateEnroll(droppedEnrollment).subscribe({
-      next: value => {
-        this.ngOnInit();
-        this.toastr.success(value.message);
-      }, error: err => {
-        this.toastr.error('');
+    const dialogRef = this.dialogRef.open(ConfirmationComponent, {
+      width: '600px',
+      maxWidth: 'none',
+      disableClose: true,
+      data: {
+        title: 'Drop Course',
+        message: 'Are you sure you want to drop this course?',
+        requireRemarks: false
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if(result?.confirmed) {
+        this.enrollmentService.updateEnroll(droppedEnrollment).subscribe({
+          next: value => {
+            this.ngOnInit();
+            this.toastr.success(value.message);
+          }, error: err => {
+            this.toastr.error('');
+          }
+        });
       }
     });
   }
@@ -91,12 +109,27 @@ export class ViewEnrollmentComponent implements OnInit{
       completionStatus: CompletionStatus.COMPLETED
     }
 
-    this.enrollmentService.updateEnroll(completedEnrollment).subscribe({
-      next: value => {
-        this.ngOnInit();
-        this.toastr.success(value.message);
-      }, error: err => {
-        this.toastr.success('(err.message');
+    const dialogRef = this.dialogRef.open(ConfirmationComponent, {
+      width: '600px',
+      maxWidth: 'none',
+      disableClose: true,
+      data: {
+        title: 'Complete Enrollment',
+        message:"Are you sure you want to mark this enrollment as `COMPLETE`?",
+        requireRemarks: false
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if(result?.confirmed) {
+        this.enrollmentService.updateEnroll(completedEnrollment).subscribe({
+          next: value => {
+            this.ngOnInit();
+            this.toastr.success(value.message);
+          }, error: err => {
+            this.toastr.success('(err.message');
+          }
+        });
       }
     });
   }
@@ -145,7 +178,12 @@ export class ViewEnrollmentComponent implements OnInit{
   }
 
   isNotPayable(enrollment: Enrollment): boolean {
-    return (enrollment.completionStatus === CompletionStatus.DROPPED || enrollment.completionStatus === CompletionStatus.REJECTED);
+    return (
+      enrollment.completionStatus === CompletionStatus.DROPPED ||
+      enrollment.completionStatus === CompletionStatus.REJECTED ||
+      enrollment.completionStatus === CompletionStatus.PENDING ||
+      enrollment.paidStatus === PaidStatus.PAID
+    );
   }
 
   payFee(enrollment: Enrollment) {
@@ -158,5 +196,44 @@ export class ViewEnrollmentComponent implements OnInit{
       this.renderContent();
     });
   }
+
+  getPayStatus(status: string): string {
+    switch (status) {
+      case PaidStatus.PAID:
+        return "Paid";
+      case PaidStatus.UNPAID:
+        return "Unpaid";
+      case PaidStatus.PARTIALLY_PAID:
+        return "Partially Paid";
+      default:
+        return "<ERR>";
+    }
+
+  }
+  getCompletionStatus(status: string): string {
+    switch (status) {
+      case CompletionStatus.COMPLETED:
+        return "Completed";
+      case CompletionStatus.PENDING:
+        return "Pending";
+      case CompletionStatus.DROPPED:
+        return "Dropped";
+      case CompletionStatus.RUNNING:
+        return "Running";
+      case CompletionStatus.REJECTED:
+        return "Rejected";
+      default:
+        return "<ERR>";
+    }
+
+  }
+
+  getFeeHistory(enrollment: Enrollment) {
+    const dialogRef = this.dialogRef.open(FeeHistoryComponent, {
+      disableClose: false,
+      data: enrollment
+    });
+  }
+
 
 }

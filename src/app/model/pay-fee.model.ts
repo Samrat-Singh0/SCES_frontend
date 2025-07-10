@@ -1,8 +1,6 @@
 import {Enrollment} from './enrollment.model';
 
-export interface Fee {
+export interface PayFee {
   enrollmentPayload: Enrollment;
   amount: number;
-  code: string | null;
-  paidDate: Date;
 }

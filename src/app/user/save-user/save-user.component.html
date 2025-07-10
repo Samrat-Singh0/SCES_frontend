@@ -75,6 +75,10 @@
       </select>
     </div>
 
-    <button [ngClass]="this.myForm.valid ? 'submit-btn-active' : 'submit-btn-inactive'" type="submit" >Submit</button>
+    <div class="btn-div">
+      <button [ngClass]="this.myForm.valid ? 'submit-btn-active' : 'submit-btn-inactive'" type="submit" >Submit</button>
+      <button class="reset-btn" type="button" (click)="resetForm()">Reset</button>
+    </div>
+
   </form>
 </div>

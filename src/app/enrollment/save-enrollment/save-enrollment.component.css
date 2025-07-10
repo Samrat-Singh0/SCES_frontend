@@ -37,7 +37,7 @@
 .courses-grid {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
-  gap: 50px;
+  gap: 20px;
   /*max-width: 900px;*/
   margin: 2rem 0 0 0;
   /*padding-left: 20px;*/
@@ -81,4 +81,9 @@
 
 .enroll-btn:hover {
   background-color: #00C8A2;
+}
+
+.threshold-msg {
+  color: red;
+  font-style: italic;
 }

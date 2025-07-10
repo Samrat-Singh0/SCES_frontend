@@ -2,7 +2,7 @@
 
 <div class="mt-5 date-div">
   <mat-form-field appearance="fill">
-    <input matInput [matDatepicker]="picker" [(ngModel)]="selectedDate">
+    <input matInput [matDatepicker]="picker" [(ngModel)]="selectedDate" [max]="today">
     <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
     <mat-datepicker #picker></mat-datepicker>
   </mat-form-field>
@@ -34,7 +34,7 @@
 </div>
 
 <div *ngIf="isAttendanceEmpty()" class="mt-5 text-center no-attendance-div">
-  <p class="no-attendance-msg">No attendance of this date exist.</p>
+  <p class="no-data-message">No data found.</p>
 </div>
 
 

@@ -24,6 +24,6 @@ export class ReportDownloadDialogComponent {
   }
 
   cancel(): void {
-    this.dialogRef.close();
+    this.dialogRef.close('cancel');
   }
 }

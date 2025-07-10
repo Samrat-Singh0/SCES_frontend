@@ -1,0 +1,32 @@
+<div class="fee-history-card">
+  <div class="close-icon">
+    <button class="close-btn" (click)="closeForm()">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <h4 class="fee-history-title">Fee History</h4>
+
+  <div class="table-container">
+    <table class="fee-table">
+      <thead>
+      <tr>
+        <th>S.N.</th>
+        <th>Amount (Rs.)</th>
+        <th>Date</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let fee of fees; let i = index">
+        <td>{{ i + 1 }}</td>
+        <td>{{ fee.amount }}</td>
+        <td>{{ fee.paidDate }}</td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="no-data-message" *ngIf="fees.length === 0">
+  <p>No data found.</p>
+</div>

@@ -94,7 +94,7 @@ export class EditSemesterComponent implements OnInit {
     }
     this.semesterService.update(updatedSemester).subscribe({
         next: (res) => {
-          this.router.navigate(['super/semester']);
+          this.router.navigate(['super/semester/view']);
           this.toastr.success(res.message);
 
         }, error: (err) => {

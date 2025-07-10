@@ -16,6 +16,7 @@
         }
       </mat-select>
     </mat-form-field>
+    <p class="threshold-msg">*If your outstanding amount exceeds a certain threshold amount, you won't be able to enroll.</p>
   </div>
   <div class="courses-grid">
     <div *ngFor="let course of coursePerSemester"
@@ -32,7 +33,7 @@
     </div>
   </div>
 
-  <button class="mt-5 enroll-btn" type="submit">
+  <button class="mt-5 enroll-btn" type="submit" [disabled]="selectedCourses.length === 0">
     <mat-icon>add</mat-icon>
     Enroll
   </button>

@@ -57,8 +57,8 @@
     </mat-select>
   </div>
 
-  <div>
-    <button type="submit" (click)="onSubmit()">{{ isEditable? "Update Course" : "Add Course" }}</button>
-
+  <div class="btn-div">
+    <button [ngClass]="this.courseForm.valid ? 'submit-btn-active' : 'submit-btn-inactive'" type="submit" (click)="onSubmit()">{{ isEditable? "Update Course" : "Add" }}</button>
+    <button class="reset-btn" type="button" (click)="resetForm()">Reset</button>
   </div>
 </form>

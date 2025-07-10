@@ -55,25 +55,6 @@
   outline: none;
 }
 
-
-button[type="submit"] {
-  width: 100%;
-  padding: 1rem;
-  background-color: #006653;
-
-  color: white;
-  font-size: 1rem;
-  font-weight: bold;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-button[type="submit"]:hover {
-  background-color: #009579;
-}
-
 .custom-ng-select {
   padding: 15px;
   border: 1px solid #ccc;
@@ -92,6 +73,5 @@ button[type="submit"]:hover {
   font-size: 0.8rem;
   margin-bottom: 10px;
 }
-
 
 

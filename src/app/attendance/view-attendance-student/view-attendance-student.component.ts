@@ -32,6 +32,7 @@ export class ViewAttendanceStudentComponent implements OnInit{
   courses: Course[] = [];
   attendances: Attendance[] =[];
   selectedDate: Date = new Date();
+  today: Date = new Date();
 
   constructor(
     private courseService: CourseService,

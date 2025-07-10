@@ -184,11 +184,6 @@ th,td {
   cursor: not-allowed;
 }
 
-.no-user-message {
-  font-style: italic;
-  color: gray;
-}
-
 .role-badge {
   padding: 4px 10px;
   border-radius: 20px;

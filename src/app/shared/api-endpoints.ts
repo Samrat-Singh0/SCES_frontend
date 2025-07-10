@@ -87,7 +87,8 @@ export const AttendanceEndpoints = {
 }
 
 export const FeeEndpoints = {
-  PAY_FEE: FEE_API_URL + '/pay'
+  PAY_FEE: FEE_API_URL + '/pay',
+  GET_HISTORY: FEE_API_URL + '/get/list'
 }
 
 export const ReportEndpoints = {

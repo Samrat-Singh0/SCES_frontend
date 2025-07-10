@@ -34,6 +34,6 @@ export class UserService {
   }
 
   searchUser(searchCriteria: SearchUser, page: number, size: number): Observable<ApiResponse<PageResponse<User>>> {
-    return this.http.post<ApiResponse<PageResponse<User>>>(this.userEndpoints.SEARCH_USER, searchCriteria);
+    return this.http.post<ApiResponse<PageResponse<User>>>(this.userEndpoints.SEARCH_USER + `?page=${page}&size=${size}`, searchCriteria);
   }
 }
