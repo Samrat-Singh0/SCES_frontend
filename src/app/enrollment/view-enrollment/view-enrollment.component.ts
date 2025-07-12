@@ -20,6 +20,8 @@ import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} fr
 import {SearchEnrollment} from '../../model/search.model';
 import {MatFormField, MatLabel} from '@angular/material/input';
 import {MatOption, MatSelect} from '@angular/material/select';
+import {CurrentUserService} from '../../shared/current-user.service';
+import {User} from '../../model/user.model';
 
 @Component({
   selector: 'app-view-enrollment',
@@ -51,6 +53,7 @@ export class ViewEnrollmentComponent implements OnInit{
   currentPage: number = 0;
   pageSize: number = 5;
   sizeSelect: number[] = [5,10,20,50,100]
+  user: User;
 
 
   constructor(
@@ -59,10 +62,12 @@ export class ViewEnrollmentComponent implements OnInit{
     private router: Router,
     public joinName: JoinNameService,
     private dialogRef: MatDialog,
-    private builder: FormBuilder
+    private builder: FormBuilder,
+    private currentUser: CurrentUserService
   ) {
     this.searchForm = new FormGroup({});
     this.enrollments = [];
+    this.user = this.currentUser.getUser();
   }
 
   ngOnInit() {

@@ -4,9 +4,9 @@
 
   <form class="search-container" [formGroup]="searchForm">
 
-    <div class="inputs-wrap">
+    <div class="inputs-wrap" *ngIf="user.role === Role.SUPER_ADMIN">
       <div class="input-wrap">
-        <i class="bi bi-search name-search-icon"></i>
+<!--        <i class="bi bi-search name-search-icon"></i>-->
         <input type="text" class="search-input" placeholder="Student Name" formControlName="studentName">
         <div class="error" *ngIf="this.searchForm.get('studentName')?.touched && this.searchForm.get('studentName')?.invalid">
           <small *ngIf="this.searchForm.get('studentName')?.errors?.['pattern']">Only Alphabets</small>
@@ -16,7 +16,7 @@
 
     <div class="inputs-wrap">
       <div class="input-wrap">
-        <i class="bi bi-search ins-search-icon"></i>
+<!--        <i class="bi bi-search ins-search-icon"></i>-->
         <input type="text" class="search-input" placeholder="Semester" formControlName="semester">
         <div class="error" *ngIf="this.searchForm.get('semester')?.touched && this.searchForm.get('semester')?.invalid">
           <small *ngIf="this.searchForm.get('semester')?.errors?.['pattern']">Only Alphabets</small>
