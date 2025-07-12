@@ -1,11 +1,56 @@
 <h3 class="mt-2 text-center">Enrolled Courses</h3>
 
-<div class="add-container" *ngIf="userRole === Role.STUDENT">
-  <button class="add-btn" (click)="enroll()">
-    <mat-icon>add</mat-icon>
-    Enroll
-  </button>
+<div class="control-container">
+
+  <form class="search-container" [formGroup]="searchForm">
+
+    <div class="inputs-wrap">
+      <div class="input-wrap">
+        <i class="bi bi-search name-search-icon"></i>
+        <input type="text" class="search-input" placeholder="Student Name" formControlName="studentName">
+        <div class="error" *ngIf="this.searchForm.get('studentName')?.touched && this.searchForm.get('studentName')?.invalid">
+          <small *ngIf="this.searchForm.get('studentName')?.errors?.['pattern']">Only Alphabets</small>
+        </div>
+      </div>
+    </div>
+
+    <div class="inputs-wrap">
+      <div class="input-wrap">
+        <i class="bi bi-search ins-search-icon"></i>
+        <input type="text" class="search-input" placeholder="Semester" formControlName="semester">
+        <div class="error" *ngIf="this.searchForm.get('semester')?.touched && this.searchForm.get('semester')?.invalid">
+          <small *ngIf="this.searchForm.get('semester')?.errors?.['pattern']">Only Alphabets</small>
+        </div>
+      </div>
+    </div>
+
+    <div class="inputs-wrap">
+      <div class="input-wrap">
+
+        <mat-form-field class="search-input-field" appearance="outline">
+          <mat-label>Pay Status</mat-label>
+          <mat-select formControlName="payStatus">
+            <mat-option value="PAID">Paid</mat-option>
+            <mat-option value="UNPAID">Unpaid</mat-option>
+            <mat-option value="PARTIALLY_PAID">Partially Paid</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </div>
+
+    <button class="search-btn" type="submit" (click)="searchEnrollment()">Search</button>
+    <button class="reset-btn" (click)="resetSearchForm()">Reset</button>
+
+  </form>
+
+  <div class="add-container" *ngIf="userRole === Role.STUDENT">
+    <button class="add-btn" (click)="enroll()">
+      <mat-icon>add</mat-icon>
+      Enroll
+    </button>
+  </div>
 </div>
+
 
 
 
@@ -118,4 +163,34 @@
 
 <div *ngIf="enrollments?.length === 0" class="no-data-message text-center mt-4">
   <p>No data found.</p>
+</div>
+
+<div class="pagination-container">
+
+
+  <button [disabled]="currentPage === 0" (click)="goToPage(currentPage - 1)">
+    Prev
+  </button>
+
+  <!--  [].constructor(totalPages): empty array create garxa, of size: totalPAges-->
+  <button
+    *ngFor="let page of [].constructor(totalPages); let i = index"
+    [class.active]="i === currentPage"
+    (click)="goToPage(i)">
+    {{ i + 1 }}
+  </button>
+
+  <button [disabled]="currentPage === totalPages - 1" (click)="goToPage(currentPage + 1)">
+    Next
+  </button>
+</div>
+
+<div class="page-size-item">
+  <mat-form-field appearance="fill">
+    <mat-select [(ngModel)]="pageSize" (selectionChange)="onPageSizeChange(pageSize)">
+      <mat-option *ngFor="let size of sizeSelect" [value]="size">
+        {{size}}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
 </div>

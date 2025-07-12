@@ -157,7 +157,6 @@ export class ViewCourseComponent implements OnInit {
         console.log(err.message);
       }
     });
-
   }
 
   resetSearchForm() {

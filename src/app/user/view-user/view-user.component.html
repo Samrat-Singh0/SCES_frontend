@@ -31,11 +31,17 @@
         </div>
 
         <div class="input-wrap">
-          <i class="bi bi-search role-search-icon"></i>
-          <input type="text" class="search-input" placeholder="Role" formControlName="role">
-          <div class = "error" *ngIf="this.searchForm.get('role')?.invalid && this.searchForm.get('role')?.touched">
-            <small *ngIf="this.searchForm.get('role')?.errors?.['pattern']">Only Alphabets</small>
-          </div>
+          <mat-form-field appearance="outline" class="search-input-field">
+            <mat-label>Role</mat-label>
+            <mat-select formControlName="role">
+              <mat-option value="SUPER_ADMIN">Super Admin</mat-option>
+              <mat-option value="INSTRUCTOR">Instructor</mat-option>
+              <mat-option value="STUDENT">Student</mat-option>
+            </mat-select>
+          </mat-form-field>
+<!--          <div class = "error" *ngIf="this.searchForm.get('role')?.invalid && this.searchForm.get('role')?.touched">-->
+<!--            <small *ngIf="this.searchForm.get('role')?.errors?.['pattern']">Only Alphabets</small>-->
+<!--          </div>-->
         </div>
 
         <div class="input-wrap">

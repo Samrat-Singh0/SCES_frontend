@@ -67,7 +67,9 @@ export const EnrollmentEndpoints = {
   GET_ALL : ENROLLMENT_API_URL + '/list',
   ENROLL: ENROLLMENT_API_URL + '/enroll',
   UPDATE: ENROLLMENT_API_URL + '/update',
-  GET_PENDING: ENROLLMENT_API_URL + '/list/pending'
+  GET_PENDING: ENROLLMENT_API_URL + '/list/pending',
+  GET_PAGED_ENROLLMENT: ENROLLMENT_API_URL + '/paged/list',
+  SEARCH_ENROLLMENT: ENROLLMENT_API_URL + '/search'
 }
 
 export const StudentEndpoints = {

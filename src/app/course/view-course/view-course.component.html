@@ -35,8 +35,6 @@
       </div>
     </div>
 
-
-
     <button class="search-btn" type="submit" (click)="searchCourse()" [disabled]="isSearchDisabled()">Search</button>
     <button class="reset-btn" (click)="resetSearchForm()">Reset</button>
 
@@ -49,7 +47,6 @@
       Add Course
     </button>
   </div>
-
 </div>
 
 <div class="course-container">
@@ -121,12 +118,9 @@
   </div>
 
   <div class="pagination-container">
-
-
     <button [disabled]="currentPage === 0" (click)="goToPage(currentPage - 1)">
       Prev
     </button>
-
     <!--  [].constructor(totalPages): empty array create garxa, of size: totalPAges-->
     <button
       *ngFor="let page of [].constructor(totalPages); let i = index"
@@ -134,7 +128,6 @@
       (click)="goToPage(i)">
       {{ i + 1 }}
     </button>
-
     <button [disabled]="currentPage === totalPages - 1" (click)="goToPage(currentPage + 1)">
       Next
     </button>

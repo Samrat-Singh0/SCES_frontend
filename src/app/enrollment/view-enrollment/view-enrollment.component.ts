@@ -15,8 +15,11 @@ import {MatDialog} from '@angular/material/dialog';
 import {FeePopupComponent} from '../../fee-popup/fee-popup.component';
 import {ToastrMsgService} from '../../shared/toastr-msg.service';
 import {ConfirmationComponent} from '../../shared/confirmation/confirmation.component';
-import {FeeService} from '../../services/fee.service';
 import {FeeHistoryComponent} from '../../fee-history/fee-history.component';
+import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
+import {SearchEnrollment} from '../../model/search.model';
+import {MatFormField, MatLabel} from '@angular/material/input';
+import {MatOption, MatSelect} from '@angular/material/select';
 
 @Component({
   selector: 'app-view-enrollment',
@@ -27,15 +30,28 @@ import {FeeHistoryComponent} from '../../fee-history/fee-history.component';
     NgIf,
     MatMiniFabButton,
     MatTooltip,
+    MatLabel,
+    FormsModule,
+    ReactiveFormsModule,
+    MatFormField,
+    MatSelect,
+    MatOption,
   ],
   templateUrl: './view-enrollment.component.html',
   styleUrl: './view-enrollment.component.css'
 })
 export class ViewEnrollmentComponent implements OnInit{
+  searchForm: FormGroup;
+  isSearchEnabled: boolean = false;
   enrollments: Enrollment[];
   expandedRowIndex: number | null = null;
   userRole: string = '';
   protected readonly Role = Role;
+  totalPages: number = 0;
+  currentPage: number = 0;
+  pageSize: number = 5;
+  sizeSelect: number[] = [5,10,20,50,100]
+
 
   constructor(
     private enrollmentService: EnrollmentService,
@@ -43,24 +59,39 @@ export class ViewEnrollmentComponent implements OnInit{
     private router: Router,
     public joinName: JoinNameService,
     private dialogRef: MatDialog,
-    private feeService: FeeService
+    private builder: FormBuilder
   ) {
+    this.searchForm = new FormGroup({});
     this.enrollments = [];
   }
 
   ngOnInit() {
     this.userRole = localStorage.getItem('role') || '';
-    this.renderContent();
+    this.renderContent(this.currentPage);
+    this.buildForm();
   }
 
-  renderContent(){
-    this.enrollmentService.getEnrollments().subscribe({
-      next: res => {
-        this.enrollments = res.body;
+  renderContent(page: number){
+    if(this.isSearchEnabled){
+      this.searchEnrollment(page);
+    }else {
+      this.enrollmentService.getPagedEnrollments(page, this.pageSize).subscribe({
+        next: res => {
+          this.enrollments = res.body.content;
+          this.totalPages = res.body.totalPages;
+          this.currentPage = res.body.number;
+        },error: err => {
+          this.toastr.error('');
+        }
+      });
+    }
+  }
 
-      },error: err => {
-        this.toastr.error('');
-      }
+  buildForm() {
+    this.searchForm = this.builder.group({
+      studentName: [undefined, Validators.pattern("^[a-zA-Z\\s]+$")],
+      semester: [undefined, Validators.pattern("^[a-zA-Z\\s]+$")],
+      payStatus: [undefined]
     });
   }
 
@@ -134,6 +165,33 @@ export class ViewEnrollmentComponent implements OnInit{
     });
   }
 
+  searchEnrollment(page:number = 0) {
+    this.isSearchEnabled = true;
+    let studentName: string = this.searchForm.value.studentName || undefined;
+    let semester: string = this.searchForm.value.semester || undefined;
+    let payStatus: string = this.searchForm.value.payStatus || undefined;
+
+    const searchCriteria: SearchEnrollment = {
+      studentName: studentName,
+      semester: semester,
+      payStatus: payStatus
+    }
+
+    this.enrollmentService.searchEnrollment(searchCriteria, page, this.pageSize).subscribe({
+      next: res => {
+        if (res && res.body && res.body.content) {
+          this.enrollments = res.body.content;
+          this.totalPages = res.body.totalPages;
+          this.currentPage = res.body.number;
+        } else {
+          this.enrollments = [];
+        }
+      }, error: err => {
+        console.log(err.message);
+      }
+    });
+  }
+
   isCurrentlyEnrolled(): boolean{
     // for(let enrollment of this.enrollments){
     //   if(enrollment.completionStatus == "RUNNING"){
@@ -193,7 +251,7 @@ export class ViewEnrollmentComponent implements OnInit{
     });
 
     dialogRef.afterClosed().subscribe(res=>{
-      this.renderContent();
+      this.renderContent(this.currentPage);
     });
   }
 
@@ -235,5 +293,20 @@ export class ViewEnrollmentComponent implements OnInit{
     });
   }
 
+  goToPage(page: number): void {
+    if(page >= 0 && page < this.totalPages){
+      this.renderContent(page);
+    }
+  }
 
+  onPageSizeChange(size: number) {
+    this.pageSize = size;
+    this.renderContent(this.currentPage);
+  }
+
+  resetSearchForm() {
+    this.searchForm.reset();
+    this.isSearchEnabled = false;
+    this.renderContent(this.currentPage);
+  }
 }

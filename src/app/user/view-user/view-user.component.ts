@@ -14,10 +14,11 @@ import {ConfirmationComponent} from '../../shared/confirmation/confirmation.comp
 import {MatTooltip} from '@angular/material/tooltip';
 import {JoinNameService} from '../../shared/join-name.service';
 import {Role} from '../../enum/role.enum';
-import {MatFormField} from '@angular/material/input';
-import {MatOption, MatSelect} from '@angular/material/select';
 import {CurrentUserService} from '../../shared/current-user.service';
 import {ToastrService} from 'ngx-toastr';
+import {MatFormField, MatLabel} from '@angular/material/input';
+import {MatSelect} from '@angular/material/select';
+import {MatOption} from '@angular/material/core';
 
 
 @Component({
@@ -28,13 +29,16 @@ import {ToastrService} from 'ngx-toastr';
     MatMiniFabButton,
     ReactiveFormsModule,
     NgIf,
+    NgIf,
     NgForOf,
     MatTooltip,
     NgClass,
     FormsModule,
     MatFormField,
+    MatLabel,
     MatSelect,
-    MatOption
+    MatOption,
+
   ],
   templateUrl: './view-user.component.html',
   styleUrl: './view-user.component.css'
@@ -89,7 +93,7 @@ export class ViewUserComponent implements OnInit {
       firstName: [undefined, Validators.pattern("^[a-zA-Z]*$")],
       middleName: [undefined, Validators.pattern("^[a-zA-Z]*$")],
       lastName: [undefined, Validators.pattern("^[a-zA-Z]*$")],
-      role: [undefined, Validators.pattern("^[a-zA-Z]*$")],
+      role: [undefined],
       phoneNumber: [undefined, Validators.pattern("^\\d+$")]
     })
 
