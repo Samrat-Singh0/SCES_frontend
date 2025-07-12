@@ -1,5 +1,3 @@
-import {PaidStatus} from '../enum/paid-status.enum';
-
 export interface SearchUser {
   firstName?: string;
   middleName?: string;

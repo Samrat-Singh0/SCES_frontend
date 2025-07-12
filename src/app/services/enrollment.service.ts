@@ -5,7 +5,6 @@ import {ApiResponse} from '../model/api-response.model';
 import {Enrollment} from '../model/enrollment.model';
 import {EnrollmentEndpoints} from '../shared/api-endpoints';
 import {PageResponse} from '../model/page-response.model';
-import {Course} from '../model/course.model';
 import {SearchEnrollment} from '../model/search.model';
 
 @Injectable({

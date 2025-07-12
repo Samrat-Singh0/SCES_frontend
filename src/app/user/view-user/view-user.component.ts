@@ -62,7 +62,6 @@ export class ViewUserComponent implements OnInit {
     private fb: FormBuilder,
     public joinName: JoinNameService,
     private currentUser: CurrentUserService,
-    private toaster : ToastrService
   ) {
     this.searchForm = new FormGroup({});
     this.user = this.currentUser.getUser();
