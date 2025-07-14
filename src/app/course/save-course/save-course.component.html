@@ -11,7 +11,7 @@
     <input type="text" id="name" formControlName="name" placeholder="Enter course name">
     <div class="error"
          *ngIf="this.courseForm.get('name')?.touched && this.courseForm.get('name')?.invalid">
-      <small *ngIf="this.courseForm.get('name')?.errors?.['required']">Field required.</small>
+<!--      <small *ngIf="this.courseForm.get('name')?.errors?.['required']">Field required.</small>-->
       <small *ngIf="this.courseForm.get('name')?.errors?.['pattern']">Please enter alphabets only.</small>
     </div>
   </div>

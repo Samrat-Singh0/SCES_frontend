@@ -27,6 +27,7 @@ import {ConfirmationComponent} from '../../shared/confirmation/confirmation.comp
 
   ],
   templateUrl: './save-enrollment.component.html',
+  standalone: true,
   styleUrl: './save-enrollment.component.css'
 })
 export class SaveEnrollmentComponent implements OnInit{

@@ -1,15 +1,15 @@
-import { Component } from '@angular/core';
-import {MatDialogActions, MatDialogRef, MatDialogTitle} from '@angular/material/dialog';
+import {Component} from '@angular/core';
+import {MatDialogActions, MatDialogRef} from '@angular/material/dialog';
 import {MatButton} from '@angular/material/button';
 
 @Component({
   selector: 'app-report-download-dialog',
   imports: [
-    MatDialogTitle,
     MatDialogActions,
     MatButton
   ],
   templateUrl: './report-download-dialog.component.html',
+  standalone: true,
   styleUrl: './report-download-dialog.component.css'
 })
 export class ReportDownloadDialogComponent {

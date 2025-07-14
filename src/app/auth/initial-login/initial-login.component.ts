@@ -17,6 +17,7 @@ import {AuthService} from '../../services/auth.service';
     NgForOf
   ],
   templateUrl: './initial-login.component.html',
+  standalone: true,
   styleUrl: './initial-login.component.css'
 })
 export class InitialLoginComponent implements OnInit {
@@ -76,7 +77,7 @@ export class InitialLoginComponent implements OnInit {
           this.router.navigate(['login']);
         },
         error: err => {
-          console.log(err);
+          // console.log(err);
         }
       })
     }

@@ -17,7 +17,7 @@ export interface Course {
       role: string;
       mustChangePassword: boolean;
     }
-  };
+  } | null;
   semester: {
     label: string;
     fee: number;

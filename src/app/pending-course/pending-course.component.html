@@ -20,7 +20,13 @@
       <td>{{ course.name }}</td>
       <td>{{ course.creditHours }}</td>
       <td>{{ course.fullMarks }}</td>
-      <td>{{joinName.getFullName(course.instructor.user.firstName, course.instructor.user.middleName, course.instructor.user.lastName)}}</td>
+      <td>{{course.instructor !== null ?
+        joinName.getFullName(
+          course?.instructor?.user?.firstName,
+          course?.instructor?.user?.middleName,
+          course?.instructor?.user?.lastName) :
+        "-"
+        }}</td>
       <td>{{ course.semester.label }}</td>
       <td>{{ joinName.getFullName(course?.addedBy?.firstName, course?.addedBy?.middleName, course?.addedBy?.lastName)}}</td>
       <td class="status">
@@ -28,14 +34,18 @@
                 class="accept-icon"
                 (click)="acceptCourse(course)"
                 [disabled]="isCourseAddedByLoggedInUser(joinName.getFullName(
-                course.instructor.user.firstName,
-                course.instructor.user.middleName,
-                course.instructor.user.lastName
+                course.addedBy?.firstName,
+                course.addedBy?.middleName,
+                course.addedBy?.lastName
                 ))">
           <mat-icon>check_circle</mat-icon>
         </button>
 
-        <button mat-icon-button class="reject-icon" (click)="rejectCourse(course)">
+        <button mat-icon-button class="reject-icon" (click)="rejectCourse(course)" [disabled]="isCourseAddedByLoggedInUser(joinName.getFullName(
+                course.addedBy?.firstName,
+                course.addedBy?.middleName,
+                course.addedBy?.lastName
+                ))">
           <mat-icon>cancel</mat-icon>
         </button>
       </td>

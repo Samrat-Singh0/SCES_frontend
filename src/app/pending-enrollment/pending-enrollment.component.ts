@@ -19,6 +19,7 @@ import {ToastrMsgService} from '../shared/toastr-msg.service';
     MatIconButton
   ],
   templateUrl: './pending-enrollment.component.html',
+  standalone: true,
   styleUrl: './pending-enrollment.component.css'
 })
 export class PendingEnrollmentComponent implements OnInit{

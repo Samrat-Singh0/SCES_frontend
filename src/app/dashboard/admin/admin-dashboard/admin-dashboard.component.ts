@@ -11,6 +11,7 @@ import {CurrentUserService} from '../../../shared/current-user.service';
     RouterOutlet
   ],
   templateUrl: './admin-dashboard.component.html',
+  standalone: true,
   styleUrl: './admin-dashboard.component.css'
 })
 export class AdminDashboardComponent {

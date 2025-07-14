@@ -68,7 +68,13 @@
       <td>{{ course.name }}</td>
       <td>{{ course.creditHours }}</td>
       <td>{{ course.fullMarks }}</td>
-      <td>{{joinName.getFullName(course.instructor.user.firstName, course.instructor.user.middleName, course.instructor.user.lastName)}}</td>
+      <td>{{course.instructor !== null ?
+        joinName.getFullName(
+          course?.instructor?.user?.firstName,
+          course?.instructor?.user?.middleName,
+          course?.instructor?.user?.lastName) :
+        "-"
+        }}</td>
       <td>{{ course.semester.label }}</td>
       <td class="edit-delete-btn">
         <button mat-mini-fab
@@ -97,9 +103,6 @@
     </tbody>
   </table>
 </div>
-
-
-
 
 <div *ngIf="courses?.length === 0" class="no-data-message text-center mt-4">
   <p>No data found.</p>

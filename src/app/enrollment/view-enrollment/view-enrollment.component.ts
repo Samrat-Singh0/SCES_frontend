@@ -40,6 +40,7 @@ import {User} from '../../model/user.model';
     MatOption,
   ],
   templateUrl: './view-enrollment.component.html',
+  standalone: true,
   styleUrl: './view-enrollment.component.css'
 })
 export class ViewEnrollmentComponent implements OnInit{
@@ -192,7 +193,7 @@ export class ViewEnrollmentComponent implements OnInit{
           this.enrollments = [];
         }
       }, error: err => {
-        console.log(err.message);
+        // console.log(err.message);
       }
     });
   }

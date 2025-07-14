@@ -25,7 +25,7 @@ export class CourseService {
   }
 
   getPagedCourses(page: number, size: number): Observable<ApiResponse<PageResponse<Course>>> {
-    return this.http.get<ApiResponse<PageResponse<Course>>>(this.courseEndpoints.GET_PAGED_LIST+`?page=${page}&size=${size}&sort=name,asc`);
+    return this.http.get<ApiResponse<PageResponse<Course>>>(this.courseEndpoints.GET_PAGED_LIST+`?page=${page}&size=${size}&sort=id,desc`);
   }
 
   getCoursesBasedOnRole(): Observable<ApiResponse<Course[]>> {
@@ -49,6 +49,6 @@ export class CourseService {
   }
 
   searchCourse(searchCriteria: SearchCourse, page: number, size: number): Observable<ApiResponse<PageResponse<Course>>> {
-    return this.http.post<ApiResponse<PageResponse<Course>>>(this.courseEndpoints.SEARCH_COURSE + `?page=${page}&size=${size}`, searchCriteria);
+    return this.http.post<ApiResponse<PageResponse<Course>>>(this.courseEndpoints.SEARCH_COURSE + `?page=${page}&size=${size}&sort=id,desc`, searchCriteria);
   }
 }

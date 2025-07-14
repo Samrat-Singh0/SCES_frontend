@@ -27,6 +27,7 @@ import {ToastrMsgService} from '../../shared/toastr-msg.service';
 
   ],
   templateUrl: './save-course.component.html',
+  standalone: true,
   styleUrl: './save-course.component.css'
 })
 export class SaveCourseComponent implements OnInit{
@@ -84,7 +85,7 @@ export class SaveCourseComponent implements OnInit{
         Validators.pattern(/^[0-9]+$/)],
       ],
 
-      instructor: ['', [Validators.required]],
+      instructor: [null],
       semester: ['', Validators.required],
       checked: [null]
     });
@@ -108,9 +109,9 @@ export class SaveCourseComponent implements OnInit{
     this.instructorService.getAll().subscribe({
       next: res=> {
         this.instructors = res.body;
-        if(!this.isEditable && this.instructors.length > 0) {
-          this.courseForm.patchValue({instructor: this.instructors[0]})
-        }
+        // if(!this.isEditable && this.instructors.length > 0) {
+        //   this.courseForm.patchValue({instructor: this.instructors[0]})
+        // }
       }, error: err => {
         this.toastr.error('');
       }
@@ -125,7 +126,7 @@ export class SaveCourseComponent implements OnInit{
           name: this.courseForm.value.name,
           creditHours: this.courseForm.value.creditHours,
           fullMarks: this.courseForm.value.fullMarks,
-          instructor: this.courseForm.value.instructor,
+          instructor: this.courseForm.value.instructor || null,
           semester: this.courseForm.value.semester,
           checked: this.courseForm.value.checked
         }

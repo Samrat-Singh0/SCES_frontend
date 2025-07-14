@@ -5,7 +5,7 @@ import {MatIconModule} from '@angular/material/icon';
 import {User} from '../../model/user.model';
 import {UserService} from '../../services/user.service';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
-import {MatSnackBar} from '@angular/material/snack-bar';
+import {ToastrMsgService} from '../../shared/toastr-msg.service';
 
 @Component({
   selector: 'app-add-user',
@@ -18,6 +18,7 @@ import {MatSnackBar} from '@angular/material/snack-bar';
 
   ],
   templateUrl: './save-user.component.html',
+  standalone: true,
   styleUrl: './save-user.component.css'
 })
 export class SaveUserComponent implements OnInit {
@@ -31,7 +32,7 @@ export class SaveUserComponent implements OnInit {
     private fb: FormBuilder,
     private userService: UserService,
     private dialogRef: MatDialogRef<SaveUserComponent>,
-    private snackBar: MatSnackBar,
+    private toastr: ToastrMsgService,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {
     this.isEditMode = !!this.data;
@@ -61,7 +62,7 @@ export class SaveUserComponent implements OnInit {
         ]],
       email: [{value: this.data?.email || '', disabled: this.isEditMode}, [Validators.required, Validators.email, Validators.pattern("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,4}$")]],
       address: [this.data?.address || '', [Validators.required, Validators.pattern("^[A-Za-z ]+$")]],
-      phoneNumber: [this.data?.phoneNumber || '', [Validators.required, Validators.minLength(10), Validators.pattern("^(98\|97)\\d*$")]],
+      phoneNumber: [this.data?.phoneNumber || '', [Validators.required, Validators.minLength(10),  Validators.maxLength(10), Validators.pattern("^(98\|97)\\d*$")]],
       role: [this.data?.role || 'SUPER_ADMIN']
     })
   }
@@ -87,20 +88,20 @@ export class SaveUserComponent implements OnInit {
       if(this.isEditMode){
         this.userService.updateUser(user).subscribe({
           next: (res) => {
-            this.snackBar.open(res.message, "Close", {duration:3000})
+            this.toastr.success(res.message)
             this.dialogRef.close();
           }, error: (err)=> {
-            console.log(err);
-            this.snackBar.open(err.message, "Close", {duration:3000})
+            // console.log(err);
+            this.toastr.error('')
         }
         })
       }else {
         this.userService.addUser(user).subscribe({
           next: res => {
-            this.snackBar.open(res.message, "Close", {duration: 3000});
+            this.toastr.success(res.message);
             this.dialogRef.close();
           }, error: (err) =>{
-            this.snackBar.open(err.message, "Close", {duration: 3000});
+            this.toastr.error('');
           }
         });
       }

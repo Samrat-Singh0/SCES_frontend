@@ -32,6 +32,7 @@ import {PayFee} from '../model/pay-fee.model';
     MatDialogClose
   ],
   templateUrl: './fee-popup.component.html',
+  standalone: true,
   styleUrl: './fee-popup.component.css'
 })
 export class FeePopupComponent {

@@ -7,7 +7,6 @@ import {MatMiniFabButton} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
 import {SaveUserComponent} from '../save-user/save-user.component';
 import {MatDialog} from '@angular/material/dialog';
-import {MatSnackBar} from '@angular/material/snack-bar';
 import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
 import {SearchUser} from '../../model/search.model';
 import {ConfirmationComponent} from '../../shared/confirmation/confirmation.component';
@@ -41,6 +40,7 @@ import {MatOption} from '@angular/material/core';
 
   ],
   templateUrl: './view-user.component.html',
+  standalone: true,
   styleUrl: './view-user.component.css'
 })
 
@@ -58,7 +58,7 @@ export class ViewUserComponent implements OnInit {
   constructor(
     private userService: UserService,
     private dialog: MatDialog,
-    private snackbar: MatSnackBar,
+    private toastr: ToastrService,
     private fb: FormBuilder,
     public joinName: JoinNameService,
     private currentUser: CurrentUserService,
@@ -82,7 +82,7 @@ export class ViewUserComponent implements OnInit {
           this.totalPages = data.body.totalPages;
           this.currentPage = data.body.number;
       }, error: err => {
-        this.snackbar.open(err.message, "Close", {duration: 3000} )
+        this.toastr.error('');
       }
     });
   }
@@ -140,10 +140,10 @@ export class ViewUserComponent implements OnInit {
         this.userService.deleteUser(user.code, result?.remarks).subscribe({
           next: (res) => {
             this.ngOnInit();
-            this.snackbar.open(res.message, "Close", {duration: 3000});
+            this.toastr.success(res.message);
           },
           error: (err) => {
-            this.snackbar.open(err.message, "Close", {duration: 3000});
+            this.toastr.error('');
           }
         })
       }
@@ -170,7 +170,7 @@ export class ViewUserComponent implements OnInit {
           this.currentPage = res.body.number;
 
         }, error: (err) => {
-          console.log(err.message);
+          // console.log(err.message);
         }
       })
     }

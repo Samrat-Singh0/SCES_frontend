@@ -18,6 +18,7 @@ import {ToastrMsgService} from '../../shared/toastr-msg.service';
     NgIf
   ],
   templateUrl: './edit-semester.component.html',
+  standalone: true,
   styleUrl: './edit-semester.component.css'
 })
 export class EditSemesterComponent implements OnInit {

@@ -15,6 +15,7 @@ import {ToastrService} from 'ngx-toastr';
     NgForOf
   ],
   templateUrl: './view-grade-instructor.component.html',
+  standalone: true,
   styleUrl: './view-grade-instructor.component.css'
 })
 export class ViewGradeInstructorComponent implements OnInit{

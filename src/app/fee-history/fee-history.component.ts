@@ -14,6 +14,7 @@ import {NgForOf, NgIf} from '@angular/common';
     NgIf,
   ],
   templateUrl: './fee-history.component.html',
+  standalone: true,
   styleUrl: './fee-history.component.css'
 })
 export class FeeHistoryComponent implements OnInit{

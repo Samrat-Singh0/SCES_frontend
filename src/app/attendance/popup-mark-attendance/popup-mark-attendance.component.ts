@@ -33,6 +33,7 @@ import {ToastrMsgService} from '../../shared/toastr-msg.service';
     NgStyle
   ],
   templateUrl: './popup-mark-attendance.component.html',
+  standalone: true,
   styleUrl: './popup-mark-attendance.component.css'
 })
 export class PopupMarkAttendanceComponent implements OnInit{

@@ -18,6 +18,7 @@ import {ToastrMsgService} from '../shared/toastr-msg.service';
     MatMiniFabButton
   ],
   templateUrl: './password-policy.component.html',
+  standalone: true,
   styleUrl: './password-policy.component.css'
 })
 export class PasswordPolicyComponent implements OnInit {
@@ -62,7 +63,6 @@ export class PasswordPolicyComponent implements OnInit {
       length: policy.length
     }));
 
-    console.log(modifiedPolicies);
     this.passwordPolicyService.updatePolicies(modifiedPolicies).subscribe({
       next: (res) => {
         this.loadPasswordPolicies();
@@ -84,4 +84,7 @@ export class PasswordPolicyComponent implements OnInit {
     }
   }
 
+  resetPolicy() {
+    this.loadPasswordPolicies();
+  }
 }

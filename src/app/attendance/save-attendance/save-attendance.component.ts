@@ -34,6 +34,7 @@ import {ToastrService} from 'ngx-toastr';
     NgClass,
   ],
   templateUrl: './save-attendance.component.html',
+  standalone: true,
   styleUrl: './save-attendance.component.css'
 })
 export class SaveAttendanceComponent implements OnInit{

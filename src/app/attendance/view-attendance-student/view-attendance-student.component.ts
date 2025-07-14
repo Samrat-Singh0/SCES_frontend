@@ -26,6 +26,7 @@ import {ToastrMsgService} from '../../shared/toastr-msg.service';
     NgIf
   ],
   templateUrl: './view-attendance-student.component.html',
+  standalone: true,
   styleUrl: './view-attendance-student.component.css'
 })
 export class ViewAttendanceStudentComponent implements OnInit{

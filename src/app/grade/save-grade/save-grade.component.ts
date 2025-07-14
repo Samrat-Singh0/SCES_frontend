@@ -29,6 +29,7 @@ import {ToastrMsgService} from '../../shared/toastr-msg.service';
     MatMiniFabButton,
   ],
   templateUrl: './save-grade.component.html',
+  standalone: true,
   styleUrl: './save-grade.component.css'
 })
 export class SaveGradeComponent implements OnInit {

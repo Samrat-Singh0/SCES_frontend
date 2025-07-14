@@ -15,6 +15,7 @@ import {ToastrMsgService} from '../../../shared/toastr-msg.service';
     NgIf
   ],
   templateUrl: './analytic.component.html',
+  standalone: true,
   styleUrl: './analytic.component.css'
 })
 export class AnalyticComponent implements OnInit{

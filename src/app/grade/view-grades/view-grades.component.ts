@@ -15,6 +15,7 @@ import {ToastrMsgService} from '../../shared/toastr-msg.service';
     NgIf
   ],
   templateUrl: './view-grades.component.html',
+  standalone: true,
   styleUrl: './view-grades.component.css'
 })
 export class ViewGradesComponent implements OnInit{

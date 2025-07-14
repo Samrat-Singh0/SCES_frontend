@@ -22,6 +22,7 @@ import {ToastrMsgService} from '../../shared/toastr-msg.service';
     NgForOf
   ],
   templateUrl: './view-attendance-instructor.component.html',
+  standalone: true,
   styleUrl: './view-attendance-instructor.component.css'
 })
 export class ViewAttendanceInstructorComponent implements OnInit{

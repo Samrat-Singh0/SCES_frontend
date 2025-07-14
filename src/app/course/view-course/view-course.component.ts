@@ -38,6 +38,7 @@ import {ToastrMsgService} from '../../shared/toastr-msg.service';
     MatSelect,
   ],
   templateUrl: './view-course.component.html',
+  standalone: true,
   styleUrl: './view-course.component.css'
 })
 export class ViewCourseComponent implements OnInit {
@@ -154,7 +155,7 @@ export class ViewCourseComponent implements OnInit {
         this.totalPages = res.body.totalPages;
         this.currentPage = res.body.number;
       }, error: err => {
-        console.log(err.message);
+        // console.log(err.message);
       }
     });
   }

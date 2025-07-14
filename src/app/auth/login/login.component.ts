@@ -63,9 +63,6 @@ export class LoginComponent implements OnInit{
             localStorage.setItem('loggedInUser', JSON.stringify(body.body));
             this.currentUser.setUser(body.body);
           }
-
-          this.errorMessage = '';
-
           if(body.body === null){
             // this.snackBar.open(response.body.message, "Close", {duration: 3000});
             this.toastr.error('Invalid Username/Password');
@@ -95,7 +92,12 @@ export class LoginComponent implements OnInit{
           }
         },
         error:(err) => {
-          this.errorMessage = err.message;
+          if(err.status === 400){
+            const accessToken = err.headers.get('Authorization');
+            const refreshToken = err.headers.get('X-Refresh-Token');
+            this.toastr.error(err.error?.message);
+            this.router.navigate(['initial-login/'+''+err.error?.body]);
+          }
         }
       })
     }

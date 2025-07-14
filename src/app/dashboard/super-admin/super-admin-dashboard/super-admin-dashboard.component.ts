@@ -16,6 +16,7 @@ import {JoinNameService} from '../../../shared/join-name.service';
     SpinnerComponent,
   ],
   templateUrl: './super-admin-dashboard.component.html',
+  standalone: true,
   styleUrl: './super-admin-dashboard.component.css'
 })
 export class SuperAdminDashboardComponent {

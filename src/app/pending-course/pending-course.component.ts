@@ -17,6 +17,7 @@ import {CurrentUserService} from '../shared/current-user.service';
     NgIf
   ],
   templateUrl: './pending-course.component.html',
+  standalone: true,
   styleUrl: './pending-course.component.css'
 })
 export class PendingCourseComponent {
@@ -31,7 +32,7 @@ export class PendingCourseComponent {
     public currentUser: CurrentUserService
   ) {
     this.courses = [];
-    this.currentUser.getUser();
+    this.user = this.currentUser.getUser();
   }
 
   ngOnInit() {
@@ -53,9 +54,7 @@ export class PendingCourseComponent {
       ...course,
       checked: 'CHECKED'
     }
-    console.log("ACCEPT")
-    // this.updateCourse(updatedCourse);
-
+    this.updateCourse(updatedCourse);
   }
 
   rejectCourse(course: Course){
@@ -63,8 +62,7 @@ export class PendingCourseComponent {
       ...course,
       checked: 'REJECTED'
     }
-    console.log("REJECT")
-    // this.updateCourse(updatedCourse);
+    this.updateCourse(updatedCourse);
   }
 
   updateCourse(updatedCourse: Course) {
@@ -77,8 +75,7 @@ export class PendingCourseComponent {
     });
   }
 
-  isCourseAddedByLoggedInUser(instructorName: string): boolean {
-    console.log(this.user);
-    return false;
+  isCourseAddedByLoggedInUser(addedByUserName: string): boolean {
+    return addedByUserName === this.joinName.getFullName(this.user.firstName, this.user.middleName, this.user.lastName);
   }
 }

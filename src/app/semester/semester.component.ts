@@ -21,6 +21,7 @@ import {ToastrMsgService} from '../shared/toastr-msg.service';
     NgIf
   ],
   templateUrl: './semester.component.html',
+  standalone: true,
   styleUrl: './semester.component.css'
 })
 export class SemesterComponent {
