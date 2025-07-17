@@ -36,6 +36,10 @@ export class CourseService {
     return this.http.get<ApiResponse<any>>(this.courseEndpoints.PENDING_COURSE);
   }
 
+  getCoursesWithNoSemester(): Observable<ApiResponse<Course[]>> {
+    return this.http.get<ApiResponse<Course[]>>(this.courseEndpoints.GET_COURSES_WITH_NO_SEMESTER);
+  }
+
   addCourse(course: Course): Observable<ApiResponse<any>> {
     return this.http.post<ApiResponse<any>>(this.courseEndpoints.ADD_COURSE, course);
   }

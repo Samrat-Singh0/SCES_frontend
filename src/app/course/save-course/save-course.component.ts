@@ -126,7 +126,7 @@ export class SaveCourseComponent implements OnInit{
           name: this.courseForm.value.name,
           creditHours: this.courseForm.value.creditHours,
           fullMarks: this.courseForm.value.fullMarks,
-          instructor: this.courseForm.value.instructor || null,
+          instructors: this.courseForm.value.instructor || null,
           semester: this.courseForm.value.semester,
           checked: this.courseForm.value.checked
         }

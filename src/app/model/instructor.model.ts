@@ -1,6 +1,6 @@
 import {User} from './user.model';
 
 export interface Instructor {
-  instructorCode: string,
+  code: string,
   user: User
 }

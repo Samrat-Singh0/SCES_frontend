@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {Semester} from '../model/semester.model';
 import {SemesterService} from '../services/semester.service';
 import {NgForOf, NgIf} from '@angular/common';
@@ -24,7 +24,7 @@ import {ToastrMsgService} from '../shared/toastr-msg.service';
   standalone: true,
   styleUrl: './semester.component.css'
 })
-export class SemesterComponent {
+export class SemesterComponent implements OnInit{
 
   semesters: Semester[] = [];
 
@@ -61,9 +61,7 @@ export class SemesterComponent {
 
   updateSemester(semester: Semester) {
     this.semesterState.setSemester(semester);
-    this.router.navigate(['super/semester/edit'],{
-      queryParams: {label: semester.label}
-    });
+    this.router.navigate(['super/semester/edit']);
   }
 
 }

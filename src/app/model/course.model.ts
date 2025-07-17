@@ -4,10 +4,10 @@ export interface Course {
   creditHours: number;
   fullMarks: number;
   checked: string | null;
-  instructor: {
-    instructorCode: string;
+  instructors: [{
+    code: string;
     user: {
-      userCode: string;
+      code: string;
       firstName: string;
       middleName: string;
       lastName: string;
@@ -17,7 +17,7 @@ export interface Course {
       role: string;
       mustChangePassword: boolean;
     }
-  } | null;
+  }] | null;
   semester: {
     label: string;
     fee: number;

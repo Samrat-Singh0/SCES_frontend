@@ -14,8 +14,25 @@
 }
 
 .header-div button {
-  position: absolute;
   left: 0;
+}
+
+.course-form-array-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5rem;
+  justify-content: space-between;
+}
+
+.control-group {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.form-container {
+  display: flex;
+  flex-direction: column;
 }
 
 .form-control {
@@ -23,7 +40,23 @@
   font-size: 1rem;
 }
 
-.add-btn {
+.form-controls {
+  padding: 10px 10px;
+  height: 60px;
+  font-size: 1rem;
+}
+
+.add-course-container,
+.add-instructor-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.course-select {
+  width: 50vh;
+}
+
+.save-btn {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -42,6 +75,24 @@
   background-color: #009579;
 }
 
+.select-remove-container {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  height:  60px;
+}
+
+.save-sem-btn {
+  display: flex;
+  justify-content: right;
+}
+
+.remove-course-btn {
+  background-color: red;
+  color: white;
+  margin-top: -25px;
+}
+
 
 .error {
   color: red;
@@ -49,7 +100,4 @@
   margin-bottom: 10px;
 }
 
-.custom-ng-select {
-
-}
 

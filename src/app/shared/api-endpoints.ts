@@ -56,7 +56,8 @@ export const CourseEndpoints = {
   SEARCH_COURSE : COURSE_API_URL + "/search",
   PENDING_COURSE: COURSE_API_URL + "/list/pending",
   GET_COURSE_BASED_ON_ROLE : COURSE_API_URL + "/list/role",
-  GET_PAGED_LIST: COURSE_API_URL + "/paged/list"
+  GET_PAGED_LIST: COURSE_API_URL + "/paged/list",
+  GET_COURSES_WITH_NO_SEMESTER: COURSE_API_URL + '/no-sem'
 }
 
 export const InstructorEndpoints = {
