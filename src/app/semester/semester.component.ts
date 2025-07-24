@@ -61,7 +61,8 @@ export class SemesterComponent implements OnInit{
 
   updateSemester(semester: Semester) {
     this.semesterState.setSemester(semester);
-    this.router.navigate(['super/semester/edit']);
+    // this.router.navigate(['super/semester/edit/' + semester.label]);
+    this.router.navigate(['super/semester/edit/']);
   }
 
 }

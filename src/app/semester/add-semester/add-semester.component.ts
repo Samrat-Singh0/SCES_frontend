@@ -7,12 +7,11 @@ import {
   ReactiveFormsModule,
   Validators
 } from "@angular/forms";
-import {Router} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {MatIcon} from '@angular/material/icon';
 import {MatIconButton, MatMiniFabButton} from '@angular/material/button';
 import {SemesterService} from '../../services/semester.service';
 import {NgForOf, NgIf} from '@angular/common';
-import {futureDateValidator} from '../../auth/validators/future-date.validator';
 import {ToastrMsgService} from '../../shared/toastr-msg.service';
 import {Course} from '../../model/course.model';
 import {CourseService} from '../../services/course.service';
@@ -24,6 +23,11 @@ import {MatCard, MatCardContent, MatCardTitle} from '@angular/material/card';
 import {Instructor} from '../../model/instructor.model';
 import {InstructorService} from '../../services/instructor.service';
 import {JoinNameService} from '../../shared/join-name.service';
+import {SaveCourseComponent} from '../../course/save-course/save-course.component';
+import {MatDialog} from '@angular/material/dialog';
+import {SaveUserComponent} from '../../user/save-user/save-user.component';
+import {Role} from '../../enum/role.enum';
+import {SemesterStateService} from '../../shared/semester-state.service';
 
 @Component({
   selector: 'app-add-semester',
@@ -49,13 +53,16 @@ import {JoinNameService} from '../../shared/join-name.service';
   styleUrl: './add-semester.component.css'
 })
 export class AddSemesterComponent implements OnInit {
+  mode: 'add' | 'edit' = 'add';
   addForm: FormGroup;
   availableCourses: Course[] = [];
   selectedCourse: string[] = [];
-  previousSelectedCourses: string[] = [];
   availableInstructors: Instructor[] = [];
   renderCourseField: number = 0;
   renderInstructorField: number = 0;
+  label: string | null = null;
+  semester: Semester | null = null;
+  selectedInstructor: Map<String, Instructor[]> = new Map();
 
   constructor(
     private router: Router,
@@ -64,27 +71,55 @@ export class AddSemesterComponent implements OnInit {
     private toastr: ToastrMsgService,
     private courseService: CourseService,
     private instructorService: InstructorService,
-    public joinName: JoinNameService
+    public joinName: JoinNameService,
+    private dialog: MatDialog,
+    private route: ActivatedRoute,
+    private semesterState: SemesterStateService,
   ) {
     this.addForm = new FormGroup({});
   }
 
   ngOnInit(): void {
+    this.getSemester();
     this.loadCourses();
-    this.buildForm();
     this.loadInstructor();
+    this.buildForm();
+  }
+
+  getSemester() {
+    this.route.paramMap.subscribe(paramMap => {
+      this.label = paramMap.get('label');
+      this.mode = this.label ? 'edit' : 'add';
+
+      if(this.mode === 'edit') {
+        this.semester = this.semesterState.getSemester();
+        if(!this.semester) {
+          this.toastr.error("Semester data not found");
+          this.router.navigate(['super/semester/view']);
+        }
+      }
+    })
   }
 
   buildForm() {
     const today = new Date().toISOString().split('T')[0];
 
     this.addForm = this.builder.group({
-      label: ['', [Validators.required, Validators.pattern("^[A-Za-z]+$"), Validators.minLength(5)]],
-      fee: ['', [Validators.required, Validators.pattern("^[0-9]+$")]],
-      startDate: [today, [Validators.required, futureDateValidator()]],
-      endDate: [today, [Validators.required, futureDateValidator()]],
+      label: [
+        { value: this.semester?.label || '', disabled: this.mode === 'edit' },
+        [Validators.required, Validators.pattern("^[A-Za-z]+$"), Validators.minLength(5)]
+      ],
+      fee: [this.semester?.fee || '', [Validators.required, Validators.pattern("^[0-9]+$")]],
+      startDate: [this.semester?.startDate || today, [Validators.required]],
+      endDate: [this.semester?.endDate || today, [Validators.required]],
       courses: this.builder.array([])
     });
+
+    if (this.mode === 'edit') {
+      this.setCourses();
+    }
+
+    this.addCourse(null);
   }
 
   loadCourses() {
@@ -107,6 +142,42 @@ export class AddSemesterComponent implements OnInit {
     });
   }
 
+  setCourses() {
+    const courseArray = this.courses;
+    let index = 0;
+    console.log(this.semester);
+    this.semester?.course?.forEach(course => {
+      this.renderCourseField++;
+      this.availableCourses.push(course);
+
+      const courseGroup = this.builder.group({
+        course: [course, [Validators.required]],
+        instructors: this.builder.array([])
+      });
+
+      courseArray.push(courseGroup);
+      this.setInstructors(index);
+      index++;
+    });
+  }
+
+  setInstructors(courseIndex: number) {
+    const instructorArray = this.getInstructors(courseIndex);
+
+    const course = this.semester?.course?.[courseIndex];
+
+    course?.instructors?.forEach(instructor => {
+      this.renderInstructorField++;
+      this.availableInstructors.push(instructor);
+
+      const instructorGroup = this.builder.group({
+        instructor: [instructor, [Validators.required]],
+      });
+
+      instructorArray.push(instructorGroup);
+    })
+  }
+
   get courses() {
     return this.addForm.get('courses') as FormArray;
   }
@@ -115,20 +186,20 @@ export class AddSemesterComponent implements OnInit {
     return this.courses.at(courseIndex).get('instructors') as FormArray;
   }
 
-  addCourse() {
+  addCourse(course: Course | null) {
     this.renderCourseField++;
     const courseForm = this.builder.group({
-      course: [''],
+      course: [course || '', [Validators.required]],
       instructors: this.builder.array([])
     })
 
     this.courses.push(courseForm);
   }
 
-  addInstructor(courseIndex: number) {
+  addInstructor(courseIndex: number, instructor: Instructor | null) {
     this.renderInstructorField++;
     const instructorForm = this.builder.group({
-      instructor: ['']
+      instructor: [instructor || '', [Validators.required]],
     })
     this.getInstructors(courseIndex).push(instructorForm);
   }
@@ -169,16 +240,17 @@ export class AddSemesterComponent implements OnInit {
         }
       })
     }
-
-    if (!this.addForm.invalid) {
+    if(this.addForm.invalid) {
+      this.toastr.error('Please fill all the fields that are required.');
+    }else{
       this.semesterService.add(semesterData).subscribe({
-        next: res => {
-          this.router.navigate(['super/semester/view']);
-          this.toastr.success(res.message);
-        }, error: err => {
-          this.toastr.error(err.message);
-        }
-      });
+      next: res => {
+        this.router.navigate(['super/semester/view']);
+        this.toastr.success(res.message);
+      }, error: err => {
+        this.toastr.error(err.message);
+      }
+    });
     }
   }
 
@@ -187,26 +259,107 @@ export class AddSemesterComponent implements OnInit {
   }
 
   onCourseSelect(event: MatSelectChange, index: number) {
-    const newCode = event.value.code;
-    const oldCode = this.previousSelectedCourses[index];
 
-    if (oldCode) {
-      const oldIndex = this.selectedCourse.indexOf(oldCode);
-      if (oldIndex !== -1) {
-        this.selectedCourse.splice(oldIndex, 1);
-      }
+    const oldCode = this.selectedCourse.splice(index, 1);
+    if(oldCode) {
+      this.selectedCourse.splice(index, 1);
     }
-
-    this.previousSelectedCourses[index] = newCode;
-
-    if (!this.selectedCourse.includes(newCode)) {
-      this.selectedCourse.push(newCode);
-    }
+    this.selectedCourse.push(event.value.code);
   }
 
   isCourseSelected(course: Course): boolean {
     return this.selectedCourse.includes(course.code);
   }
 
+  onInstructorSelect(event: MatSelectChange, courseIndex: number) {
+    const courseCode = this.selectedCourse[courseIndex];
+    if(courseCode) {
+      const selectedList = this.selectedInstructor.get(courseCode) || [];
+      const alreadySelected = selectedList.some(instr => instr.code === courseCode);
+      if(!alreadySelected) {
+        selectedList.push(event.value);
+        this.selectedInstructor.set(courseCode, selectedList);
+      }
+    }
+  }
+
+  isInstructorSelected(courseIndex: number, instructor: Instructor): boolean {
+    const courseCode = this.selectedCourse[courseIndex];
+    if(courseCode) {
+      const selected = this.selectedInstructor.get(courseCode) || [];
+      for(let i = 0; i < selected.length; i++) {
+        if(selected[i].code === instructor.code) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+
+
+  addNewCourse() {
+    const dialog = this.dialog.open(SaveCourseComponent, {
+      width: '1000px'
+    })
+
+    dialog.afterClosed().subscribe((result) => {
+      if (result) {
+        this.availableCourses.push(result);
+        this.addCourse(result);
+      }
+    })
+  }
+
+  addNewInstructor() {
+    const dialog = this.dialog.open(SaveUserComponent, {
+      width: '1000px',
+      height: '800px',
+      data: {
+        firstName: undefined,
+        middleName: undefined,
+        lastName: undefined,
+        role: Role.INSTRUCTOR,
+        phoneNumber: undefined,
+        forSemester: true
+      }
+    });
+
+    dialog.afterClosed().subscribe((result) => {
+      if (result) {
+        this.instructorService.getAll().subscribe({
+          next: res => {
+            this.availableInstructors = res.body;
+
+            const newlyAddedInstructor = this.availableInstructors.find(
+              instructor => instructor.user.email === result.user.email
+            );
+
+            if (newlyAddedInstructor) {
+              const lastCourseIndex = this.courses.length - 1;
+              this.addInstructor(lastCourseIndex, newlyAddedInstructor);
+            }
+          },
+          error: err => {
+            this.toastr.error('Failed to load instructors.');
+          }
+        });
+      }
+    });
+  }
+
+  compareByCode = (a: Course, b: Course): boolean => {
+    return a && b ? a.code === b.code : a === b;
+  }
+
+  compareByEmail = (a: Instructor, b: Instructor): boolean => {
+    return a && b ? a.user.email === b.user.email : a === b;
+  }
+
+  resetForm() {
+    this.getSemester();
+    this.loadCourses();
+    this.loadInstructor();
+    this.buildForm();
+  }
 
 }

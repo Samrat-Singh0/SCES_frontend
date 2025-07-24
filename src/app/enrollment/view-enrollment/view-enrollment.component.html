@@ -65,8 +65,8 @@
       <th>Outstanding Fee (Rs.)</th>
       <th>Enrolled Date</th>
       <th>Completion Date</th>
-      <th *ngIf="userRole === Role.STUDENT">Actions</th>
-      <th *ngIf="userRole === Role.SUPER_ADMIN">Actions</th>
+      <th>Actions</th>
+<!--      <th *ngIf="userRole === Role.SUPER_ADMIN">Actions</th>-->
     </tr>
 
     <ng-container *ngFor="let enrollment of enrollments; let i = index">
@@ -128,7 +128,7 @@
             <mat-icon>preview</mat-icon>
           </button>
           <button mat-mini-fab aria-label="Pay Fee"
-                  *ngIf="userRole === Role.STUDENT"
+                  *ngIf="userRole === Role.SUPER_ADMIN"
                   class="pay-btn"
                   (click)="payFee(enrollment);"
                   matTooltip="Pay now"

@@ -3,7 +3,7 @@
   align-items: center;
   justify-content: center;
   position: relative;
-  margin-top: 20px;
+  /*margin-top: 20px;*/
   margin-bottom: 5rem;
 }
 
@@ -52,11 +52,22 @@
   flex-direction: column;
 }
 
+.course-select,
+.instructor-select {
+  height: 50px;
+  margin-top: -25px;
+  background-color: white;
+}
+
 .course-select {
+  margin-top: -25px;
+  height: 50px;
+
   width: 50vh;
 }
 
-.save-btn {
+.save-btn,
+.reset-button {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -64,12 +75,29 @@
   height: 50px;
   width: 15vh;
   border: none;
-  background-color: #006653;
   border-radius: 5px;
-  color: white;
   cursor: pointer;
   transition: background-color -0.2s ease;
 }
+
+.save-btn {
+  background-color: #006653;
+  color: white;
+}
+
+.save-btn:hover {
+  background-color: #009579;
+}
+
+.reset-button {
+  background-color: #e68900;
+  color: white;
+}
+
+.reset-button:hover {
+  background-color: #ff9800;
+}
+
 
 .add-btn:hover {
   background-color: #009579;
@@ -85,6 +113,7 @@
 .save-sem-btn {
   display: flex;
   justify-content: right;
+  gap: 5px;
 }
 
 .remove-course-btn {
@@ -100,4 +129,13 @@
   margin-bottom: 10px;
 }
 
+.new-course-link {
+  color: #0d6efd;
+  text-decoration: none;
+}
 
+.new-course-link:hover {
+  color: #0a58ca;
+  text-decoration: underline;
+  cursor: pointer;
+}

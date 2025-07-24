@@ -1,13 +1,44 @@
-<h4 class="text-center text-xl font-semibold mt-4 mb-6">Select Course</h4>
+<div class="header-section">
+  <button mat-icon-button (click)="goBack()">
+    <mat-icon>arrow_back</mat-icon>
+  </button>
+  <h4 class="header-title">Attendance of {{course?.name}}</h4>
+</div>
 
-<div class="mt-5 course-grid">
-  <div *ngFor="let course of courses" class="course-card" (click)="saveAttendance(course)">
-    <mat-card class="course-mat-card">
-      <mat-card-title class="course-title">
-        {{ course.name }}
-      </mat-card-title>
-      <mat-card-content class="course-content">
-      </mat-card-content>
-    </mat-card>
-  </div>
+<div class="mt-5 date-div">
+  <mat-form-field appearance="fill">
+    <input matInput [matDatepicker]="picker" [(ngModel)]="selectedDate" [min]="minimumDateOfAttendance" [max]="today">
+    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>    <!--calendar icon-->
+    <mat-datepicker #picker></mat-datepicker>   <!--actual date picker component-->
+  </mat-form-field>
+  <button class="view-btn" (click)="populateAttendance()">
+    View
+  </button>
+</div>
+
+<div class="attendance-div">
+  <table class="attendance-table">
+    <tr>
+      <th>S.N.</th>
+      <th>Student Name</th>
+      <th>Status</th>
+      <th>Presence Rate(%)</th>
+    </tr>
+    <tr *ngFor="let student of students; let i = index">
+      <td>{{ i + 1}}</td>
+      <td>
+        {{ joinName.getFullName(
+        student?.user?.firstName,
+        student?.user?.middleName,
+        student?.user?.lastName
+      ) }}
+      </td>
+      <td class="attendance-cell">
+        <span [ngClass]="getStatusClass(getStatus(student))">
+          {{ getStatus(student)}}
+        </span>
+      </td>
+      <td>{{getAttendanceRate(student.code)}}</td>
+    </tr>
+  </table>
 </div>

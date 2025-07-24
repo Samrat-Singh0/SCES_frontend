@@ -67,7 +67,7 @@
       </div>
     </div>
 
-    <div class="form-group" *ngIf="!isEditMode">
+    <div class="form-group" *ngIf="!isEditMode && !isFormForInstructor">
       <label for="role">Role</label>
       <select class="role" formControlName="role" [disabled]="isEditMode">
         <option value="SUPER_ADMIN">Super Admin</option>

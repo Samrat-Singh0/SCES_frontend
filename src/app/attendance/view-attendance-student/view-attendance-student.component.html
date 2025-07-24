@@ -17,6 +17,7 @@
       <th>S.N.</th>
       <th>Course Name</th>
       <th>Attendance</th>
+      <th>Presence Rate (%)</th>
     </thead>
     <tbody >
       <tr *ngFor="let attendance of attendances; let i = index">
@@ -27,6 +28,7 @@
             {{attendance.attendanceStatus}}
           </span>
         </td>
+        <td>{{getAttendanceRate(attendance.course.code)}}</td>
       </tr>
 
     </tbody>

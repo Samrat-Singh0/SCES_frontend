@@ -27,7 +27,11 @@ export class AttendanceService {
     return this.http.get<ApiResponse<Attendance[]>>(this.attendanceEndpoints.GET_ATTENDANCE_DATE, { params });
   }
 
-  getAttendanceRate(courseCode: string): Observable<ApiResponse<AttendanceRate[]>> {
-    return this.http.get<ApiResponse<AttendanceRate[]>>(this.attendanceEndpoints.GET_RATE+`/${courseCode}`);
+  getAttendanceRateOfStudent(courseCode: string): Observable<ApiResponse<AttendanceRate[]>> {
+    return this.http.get<ApiResponse<AttendanceRate[]>>(this.attendanceEndpoints.GET_RATE_OF_STUDENT+`/${courseCode}`);
+  }
+
+  getAttendanceRateOfCourse(): Observable<ApiResponse<AttendanceRate[]>> {
+    return this.http.get<ApiResponse<AttendanceRate[]>>(this.attendanceEndpoints.GET_RATE_OF_COURSE);
   }
 }

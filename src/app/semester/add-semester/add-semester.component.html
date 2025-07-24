@@ -2,15 +2,16 @@
   <button mat-icon-button (click)="goBack()">
     <mat-icon>arrow_back</mat-icon>
   </button>
-  <h4 class="header-title">Add Semester</h4>
+  <h4 class="header-title">{{ mode === 'add' ? 'Add Semester' : 'Update Semester' }}</h4>
 </div>
 
+<div class="p-2 text-end"><i style="color: gray">Fields with "<b style="color: red">*</b>" are mandatory.</i></div>
 <form [formGroup]="addForm" (ngSubmit)="saveSemester()">
   <mat-card>
     <mat-card-title class="mb-3 form-label fw-semibold p-3">Semester</mat-card-title>
     <mat-card-content>
       <div class="mb-3 control-group">
-        <label for="label" class="form-label fw-semibold">Level</label>
+        <label for="label" class="form-label fw-semibold">Level <b style="color: red">*</b></label>
         <input
           placeholder="E.g. First"
           type="text"
@@ -27,9 +28,10 @@
       </div>
 
       <div class="mb-3 control-group">
-        <label for="fee" class="form-label fw-semibold">Fee (Rs.)</label>
+        <label for="fee" class="form-label fw-semibold">Fee (Rs.)<b style="color: red"> *</b></label>
         <input
           type="text"
+          placeholder="E.g. 50000"
           id="fee"
           class="form-controls"
           formControlName="fee">
@@ -41,7 +43,7 @@
       </div>
 
       <div class="mb-3 control-group">
-        <label for="startDate" class="form-label fw-semibold">Start Date</label>
+        <label for="startDate" class="form-label fw-semibold">Start Date <b style="color: red">*</b></label>
         <input
           type="date"
           id="startDate"
@@ -57,7 +59,7 @@
       </div>
 
       <div class="mb-3 control-group">
-        <label for="endDate" class="form-label fw-semibold">End Date</label>
+        <label for="endDate" class="form-label fw-semibold">End Date <b style="color: red">*</b></label>
         <input
           type="date"
           id="endDate"
@@ -78,11 +80,11 @@
             <div *ngFor="let courseGroup of courses.controls; let i = index"
                  [formGroupName]="i"
                  class="mb-3 control-group">
-              <label class="form-label fw-semibold">Course {{ i + 1 }}</label>
+              <label class="form-label fw-semibold">Course {{ i + 1 }} <b style="color: red">*</b></label>
               <div class="select-remove-container">
                 <mat-form-field appearance="outline" class="course-select">
                   <mat-label class="mb-2">Select a course</mat-label>
-                  <mat-select formControlName="course" (selectionChange)="onCourseSelect($event,i)">
+                  <mat-select class="select-control" formControlName="course" [compareWith]="compareByCode" (selectionChange)="onCourseSelect($event,i)">
                     <mat-option
                       *ngFor="let course of availableCourses"
                       [value]="course"
@@ -103,12 +105,16 @@
                     <div *ngFor="let instructorGroup of getInstructors(i).controls; let j = index"
                          [formGroupName]="j"
                          class="mb-3 control-group">
-                      <label class="form-label fw-semibold">Instructor {{ j + 1 }}</label>
+                      <label class="form-label fw-semibold">Instructor {{ j + 1 }} <b style="color: red">*</b></label>
                       <div class="select-remove-container">
                         <mat-form-field appearance="outline" class="instructor-select">
                           <mat-label class="mb-2">Select a instructor</mat-label>
-                          <mat-select formControlName="instructor">
-                            <mat-option *ngFor="let instructor of availableInstructors" [value]="instructor">
+                          <mat-select formControlName="instructor" [compareWith]="compareByEmail"  (selectionChange)="onInstructorSelect($event, i)">
+                            <mat-option
+                              *ngFor="let instructor of availableInstructors"
+                              [value]="instructor"
+                              [disabled]="isInstructorSelected(i, instructor)"
+                            >
                               {{ joinName.getFullName(instructor.user.firstName, instructor.user.middleName, instructor.user.lastName) }}
                             </mat-option>
                           </mat-select>
@@ -123,8 +129,8 @@
                 </mat-card-content>
               </mat-card>
               <div class="mt-2 add-instructor-container">
-                <mat-label class="form-label fw-semibold">Assign a instructor?</mat-label>
-                <button matTooltip="Add instructor field" type="button" mat-mini-fab (click)="addInstructor(i)">
+                <mat-label class="form-label fw-semibold">Assign a instructor? <i (click)="addNewInstructor()" class="new-course-link">Or add a new instructor?</i></mat-label>
+                <button matTooltip="Add instructor field" type="button" mat-mini-fab (click)="addInstructor(i,null)">
                   <mat-icon class="add-instructor-btn">add</mat-icon>
                 </button>
               </div>
@@ -135,8 +141,8 @@
       </mat-card>
 
       <div class="mt-2 add-course-container">
-        <mat-label class="form-label fw-semibold">Assign a course?</mat-label>
-        <button matTooltip="Add course field" type="button" mat-mini-fab (click)="addCourse()">
+        <mat-label class="form-label fw-semibold">Assign a course? <i (click)="addNewCourse()" class="new-course-link">Or add a new course?</i></mat-label>
+        <button matTooltip="Add course field" type="button" mat-mini-fab (click)="addCourse(null)">
           <mat-icon class="add-course-btn">add</mat-icon>
         </button>
       </div>
@@ -147,6 +153,10 @@
     <button type="submit" class="save-btn">
       <mat-icon>save</mat-icon>
       Save
+    </button>
+    <button type="button" class="reset-button" (click)="resetForm()">
+      <mat-icon>refresh</mat-icon>
+      RESET
     </button>
   </div>
 

@@ -92,8 +92,12 @@
                       <div class="select-remove-container">
                         <mat-form-field appearance="outline" class="instructor-select">
                           <mat-label class="mb-2">Select a instructor</mat-label>
-                          <mat-select formControlName="instructor">
-                            <mat-option *ngFor="let instructor of assignedInstructors" [value]="instructor">
+                          <mat-select formControlName="instructor" [compareWith]="compareByEmail" (selectionChange)="onInstructorSelect($event, i)">
+                            <mat-option
+                              *ngFor="let instructor of availableInstructors"
+                              [value]="instructor"
+                              [disabled]="isInstructorSelected(i, instructor)"
+                            >
                               {{ joinName.getFullName(
                               instructor.user.firstName, instructor.user.middleName, instructor.user.lastName
                             )}}
@@ -110,8 +114,8 @@
                 </mat-card-content>
               </mat-card>
               <div class="mt-2 add-instructor-container">
-                <mat-label class="form-label fw-semibold">Assign a instructor?</mat-label>
-                <button matTooltip="Add instructor field" type="button" mat-mini-fab (click)="addInstructor(i)">
+                <mat-label class="form-label fw-semibold">Assign a instructor? <i (click)="addNewInstructor()" class="new-course-link">Or add a new instructor?</i></mat-label>
+                <button matTooltip="Add instructor field" type="button" mat-mini-fab (click)="addInstructor(i,null)">
                   <mat-icon class="add-instructor-btn">add</mat-icon>
                 </button>
               </div>
@@ -121,8 +125,8 @@
       </mat-card>
 
       <div class="add-course-container">
-        <mat-label class="form-label fw-semibold">Assign a course?</mat-label>
-        <button matTooltip="Add a field" type="button" mat-mini-fab (click)="addCourse()">
+        <mat-label class="form-label fw-semibold">Assign a course? <i (click)="addNewCourse()" class="new-course-link">Or add a new course?</i></mat-label>
+        <button matTooltip="Add a field" type="button" mat-mini-fab (click)="addCourse(null)">
           <mat-icon class="add-course-btn">add</mat-icon>
         </button>
       </div>

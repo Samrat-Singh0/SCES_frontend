@@ -131,8 +131,12 @@ export class SaveGradeComponent implements OnInit {
 
     this.gradeService.saveGrade(grade).subscribe({
       next: value => {
-        this.ngOnInit();
-        this.toastr.success("Student Graded.");
+        if(!value.success) {
+          this.toastr.error(value.message);
+        }else {
+          this.toastr.success("Student Graded.");
+          this.ngOnInit();
+        }
       }, error: err => {
         this.toastr.error('');
       }
@@ -151,10 +155,8 @@ export class SaveGradeComponent implements OnInit {
     if(this.gradeInput.some(grade => grade === null || undefined)){
       return false;
     }
-    if(this.gradeInput.some(grade => grade > 60)) {
-      return false;
-    }
-    return true;
+    return !this.gradeInput.some(grade => grade > 60);
+
   }
 
 }

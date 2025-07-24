@@ -134,7 +134,7 @@ export class SaveEnrollmentComponent implements OnInit{
 
   onSemesterChange(semester: Semester){
     this.coursePerSemester = this.allCourses.filter(
-      (course) => course.semester.label === semester.label
+      (course) => course.semester?.label === semester?.label
     );
   }
 

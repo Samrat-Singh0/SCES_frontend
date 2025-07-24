@@ -17,6 +17,10 @@ import {MatCard, MatCardContent, MatCardTitle} from '@angular/material/card';
 import {Instructor} from '../../model/instructor.model';
 import {JoinNameService} from '../../shared/join-name.service';
 import {InstructorService} from '../../services/instructor.service';
+import {SaveCourseComponent} from '../../course/save-course/save-course.component';
+import {MatDialog} from '@angular/material/dialog';
+import {SaveUserComponent} from '../../user/save-user/save-user.component';
+import {Role} from '../../enum/role.enum';
 
 @Component({
   selector: 'app-edit-semester',
@@ -47,12 +51,11 @@ export class EditSemesterComponent implements OnInit {
   label: string | null = null;
   availableCourses: Course[] = [];
   selectedCourses: Course[] = [];
-  assignedInstructors: Instructor[] = [];
   availableInstructors: Instructor[] = [];
   selectedCourseCodes: string[] = [];
-  previousSelectedCourses: string[]= [];
   renderCourseField: number = 0;
   renderInstructorField: number = 0;
+  selectedInstructor: Map<String, Instructor[]> = new Map();
 
 
   constructor(
@@ -65,6 +68,7 @@ export class EditSemesterComponent implements OnInit {
     private router: Router,
     public joinName: JoinNameService,
     private instructorService: InstructorService,
+    private dialog: MatDialog,
   ) {
     this.editForm = new FormGroup({});
   }
@@ -107,7 +111,7 @@ export class EditSemesterComponent implements OnInit {
   populateAvailableInstructors() {
     this.instructorService.getAll().subscribe({
       next: res => {
-        this.assignedInstructors = this.assignedInstructors.concat(res.body);
+        this.availableInstructors = this.availableInstructors.concat(res.body);
       }
     });
   }
@@ -157,18 +161,23 @@ export class EditSemesterComponent implements OnInit {
     const instructorArray = this.getInstructors(courseIndex);
 
     const course = this.semester?.course?.[courseIndex];
+    const selectedInstructors: Instructor[] = [];
 
     course?.instructors?.forEach(instructor => {
       this.renderInstructorField++;
-      this.assignedInstructors.push(instructor);
+
+      // this.availableInstructors.push(instructor);
+      selectedInstructors.push(instructor);
 
       const instructorGroup = this.formBuilder.group({
         instructor: [instructor],
       });
 
       instructorArray.push(instructorGroup);
-    })
-    console.log(instructorArray.value);
+    });
+    if(course?.code) {
+      this.selectedInstructor.set(course.code, selectedInstructors);
+    }
   }
 
   concatArrays(): any {
@@ -177,23 +186,22 @@ export class EditSemesterComponent implements OnInit {
   }
 
 
-  addCourse() {
+  addCourse(course: Course | null) {
     this.renderCourseField++;
     const courseForm = this.formBuilder.group({
-      course: [''],
+      course: [course || ''],
       instructors: this.formBuilder.array([])
     })
 
     this.courses.push(courseForm);
   }
 
-  addInstructor(courseIndex: number) {
+  addInstructor(courseIndex: number, instructor: Instructor | null) {
     this.renderInstructorField++;
     const instructorForm = this.formBuilder.group({
-      instructor: ['']
-    });
+      instructor: [instructor || '']
+    })
     this.getInstructors(courseIndex).push(instructorForm);
-
   }
 
   removeInstructor(courseIndex: number, instructorIndex: number) {
@@ -215,25 +223,41 @@ export class EditSemesterComponent implements OnInit {
   }
 
   onCourseSelect(event: MatSelectChange, index: number) {
-    const newCode = event.value.code;
-    const oldCode = this.previousSelectedCourses[index];
 
-    if (oldCode) {
-      const oldIndex = this.selectedCourseCodes.indexOf(oldCode);
-      if (oldIndex !== -1) {
-        this.selectedCourseCodes.splice(oldIndex, 1);
-      }
+    const oldCode = this.selectedCourses.splice(index, 1);
+    if(oldCode) {
+      this.selectedCourses.splice(index, 1);
     }
-
-    this.previousSelectedCourses[index] = newCode;
-
-    if (!this.selectedCourseCodes.includes(newCode)) {
-      this.selectedCourseCodes.push(newCode);
-    }
+    this.selectedCourses.push(event.value.code);
   }
 
   isCourseSelected(course: Course): boolean {
     return this.selectedCourseCodes.includes(course.code);
+  }
+
+  onInstructorSelect(event: MatSelectChange, courseIndex: number) {
+    const courseCode = this.selectedCourses[courseIndex].code;
+    if(courseCode) {
+      const selectedList = this.selectedInstructor.get(courseCode) || [];
+      const alreadySelected = selectedList.some(instr => instr.code === event.value.code);
+      if (!alreadySelected) {
+        selectedList.push(event.value);
+        this.selectedInstructor.set(courseCode, selectedList);
+      }
+    }
+  }
+
+  isInstructorSelected(courseIndex: number, instructor: Instructor): boolean {
+    const courseCode = this.selectedCourses[courseIndex]?.code;
+    if(courseCode) {
+      const selected = this.selectedInstructor.get(courseCode) || [];
+      for(let i = 0; i < selected.length; i++) {
+        if(selected[i].code === instructor.code) {
+          return true;
+        }
+      }
+    }
+    return false;
   }
 
 
@@ -248,7 +272,17 @@ export class EditSemesterComponent implements OnInit {
       fee: this.editForm.get('fee')?.value,
       startDate: this.editForm.get('startDate')?.value,
       endDate: this.editForm.get('endDate')?.value,
-      course: this.courses.controls.map(control => control.get('course')?.value)
+      course: this.courses.controls.map(courseControl => {
+        const course = courseControl.get('course')?.value;
+
+        const instructors = (courseControl.get('instructors') as FormArray).controls
+        .map(instructorControl => instructorControl.get('instructor')?.value);
+
+        return {
+          ...course,
+          instructors: instructors,
+        }
+      })
     }
 
     this.semesterService.update(updatedSemester).subscribe({
@@ -274,4 +308,64 @@ export class EditSemesterComponent implements OnInit {
   courseMapper(a: Course, b: Course) {
     return(a.code === b.code);
   }
+
+  addNewCourse() {
+    const dialog = this.dialog.open(SaveCourseComponent, {
+      width: '1000px'
+    })
+
+    dialog.afterClosed().subscribe((result) => {
+      if (result) {
+        this.availableCourses.push(result);
+        this.addCourse(result);
+      }
+    })
+  }
+
+  addNewInstructor() {
+    const dialog = this.dialog.open(SaveUserComponent, {
+      width: '1000px',
+      height: '800px',
+      data: {
+        firstName: undefined,
+        middleName: undefined,
+        lastName: undefined,
+        role: Role.INSTRUCTOR,
+        phoneNumber: undefined,
+        forSemester: true
+      }
+    });
+
+    dialog.afterClosed().subscribe((result) => {
+      if (result) {
+        this.instructorService.getAll().subscribe({
+          next: res => {
+            this.availableInstructors = res.body;
+
+            const newlyAddedInstructor = this.availableInstructors.find(
+              instructor => instructor.user.email === result.user.email
+            );
+
+
+            if (newlyAddedInstructor) {
+              const lastCourseIndex = this.courses.length - 1;
+              this.addInstructor(lastCourseIndex, newlyAddedInstructor);
+            }
+          },
+          error: err => {
+            this.toastr.error('Failed to load instructors.');
+          }
+        });
+      }
+    });
+  }
+
+  compareByCode = (a: Course, b: Course): boolean => {
+    return a && b ? a.code === b.code : a === b;
+  }
+
+  compareByEmail = (a: Instructor, b: Instructor): boolean => {
+    return a && b ? a.user.email === b.user.email : a === b;
+  }
+
 }

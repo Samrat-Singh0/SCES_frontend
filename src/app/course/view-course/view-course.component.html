@@ -40,13 +40,6 @@
 
   </form>
 
-
-  <div class="add-container">
-    <button class="add-btn" (click) = "addCourse()">
-      <mat-icon>add</mat-icon>
-      Add Course
-    </button>
-  </div>
 </div>
 
 <div class="course-container">
@@ -57,7 +50,6 @@
       <th>Course Name</th>
       <th>Credit Hour</th>
       <th>Full Mark</th>
-      <th>Assigned Instructor</th>
       <th>Semester</th>
       <th>Actions</th>
     </tr>
@@ -68,14 +60,7 @@
       <td>{{ course.name }}</td>
       <td>{{ course.creditHours }}</td>
       <td>{{ course.fullMarks }}</td>
-      <td>{{course.instructor !== null ?
-        joinName.getFullName(
-          course?.instructor?.user?.firstName,
-          course?.instructor?.user?.middleName,
-          course?.instructor?.user?.lastName) :
-        "-"
-        }}</td>
-      <td>-</td>
+      <td>{{course.semester?.label || '-'}}</td>
       <td class="edit-delete-btn">
         <button mat-mini-fab
                 matTooltip="Update"
@@ -124,7 +109,7 @@
     <button [disabled]="currentPage === 0" (click)="goToPage(currentPage - 1)">
       Prev
     </button>
-    <!--  [].constructor(totalPages): empty array create garxa, of size: totalPAges-->
+
     <button
       *ngFor="let page of [].constructor(totalPages); let i = index"
       [class.active]="i === currentPage"

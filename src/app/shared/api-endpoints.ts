@@ -61,7 +61,8 @@ export const CourseEndpoints = {
 }
 
 export const InstructorEndpoints = {
-  GET_ALL : SUPER_API_BASE_URL + '/instructor/list'
+  GET_ALL : SUPER_API_BASE_URL + '/instructor/list',
+  GET_INSTRUCTOR: SUPER_API_BASE_URL + '/instructor',
 }
 
 export const EnrollmentEndpoints = {
@@ -86,7 +87,8 @@ export const AttendanceEndpoints = {
   GET_ATTENDANCE_TODAY: ATTENDANCE_API_URL + "/get/today",
   GET_ATTENDANCE_DATE: ATTENDANCE_API_URL + "/get/date",
   SAVE_ATTENDANCE : ATTENDANCE_API_URL + "/save",
-  GET_RATE : ATTENDANCE_API_URL + '/rate'
+  GET_RATE_OF_STUDENT : ATTENDANCE_API_URL + '/rate/student',
+  GET_RATE_OF_COURSE : ATTENDANCE_API_URL + '/rate/course',
 }
 
 export const FeeEndpoints = {

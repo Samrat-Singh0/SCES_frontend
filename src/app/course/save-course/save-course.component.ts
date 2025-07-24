@@ -1,5 +1,4 @@
-import {Component, OnInit} from '@angular/core';
-import {MatIconButton} from '@angular/material/button';
+import {Component, Inject, OnInit, Optional} from '@angular/core';
 import {NgClass, NgIf} from '@angular/common';
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import {Semester} from '../../model/semester.model';
@@ -9,18 +8,14 @@ import {InstructorService} from '../../services/instructor.service';
 import {CourseService} from '../../services/course.service';
 import {ActivatedRoute, Router} from '@angular/router';
 import {MatIcon} from '@angular/material/icon';
-import {MatOption} from '@angular/material/core';
-import {MatSelect} from '@angular/material/select';
 import {JoinNameService} from '../../shared/join-name.service';
 import {ToastrMsgService} from '../../shared/toastr-msg.service';
+import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 
 @Component({
   selector: 'app-save-course',
   imports: [
     MatIcon,
-    MatIconButton,
-    MatOption,
-    MatSelect,
     NgIf,
     ReactiveFormsModule,
     NgClass,
@@ -46,16 +41,23 @@ export class SaveCourseComponent implements OnInit{
     private courseService: CourseService,
     private router: Router,
     private route: ActivatedRoute,
-    public joinName: JoinNameService
+    public joinName: JoinNameService,
+    @Optional() private dialogRef: MatDialogRef<SaveCourseComponent>,
+    @Optional() @Inject(MAT_DIALOG_DATA) public data: any,
   ) {
     this.courseForm = new FormGroup({});
   }
 
   ngOnInit() {
+    this.isDialog();
     this.buildForm();
     this.isFormAddOrUpdate();
     this.populateSemester();
     this.populateInstructor();
+  }
+
+  isDialog(): boolean {
+    return !!this.dialogRef;
   }
 
   isFormAddOrUpdate() {
@@ -85,8 +87,8 @@ export class SaveCourseComponent implements OnInit{
         Validators.pattern(/^[0-9]+$/)],
       ],
 
-      instructor: [null],
-      semester: ['', Validators.required],
+      // instructor: [null],
+      // semester: ['', Validators.required],
       checked: [null]
     });
   }
@@ -138,22 +140,16 @@ export class SaveCourseComponent implements OnInit{
             this.toastr.error('');
           }
         });
-      } else {
-        this.courseService.addCourse(this.courseForm.value).subscribe({
-          next: res => {
-            this.router.navigate(['super/course/view']);
-            this.toastr.success(res.message);
-          }, error: err => {
-            this.toastr.error('');
-          }
-        });
+      }else {
+        this.dialogRef.close(this.courseForm.value);
       }
+
     }
 
   }
 
-  goBack() {
-    this.router.navigate(['super/course/view']);
+  closeForm() {
+    this.dialogRef.close();
   }
 
   instructorMapper(a: Instructor, b: Instructor): boolean {
@@ -166,5 +162,9 @@ export class SaveCourseComponent implements OnInit{
 
   resetForm() {
     this.ngOnInit();
+  }
+
+  goBack() {
+    this.router.navigate(['super/course/view']);
   }
 }

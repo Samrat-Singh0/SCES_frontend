@@ -30,11 +30,11 @@ import {
 import {
   ViewAttendanceStudentComponent
 } from './attendance/view-attendance-student/view-attendance-student.component';
-import {SaveAttendanceComponent} from './attendance/save-attendance/save-attendance.component';
 import {
   PopupMarkAttendanceComponent
 } from './attendance/popup-mark-attendance/popup-mark-attendance.component';
 import {AnalyticComponent} from './dashboard/super-admin/analytic/analytic.component';
+import {AttendanceComponent} from './attendance/attendance.component';
 
 export const routes: Routes = [
   {path: "", component: LoginComponent},
@@ -47,6 +47,7 @@ export const routes: Routes = [
       {path: "password-policy", component: PasswordPolicyComponent},
       {path: "semester/view", component: SemesterComponent},
       {path: "semester/edit", component: EditSemesterComponent},
+      {path: "semester/edit/:label", component: AddSemesterComponent},
       {path: "semester/add", component: AddSemesterComponent},
       {path: "course/view", component: ViewCourseComponent},
       {path: "course/save", component: SaveCourseComponent},
@@ -59,8 +60,8 @@ export const routes: Routes = [
   {path: "instructor", component:AdminDashboardComponent,children:[
       {path: "grade/view", component: ViewGradeInstructorComponent},
       {path: "grade/save/:code", component: SaveGradeComponent},
-      {path: "attendance/view", component: ViewAttendanceInstructorComponent},
-      {path: "attendance/save/:code", component: SaveAttendanceComponent},
+      {path: "attendance/view", component: AttendanceComponent},
+      {path: "attendance/save/:code", component: ViewAttendanceInstructorComponent},
       {path: "attendance/mark", component: PopupMarkAttendanceComponent},
       {path: "", component: ViewGradeInstructorComponent}
     ]},

@@ -1,9 +1,10 @@
 <h2 mat-dialog-title>Pay Fee</h2>
 <mat-dialog-content>
   <p>Outstanding: Rs. {{data.enrollment.outstandingFee}}</p>
+  <p>Minimum required: Rs. {{minimumAmount}}</p>
   <mat-form-field appearance="fill" class="w-full">
     <mat-label>Enter Amount</mat-label>
-    <input matInput type="number" [(ngModel)]="amount" min="0" [max]="data.enrollment.outstandingFee"  (keyup)="updateButtonValidity()">
+    <input matInput type="number" [(ngModel)]="amount" min="0" [max]="data.enrollment.outstandingFee" (keyup)="updateButtonValidity()">
 
   </mat-form-field>
 </mat-dialog-content>

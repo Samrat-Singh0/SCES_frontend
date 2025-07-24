@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {PasswordPolicy} from '../model/password-policy.model';
 import {PasswordPolicyService} from '../services/password-policy.service';
-import {NgForOf, NgIf} from '@angular/common';
+import {NgClass, NgForOf, NgIf} from '@angular/common';
 import {MatCheckbox} from '@angular/material/checkbox';
 import {MatIcon} from '@angular/material/icon';
 import {UpdatePasswordPolicy} from '../model/update-password-policy.model';
@@ -15,7 +15,8 @@ import {ToastrMsgService} from '../shared/toastr-msg.service';
     MatCheckbox,
     MatIcon,
     NgIf,
-    MatMiniFabButton
+    MatMiniFabButton,
+    NgClass
   ],
   templateUrl: './password-policy.component.html',
   standalone: true,
@@ -87,4 +88,13 @@ export class PasswordPolicyComponent implements OnInit {
   resetPolicy() {
     this.loadPasswordPolicies();
   }
+
+  getStatusClass(status: boolean) {
+    if(status) {
+      return 'active-status';
+    }else {
+      return 'inactive-status';
+    }
+  }
+
 }

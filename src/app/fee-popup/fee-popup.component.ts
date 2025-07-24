@@ -1,4 +1,4 @@
-import {Component, Inject} from '@angular/core';
+import {Component, Inject, OnInit} from '@angular/core';
 import {
   MAT_DIALOG_DATA,
   MatDialog,
@@ -13,7 +13,6 @@ import {MatFormField, MatInput, MatLabel} from '@angular/material/input';
 import {FormsModule} from '@angular/forms';
 import {MatButton} from '@angular/material/button';
 import {FeeService} from '../services/fee.service';
-import {Fee} from '../model/fee.model';
 import {ToastrMsgService} from '../shared/toastr-msg.service';
 import {ConfirmationComponent} from '../shared/confirmation/confirmation.component';
 import {PayFee} from '../model/pay-fee.model';
@@ -35,10 +34,12 @@ import {PayFee} from '../model/pay-fee.model';
   standalone: true,
   styleUrl: './fee-popup.component.css'
 })
-export class FeePopupComponent {
+export class FeePopupComponent implements OnInit {
 
   amount: number | null= null;
   isAmountValid: boolean = false;
+  thresholdPercent: number = 50;
+  minimumAmount: number = 0;
 
   constructor(
     private toastr: ToastrMsgService,
@@ -47,6 +48,19 @@ export class FeePopupComponent {
     private dialog: MatDialog,
     @Inject(MAT_DIALOG_DATA)public data: {enrollment: Enrollment}
   ) {
+
+  }
+
+  ngOnInit() {
+    this.setMinimumAmount();
+  }
+
+  setMinimumAmount() {
+    const outstandingFee = this.data.enrollment.outstandingFee;
+    this.minimumAmount = this.data.enrollment.semester.fee * this.thresholdPercent/100;
+    if(outstandingFee < this.minimumAmount) {
+      this.minimumAmount = 0;
+    }
   }
 
   confirmPayment() {
@@ -91,7 +105,11 @@ export class FeePopupComponent {
       return false;
     }
     if(this.amount > this.data.enrollment.outstandingFee) {
-      this.toastr.error("You amount cannot exceed the outstanding amount");
+      this.toastr.error("Your amount cannot exceed the outstanding amount");
+      return false;
+    }
+    if(this.amount < this.minimumAmount) {
+      this.toastr.error("Your amount must be greater than minimum amount");
       return false;
     }
     return true;

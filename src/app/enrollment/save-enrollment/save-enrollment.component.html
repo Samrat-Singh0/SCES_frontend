@@ -24,12 +24,12 @@
          [ngClass]="{ 'selected': selectedCourses.includes(course)}"
          (click)="selectCourse(course)">
       <h5>{{course.name}}</h5>
-      <p>Instructor:
-        {{joinName.getFullName(
-          course?.instructor?.user?.firstName,
-          course?.instructor?.user?.middleName,
-          course?.instructor?.user?.lastName)}}
-      </p>
+<!--      <p>Instructor:-->
+<!--        {{joinName.getFullName(-->
+<!--          course?.instructor?.user?.firstName,-->
+<!--          course?.instructor?.user?.middleName,-->
+<!--          course?.instructor?.user?.lastName)}}-->
+<!--      </p>-->
     </div>
   </div>
 
