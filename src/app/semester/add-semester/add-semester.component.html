@@ -12,19 +12,11 @@
     <mat-card-content>
       <div class="mb-3 control-group">
         <label for="label" class="form-label fw-semibold">Level <b style="color: red">*</b></label>
-        <input
-          placeholder="E.g. First"
-          type="text"
-          id="label"
-          class="form-controls"
-          formControlName="label">
-        <div class="error"
-             *ngIf="this.addForm.get('label')?.invalid && this.addForm.get('label')?.touched">
-          <small *ngIf="this.addForm.get('label')?.errors?.['required']">Enter a valid label</small>
-          <small *ngIf="this.addForm.get('label')?.errors?.['pattern']">Alphabets only.</small>
-          <small *ngIf="this.addForm.get('label')?.errors?.['minlength']">Enter a valid
-            label.</small>
-        </div>
+        <mat-select formControlName="label" class="semester-select" placeholder="Select a semester label">
+          @for (semester of inactiveSemesters; track semester.label) {
+            <mat-option [value]="semester.label">{{semester.label}}</mat-option>
+          }
+        </mat-select>
       </div>
 
       <div class="mb-3 control-group">
@@ -39,6 +31,7 @@
              *ngIf="this.addForm.get('fee')?.invalid && this.addForm.get('fee')?.touched">
           <small *ngIf="this.addForm.get('fee')?.errors?.['required']">Enter a valid amount.</small>
           <small *ngIf="this.addForm.get('fee')?.errors?.['pattern']">Enter a valid amount.</small>
+          <small *ngIf="this.addForm.get('fee')?.errors?.['feeValidator']">Fee must be between Rs.1,000 to Rs.10,00,000.</small>
         </div>
       </div>
 
@@ -48,7 +41,8 @@
           type="date"
           id="startDate"
           class="form-controls"
-          formControlName="startDate">
+          formControlName="startDate"
+          [min]="validDate">
         <div class="error"
              *ngIf="this.addForm.get('startDate')?.invalid && this.addForm.get('startDate')?.touched">
           <small *ngIf="this.addForm.get('startDate')?.errors?.['required']">Enter a valid
@@ -64,7 +58,8 @@
           type="date"
           id="endDate"
           class="form-controls"
-          formControlName="endDate">
+          formControlName="endDate"
+          [min]="validDate">
         <div class="error"
              *ngIf="this.addForm.get('endDate')?.invalid && this.addForm.get('endDate')?.touched">
           <small *ngIf="this.addForm.get('endDate')?.errors?.['required']">Enter a valid
@@ -84,7 +79,8 @@
               <div class="select-remove-container">
                 <mat-form-field appearance="outline" class="course-select">
                   <mat-label class="mb-2">Select a course</mat-label>
-                  <mat-select class="select-control" formControlName="course" [compareWith]="compareByCode" (selectionChange)="onCourseSelect($event,i)">
+                  <mat-select class="select-control" formControlName="course"
+                              [compareWith]="compareByCode">
                     <mat-option
                       *ngFor="let course of availableCourses"
                       [value]="course"
@@ -109,7 +105,7 @@
                       <div class="select-remove-container">
                         <mat-form-field appearance="outline" class="instructor-select">
                           <mat-label class="mb-2">Select a instructor</mat-label>
-                          <mat-select formControlName="instructor" [compareWith]="compareByEmail"  (selectionChange)="onInstructorSelect($event, i)">
+                          <mat-select formControlName="instructor" [compareWith]="compareByEmail">
                             <mat-option
                               *ngFor="let instructor of availableInstructors"
                               [value]="instructor"
@@ -130,7 +126,7 @@
               </mat-card>
               <div class="mt-2 add-instructor-container">
                 <mat-label class="form-label fw-semibold">Assign a instructor? <i (click)="addNewInstructor()" class="new-course-link">Or add a new instructor?</i></mat-label>
-                <button matTooltip="Add instructor field" type="button" mat-mini-fab (click)="addInstructor(i,null)">
+                <button matTooltip="Add instructor field" type="button" mat-mini-fab (click)="addInstructor(i,null)" [disabled]="isAddInstructorButtonDisabled(i) || getInstructors(i).invalid">
                   <mat-icon class="add-instructor-btn">add</mat-icon>
                 </button>
               </div>
@@ -142,7 +138,7 @@
 
       <div class="mt-2 add-course-container">
         <mat-label class="form-label fw-semibold">Assign a course? <i (click)="addNewCourse()" class="new-course-link">Or add a new course?</i></mat-label>
-        <button matTooltip="Add course field" type="button" mat-mini-fab (click)="addCourse(null)">
+        <button matTooltip="Add course field" type="button" mat-mini-fab (click)="addCourse(null)" [disabled]="isAddCourseButtonDisabled() || courses.invalid">
           <mat-icon class="add-course-btn">add</mat-icon>
         </button>
       </div>
@@ -150,13 +146,14 @@
     </mat-card-content>
   </mat-card>
   <div class="mt-4 save-sem-btn">
-    <button type="submit" class="save-btn">
-      <mat-icon>save</mat-icon>
-      Save
-    </button>
+
     <button type="button" class="reset-button" (click)="resetForm()">
       <mat-icon>refresh</mat-icon>
       RESET
+    </button>
+    <button type="submit" class="save-btn">
+      <mat-icon>save</mat-icon>
+      Save
     </button>
   </div>
 

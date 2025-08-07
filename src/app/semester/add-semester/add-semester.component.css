@@ -35,15 +35,17 @@
   flex-direction: column;
 }
 
-.form-control {
-  height: 60px;
-  font-size: 1rem;
-}
-
+.semester-select,
 .form-controls {
   padding: 10px 10px;
   height: 60px;
   font-size: 1rem;
+}
+
+.semester-select {
+  background-color: white;
+  border: black 1px solid;
+  align-content: center;
 }
 
 .add-course-container,
@@ -54,14 +56,14 @@
 
 .course-select,
 .instructor-select {
-  height: 50px;
-  margin-top: -25px;
+  height: 55px;
+  /*margin-top: -25px;*/
   background-color: white;
 }
 
 .course-select {
   margin-top: -25px;
-  height: 50px;
+  /*height: 50px;*/
 
   width: 50vh;
 }

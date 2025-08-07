@@ -4,4 +4,5 @@ export interface AnalyticData {
   totalInstructor: number;
   totalFee: number;
   totalOutstandingFee: number;
+  onboardedDate: Date | undefined;
 }

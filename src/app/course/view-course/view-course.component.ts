@@ -47,7 +47,6 @@ export class ViewCourseComponent implements OnInit {
   totalPages: number = 0;
   currentPage: number = 0;
   pageSize: number = 5;
-  isSearchEnabled: boolean = false;
   sizeSelect: number[] = [5,10,20,50,100]
 
   constructor(
@@ -70,19 +69,30 @@ export class ViewCourseComponent implements OnInit {
   }
 
   renderContent(page: number) {
-    if(this.isSearchEnabled){
-      this.searchCourse(page);
-    }else {
-      this.courseService.getPagedCourses(page, this.pageSize).subscribe({
+
+      let name: string = this.searchForm.value.name || null;
+      let instructor: string = this.searchForm.value.instructor || null;
+      let semester: string = this.searchForm.value.semester || null;
+
+      const searchCriteria: SearchCourse = {
+        name: name,
+        instructor: instructor,
+        semester: semester
+      }
+
+      this.courseService.getPagedCourses(searchCriteria, page, this.pageSize).subscribe({
         next: res => {
-          this.courses = res.body.content;
-          this.totalPages = res.body.totalPages;
-          this.currentPage = res.body.number;
+          if(res.success){
+            this.courses = res.body.content;
+            this.totalPages = res.body.totalPages;
+            this.currentPage = res.body.number;
+          }else {
+            this.toastr.error(res.message);
+          }
         }, error: err => {
           this.toastr.error('');
         }
       });
-    }
   }
 
   buildForm() {
@@ -91,11 +101,6 @@ export class ViewCourseComponent implements OnInit {
       instructor: [undefined, Validators.pattern("^[a-zA-Z\\s]+$")],
       semester: [undefined, Validators.pattern("^[a-zA-Z]*$")]
     });
-  }
-
-
-  addCourse() {
-    this.router.navigate(['super/course/save'])
   }
 
   updateCourse(code: string) {
@@ -126,8 +131,12 @@ export class ViewCourseComponent implements OnInit {
       if(result?.confirmed){
         this.courseService.deleteCourse(code, result?.remarks).subscribe({
           next: res => {
-            this.ngOnInit();
-            this.toastr.success(res.message);
+            if(res.success){
+              this.ngOnInit();
+              this.toastr.success(res.message);
+            }else {
+              this.toastr.error(res.message);
+            }
           }, error: err => {
             this.toastr.error('');
           }
@@ -136,33 +145,8 @@ export class ViewCourseComponent implements OnInit {
     });
   }
 
-
-  searchCourse(page:number = 0) {
-    this.isSearchEnabled = true;
-    let name: string = this.searchForm.value.name || undefined;
-    let instructor: string = this.searchForm.value.instructor || undefined;
-    let semester: string = this.searchForm.value.semester || undefined;
-
-    const searchCriteria: SearchCourse = {
-      name: name,
-      instructor: instructor,
-      semester: semester
-    }
-
-    this.courseService.searchCourse(searchCriteria, page, this.pageSize).subscribe({
-      next: res => {
-        this.courses = res.body.content;
-        this.totalPages = res.body.totalPages;
-        this.currentPage = res.body.number;
-      }, error: err => {
-        // console.log(err.message);
-      }
-    });
-  }
-
   resetSearchForm() {
     this.searchForm.reset();
-    this.isSearchEnabled = false;
     this.renderContent(this.currentPage);
   }
 
@@ -201,7 +185,7 @@ export class ViewCourseComponent implements OnInit {
   }
 
   sendDownloadRequest(reportDto: ReportRequest) {
-    this.reportService.downloadReport(reportDto).subscribe({
+    this.reportService.downloadCourseReport(reportDto).subscribe({
       next: value => {
         if(value.status < 200 || value.status >=300) {
           this.toastr.error('');
@@ -227,4 +211,16 @@ export class ViewCourseComponent implements OnInit {
     this.renderContent(this.currentPage);
   }
 
+  isButtonVisible(i: number, currentPage: number): boolean {
+    console.log(currentPage);
+    if(currentPage === 0) {
+      return i === currentPage || i === currentPage + 1 || i === currentPage + 2;
+    }
+
+    if(currentPage === this.totalPages-1) {
+      return i === currentPage || i === currentPage - 1 || i === currentPage - 2;
+    }
+    return i === currentPage - 1 || i === currentPage + 1 || i === currentPage;
+
+  }
 }

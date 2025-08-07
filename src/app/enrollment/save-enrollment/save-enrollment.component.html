@@ -21,19 +21,13 @@
   <div class="courses-grid">
     <div *ngFor="let course of coursePerSemester"
          class="course-card"
-         [ngClass]="{ 'selected': selectedCourses.includes(course)}"
+         [ngClass]="{ 'selected': coursesMap.has(course.code)}"
          (click)="selectCourse(course)">
       <h5>{{course.name}}</h5>
-<!--      <p>Instructor:-->
-<!--        {{joinName.getFullName(-->
-<!--          course?.instructor?.user?.firstName,-->
-<!--          course?.instructor?.user?.middleName,-->
-<!--          course?.instructor?.user?.lastName)}}-->
-<!--      </p>-->
     </div>
   </div>
 
-  <button class="mt-5 enroll-btn" type="submit" [disabled]="selectedCourses.length === 0">
+  <button class="mt-5 enroll-btn" type="submit">
     <mat-icon>add</mat-icon>
     Enroll
   </button>

@@ -97,7 +97,25 @@ td:nth-child(5) {
   color: white;
 }
 
+.download-btn {
+  height: 50px;
+  display: flex;
+  gap: 10px;
+  justify-content: right;
+}
 
+.btn-download {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 4px;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.btn-download:hover {
+  background-color: #0056b3;
+}
 
 
 

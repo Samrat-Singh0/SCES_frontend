@@ -4,6 +4,7 @@ import {Observable} from 'rxjs';
 import {Semester} from '../model/semester.model';
 import {ApiResponse} from '../model/api-response.model';
 import {SemesterEndpoints} from '../shared/api-endpoints';
+import {ActiveStatus} from '../enum/active-status.enum';
 
 @Injectable({
   providedIn: 'root'
@@ -11,15 +12,10 @@ import {SemesterEndpoints} from '../shared/api-endpoints';
 export class SemesterService {
   private readonly semesterEndpoint = SemesterEndpoints;
 
-  constructor(private http: HttpClient) {
-  }
+  constructor(private http: HttpClient) {}
 
-  getSemester(label: string): Observable<ApiResponse<Semester>> {
-    return this.http.get<ApiResponse<Semester>>(this.semesterEndpoint.GET_SEMESTER+`${label}`);
-  }
-
-  getAll(): Observable<ApiResponse<Semester[]>> {
-    return this.http.get<ApiResponse<Semester[]>>(this.semesterEndpoint.GET_ALL_SEMESTER);
+  getAll(status: ActiveStatus): Observable<ApiResponse<Semester[]>> {
+    return this.http.get<ApiResponse<Semester[]>>(this.semesterEndpoint.GET_ALL_SEMESTER + '/' + status);
   }
 
   add(semester: Semester): Observable<ApiResponse<any>> {

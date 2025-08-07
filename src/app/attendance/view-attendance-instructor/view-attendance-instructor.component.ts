@@ -49,7 +49,6 @@ export class ViewAttendanceInstructorComponent implements OnInit{
   today: Date = new Date();
   minimumDateOfAttendance: Date = new Date();
 
-
   constructor(
     private router: Router,
     private toastr: ToastrService,
@@ -71,8 +70,12 @@ export class ViewAttendanceInstructorComponent implements OnInit{
   getCourse(code: string) {
     this.courseService.getCourse(code).subscribe({
       next: res => {
-        this.course = res.body;
-        this.populateAttendance();
+        if(res.success){
+          this.course = res.body;
+          this.populateAttendance()
+        }else {
+          this.toastr.error(res.message);
+        }
       }, error: err=>{
         this.toastr.error('');
       }
@@ -83,9 +86,13 @@ export class ViewAttendanceInstructorComponent implements OnInit{
     const formattedDate = this.formatDate.formatDateWithoutTimezone(this.selectedDate);
     this.attendanceService.getAttendanceOfDate(this.course.code, formattedDate).subscribe({
       next: res => {
-        this.attendance = res.body;
-        this.populateStudent();
-        this.populateAttendanceRate();
+        if(res.success){
+          this.attendance = res.body;
+          this.populateStudent();
+          this.populateAttendanceRate();
+        }else {
+          this.toastr.error(res.message);
+        }
       }, error: err => {
         this.toastr.error('');
       }
@@ -95,12 +102,16 @@ export class ViewAttendanceInstructorComponent implements OnInit{
   populateStudent() {
     this.studentService.getStudentsPerCourse(this.course).subscribe({
       next: res => {
-        this.students = res.body;
-        this.attendanceMap = new Map(
-          this.attendance.map(a => [a.student.code, a.attendanceStatus])
-        )
+        if(res.success){
+          this.students = res.body;
+          this.attendanceMap = new Map(
+            this.attendance.map(a => [a.student.code, a.attendanceStatus])
+          )
+          this.students.sort((a,b)=>a.user.firstName.localeCompare(b.user.firstName));
+        }else {
+          this.toastr.error(res.message);
+        }
 
-        this.students.sort((a,b)=>a.user.firstName.localeCompare(b.user.firstName));
       }, error: err => {
         this.toastr.error('');
       }
@@ -110,8 +121,12 @@ export class ViewAttendanceInstructorComponent implements OnInit{
   populateAttendanceRate() {
     this.attendanceService.getAttendanceRateOfStudent(this.course.code).subscribe({
       next: res => {
-        this.attendanceRate = res.body;
-        this.minimumDateOfAttendance = this.attendanceRate[0].startDate;
+        if(res.success){
+          this.attendanceRate = res.body;
+          this.minimumDateOfAttendance = this.attendanceRate[0].startDate;
+        }else {
+          this.toastr.error(res.message);
+        }
       }, error: err => {
         this.toastr.error('');
       }
@@ -119,7 +134,7 @@ export class ViewAttendanceInstructorComponent implements OnInit{
   }
 
   goBack() {
-    this.router.navigate(['instructor/attendance/view']);
+    this.router.navigate(['super/manage/attendance']);
   }
 
   getStatus(student: Student): string {
@@ -146,6 +161,7 @@ export class ViewAttendanceInstructorComponent implements OnInit{
   }
 
   getAttendanceRate(studentCode: string): string {
+
 
     const student = this.attendanceRate.find(student => student.studentCode === studentCode);
 

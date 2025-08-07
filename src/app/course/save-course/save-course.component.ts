@@ -11,6 +11,8 @@ import {MatIcon} from '@angular/material/icon';
 import {JoinNameService} from '../../shared/join-name.service';
 import {ToastrMsgService} from '../../shared/toastr-msg.service';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
+import {ActiveStatus} from '../../enum/active-status.enum';
+import {Course} from '../../model/course.model';
 
 @Component({
   selector: 'app-save-course',
@@ -31,7 +33,7 @@ export class SaveCourseComponent implements OnInit{
   instructors: Instructor[] = [];
   isEditable: boolean = false;
   code: string = '';
-
+  oldData: Course | null = null;
 
   constructor(
     private builder: FormBuilder,
@@ -65,15 +67,20 @@ export class SaveCourseComponent implements OnInit{
       this.isEditable = !!params.get('code');
       this.code = params.get('code') || '';
       if (this.isEditable) {
-        this.loadCourseDate(this.code);
+        this.loadCourseDate();
       }
     });
   }
 
-  loadCourseDate(code: string) {
+  loadCourseDate() {
     this.courseService.getCourse(this.code).subscribe({
       next: res => {
-        this.courseForm.patchValue(res.body);
+        if(res.success){
+          this.courseForm.patchValue(res.body);
+          this.oldData = res.body;
+        }else {
+          this.toastr.error(res.message);
+        }
       }
     });
   }
@@ -86,20 +93,21 @@ export class SaveCourseComponent implements OnInit{
         Validators.required,
         Validators.pattern(/^[0-9]+$/)],
       ],
-
-      // instructor: [null],
-      // semester: ['', Validators.required],
       checked: [null]
     });
   }
 
   populateSemester() {
-    this.semesterService.getAll().subscribe({
+    this.semesterService.getAll(ActiveStatus.ACTIVE).subscribe({
       next: res => {
-        this.semesters = res.body;
+        if(res.success){
+          this.semesters = res.body;
 
-        if(!this.isEditable && this.semesters.length > 0){
-          this.courseForm.patchValue({semester: this.semesters[0]})
+          if(!this.isEditable && this.semesters.length > 0){
+            this.courseForm.patchValue({semester: this.semesters[0]})
+          }
+        }else {
+          this.toastr.error(res.message);
         }
       }, error: err => {
         this.toastr.error('');
@@ -110,10 +118,11 @@ export class SaveCourseComponent implements OnInit{
   populateInstructor() {
     this.instructorService.getAll().subscribe({
       next: res=> {
-        this.instructors = res.body;
-        // if(!this.isEditable && this.instructors.length > 0) {
-        //   this.courseForm.patchValue({instructor: this.instructors[0]})
-        // }
+        if(res.success){
+          this.instructors = res.body;
+        }else {
+          this.toastr.error(res.message);
+        }
       }, error: err => {
         this.toastr.error('');
       }
@@ -130,12 +139,18 @@ export class SaveCourseComponent implements OnInit{
           fullMarks: this.courseForm.value.fullMarks,
           instructors: this.courseForm.value.instructor || null,
           semester: this.courseForm.value.semester,
-          checked: this.courseForm.value.checked
+          checked: this.courseForm.value.checked,
+          isStudentEnrolled: null
         }
+
         this.courseService.updateCourse(updatedCourse).subscribe({
           next: res => {
-            this.router.navigate(['super/course/view']);
-            this.toastr.success(res.message);
+            if(res.success){
+              this.router.navigate(['super/course']);
+              this.toastr.success(res.message);
+            }else {
+              this.toastr.error(res.message);
+            }
           }, error: err => {
             this.toastr.error('');
           }
@@ -143,21 +158,11 @@ export class SaveCourseComponent implements OnInit{
       }else {
         this.dialogRef.close(this.courseForm.value);
       }
-
     }
-
   }
 
   closeForm() {
     this.dialogRef.close();
-  }
-
-  instructorMapper(a: Instructor, b: Instructor): boolean {
-    return (a.user.code === b.user.code);
-  }
-
-  semesterMapper(a: Semester, b: Semester): boolean {
-    return(a.label === b.label);
   }
 
   resetForm() {

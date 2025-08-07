@@ -42,7 +42,11 @@ export class PendingCourseComponent {
   renderContent() {
     this.courseService.getPendingCourses().subscribe({
       next: res => {
-        this.courses = res.body;
+        if(res.success){
+          this.courses = res.body;
+        }else {
+          this.toastr.error(res.message);
+        }
       }, error: err => {
         this.toastr.error('');
       }
@@ -68,7 +72,12 @@ export class PendingCourseComponent {
   updateCourse(updatedCourse: Course) {
     this.courseService.updateCourse(updatedCourse).subscribe({
       next: res => {
-        this.ngOnInit();
+        if(res.success){
+          this.toastr.success(res.message);
+          this.renderContent();
+        }else {
+          this.toastr.error(res.message);
+        }
       }, error: err =>{
         this.toastr.error('');
       }

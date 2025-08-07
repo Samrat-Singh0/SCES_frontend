@@ -1,11 +1,6 @@
 import {Routes} from '@angular/router';
 import {LoginComponent} from './auth/login/login.component';
 import {SignupComponent} from './auth/signup/signup.component';
-import {
-  SuperAdminDashboardComponent
-} from './dashboard/super-admin/super-admin-dashboard/super-admin-dashboard.component';
-import {AdminDashboardComponent} from './dashboard/admin/admin-dashboard/admin-dashboard.component';
-import {UserDashboardComponent} from './dashboard/user/user-dashboard/user-dashboard.component';
 import {InitialLoginComponent} from './auth/initial-login/initial-login.component';
 import {SaveUserComponent} from './user/save-user/save-user.component';
 import {ViewUserComponent} from './user/view-user/view-user.component';
@@ -17,12 +12,8 @@ import {ViewCourseComponent} from './course/view-course/view-course.component';
 import {SaveCourseComponent} from './course/save-course/save-course.component';
 import {PendingCourseComponent} from './pending-course/pending-course.component';
 import {ViewEnrollmentComponent} from './enrollment/view-enrollment/view-enrollment.component';
-import {SaveEnrollmentComponent} from './enrollment/save-enrollment/save-enrollment.component';
 import {PendingEnrollmentComponent} from './pending-enrollment/pending-enrollment.component';
 import {ViewGradesComponent} from './grade/view-grades/view-grades.component';
-import {
-  ViewGradeInstructorComponent
-} from './grade/view-grade-instructor/view-grade-instructor.component';
 import {SaveGradeComponent} from './grade/save-grade/save-grade.component';
 import {
   ViewAttendanceInstructorComponent
@@ -33,44 +24,41 @@ import {
 import {
   PopupMarkAttendanceComponent
 } from './attendance/popup-mark-attendance/popup-mark-attendance.component';
-import {AnalyticComponent} from './dashboard/super-admin/analytic/analytic.component';
+import {AnalyticComponent} from './analytic/analytic.component';
 import {AttendanceComponent} from './attendance/attendance.component';
+import {RoleComponent} from './role/role.component';
+import {
+  ViewGradesInstructorComponent
+} from './grade/view-grades-instructor/view-grades-instructor.component';
+import {DashboardComponent} from './dashboard/dashboard.component';
 
 export const routes: Routes = [
   {path: "", component: LoginComponent},
   {path: "login", component: LoginComponent},
   {path: "initial-login/:email", component: InitialLoginComponent},
   {path: "signup", component: SignupComponent},
-  {path: "super", component:SuperAdminDashboardComponent, children: [
+  {path: "super", component:DashboardComponent, children: [
+      {path: "role", component: RoleComponent},
       {path: "user/add", component: SaveUserComponent},
-      {path: "user/view", component: ViewUserComponent},
+      {path: "user", component: ViewUserComponent},
       {path: "password-policy", component: PasswordPolicyComponent},
-      {path: "semester/view", component: SemesterComponent},
+      {path: "semester", component: SemesterComponent},
       {path: "semester/edit", component: EditSemesterComponent},
       {path: "semester/edit/:label", component: AddSemesterComponent},
       {path: "semester/add", component: AddSemesterComponent},
-      {path: "course/view", component: ViewCourseComponent},
+      {path: "course", component: ViewCourseComponent},
       {path: "course/save", component: SaveCourseComponent},
-      {path:"course/pending", component: PendingCourseComponent},
-      {path: "enroll/view", component: ViewEnrollmentComponent},
-      {path: "enroll/pending", component: PendingEnrollmentComponent},
-      {path: "analytic", component: AnalyticComponent},
-      {path: "", component: AnalyticComponent}
-    ]},
-  {path: "instructor", component:AdminDashboardComponent,children:[
-      {path: "grade/view", component: ViewGradeInstructorComponent},
-      {path: "grade/save/:code", component: SaveGradeComponent},
-      {path: "attendance/view", component: AttendanceComponent},
+      {path:"pending/course", component: PendingCourseComponent},
+      {path: "enroll", component: ViewEnrollmentComponent},
+      {path: "pending/enroll", component: PendingEnrollmentComponent},
+      {path: "view/grade", component: ViewGradesComponent},
+      {path: "manage/grade", component: ViewGradesInstructorComponent},
+      {path: "grade/save/:label/:code", component: SaveGradeComponent},
+      {path: "view/attendance", component: ViewAttendanceStudentComponent},
+      {path: "manage/attendance", component: AttendanceComponent},
       {path: "attendance/save/:code", component: ViewAttendanceInstructorComponent},
       {path: "attendance/mark", component: PopupMarkAttendanceComponent},
-      {path: "", component: ViewGradeInstructorComponent}
-    ]},
-
-  {path: "student", component: UserDashboardComponent, children:[
-      {path: "enroll/view", component: ViewEnrollmentComponent},
-      {path: "enroll/save", component: SaveEnrollmentComponent},
-      {path: "grade/view", component: ViewGradesComponent},
-      {path: "attendance/view", component: ViewAttendanceStudentComponent},
-      {path: "", component: ViewEnrollmentComponent}
+      {path: "analytic", component: AnalyticComponent},
+      {path: "", component: AnalyticComponent}
     ]}
 ];

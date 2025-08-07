@@ -24,8 +24,8 @@ export class CourseService {
     return this.http.get<ApiResponse<Course[]>>(this.courseEndpoints.GET_ALL_COURSE);
   }
 
-  getPagedCourses(page: number, size: number): Observable<ApiResponse<PageResponse<Course>>> {
-    return this.http.get<ApiResponse<PageResponse<Course>>>(this.courseEndpoints.GET_PAGED_LIST+`?page=${page}&size=${size}&sort=id,desc`);
+  getPagedCourses(searchCriteria: SearchCourse, page: number, size: number): Observable<ApiResponse<PageResponse<Course>>> {
+    return this.http.post<ApiResponse<PageResponse<Course>>>(this.courseEndpoints.GET_PAGED_LIST+`?page=${page}&size=${size}&sort=id,desc`, searchCriteria);
   }
 
   getCoursesBasedOnRole(): Observable<ApiResponse<Course[]>> {
@@ -40,19 +40,11 @@ export class CourseService {
     return this.http.get<ApiResponse<Course[]>>(this.courseEndpoints.GET_COURSES_WITH_NO_SEMESTER);
   }
 
-  addCourse(course: Course): Observable<ApiResponse<any>> {
-    return this.http.post<ApiResponse<any>>(this.courseEndpoints.ADD_COURSE, course);
-  }
-
   deleteCourse(code: string, remarks: string): Observable<ApiResponse<any>> {
     return this.http.post<ApiResponse<any>>(this.courseEndpoints.DELETE_COURSE +`/${code}`,remarks);
   }
 
   updateCourse(course: Course): Observable<ApiResponse<any>> {
     return this.http.post<ApiResponse<any>>(this.courseEndpoints.UPDATE_COURSE, course);
-  }
-
-  searchCourse(searchCriteria: SearchCourse, page: number, size: number): Observable<ApiResponse<PageResponse<Course>>> {
-    return this.http.post<ApiResponse<PageResponse<Course>>>(this.courseEndpoints.SEARCH_COURSE + `?page=${page}&size=${size}&sort=id,desc`, searchCriteria);
   }
 }

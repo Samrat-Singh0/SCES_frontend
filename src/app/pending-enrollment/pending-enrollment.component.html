@@ -33,11 +33,11 @@
         </td>
         <td>{{ enrollment.enrolledDate }}</td>
         <td class="status">
-          <button mat-icon-button class="accept-icon" (click)="acceptEnroll(enrollment); $event.stopPropagation();">
+          <button mat-icon-button class="accept-icon" (click)="updateEnrollment(enrollment, true); $event.stopPropagation();">
             <mat-icon>check_circle</mat-icon>
           </button>
 
-          <button mat-icon-button class="reject-icon" (click)="rejectEnroll(enrollment); $event.stopPropagation();">
+          <button mat-icon-button class="reject-icon" (click)="updateEnrollment(enrollment, false); $event.stopPropagation();">
             <mat-icon>cancel</mat-icon>
           </button>
         </td>

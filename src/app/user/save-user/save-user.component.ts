@@ -7,6 +7,8 @@ import {UserService} from '../../services/user.service';
 import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from '@angular/material/dialog';
 import {ToastrMsgService} from '../../shared/toastr-msg.service';
 import {ConfirmationComponent} from '../../shared/confirmation/confirmation.component';
+import {RoleModel} from '../../model/role.model';
+import {RoleService} from '../../services/role.service';
 
 @Component({
   selector: 'app-add-user',
@@ -29,6 +31,8 @@ export class SaveUserComponent implements OnInit {
   fullName!: string;
   middleName!: string;
   lastName!: string;
+  oldData: string = '';
+  roles: RoleModel[]
 
   constructor(
     private fb: FormBuilder,
@@ -36,6 +40,7 @@ export class SaveUserComponent implements OnInit {
     private dialogRef: MatDialogRef<SaveUserComponent>,
     private toastr: ToastrMsgService,
     private dialog: MatDialog,
+    private roleService: RoleService,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {
     this.isEditMode = !!this.data;
@@ -44,12 +49,27 @@ export class SaveUserComponent implements OnInit {
       this.isEditMode = false;
     }
     this.myForm = new FormGroup({});
+    this.roles = [];
   }
 
   ngOnInit(): void {
     this.buildForm();
+    this.getRoles();
   }
 
+  getRoles() {
+    this.roleService.getSavedRoles().subscribe({
+      next: res => {
+        if(res.success) {
+          this.roles = res.body;
+        }else{
+          this.toastr.error(res.message);
+        }
+      },error: err => {
+        this.toastr.error(err.message);
+      }
+    });
+  }
 
 
   buildForm() {
@@ -72,8 +92,11 @@ export class SaveUserComponent implements OnInit {
       email: [{value: this.data?.email || '', disabled: this.isEditMode}, [Validators.required, Validators.email, Validators.pattern("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,4}$")]],
       address: [this.data?.address || '', [Validators.required, Validators.pattern("^[A-Za-z ]+$")]],
       phoneNumber: [this.data?.phoneNumber || '', [Validators.required, Validators.minLength(10),  Validators.maxLength(10), Validators.pattern("^(98\|97)\\d*$")]],
-      role: [this.data?.role || 'SUPER_ADMIN']
+      newRole: [this.data?.newRole.roleType || 'SUPER_ADMIN']
     })
+    if(this.isEditMode) {
+      this.oldData= JSON.stringify(this.data);
+    }
   }
 
   closeForm() {
@@ -97,37 +120,58 @@ export class SaveUserComponent implements OnInit {
       dialogRef.afterClosed().subscribe(result => {
         if(result?.confirmed){
           const form = this.myForm.getRawValue();
-          const user: User = {
+          const role: RoleModel = {
+            code: '',
+            roleName:'',
+            roleType: form.newRole,
+            permissions: []
+          }
+
+          const user = {
             code: this.data?.code || '',
-            email: form.email,
             firstName: form.firstName,
             middleName: form.middleName,
             lastName: form.lastName,
+            email: form.email,
             address: form.address,
             phoneNumber: form.phoneNumber,
-            role: form.role
+            role: form.role,
+            mustChangePassword: false,
+            newRole: role
+          }
+
+          if(this.oldData === JSON.stringify(user)) {
+            this.toastr.info("No any changes found.");
+            return;
           }
 
           if(this.isEditMode){
             this.userService.updateUser(user).subscribe({
               next: (res) => {
-                this.toastr.success(res.message)
-                this.dialogRef.close();
+                if(res.success){
+                  this.toastr.success(res.message)
+                  this.dialogRef.close();
+                }else {
+                  this.toastr.error(res.message);
+                }
               }, error: (err)=> {
-                // console.log(err);
                 this.toastr.error('')
               }
             })
           }else {
             this.userService.addUser(user).subscribe({
               next: res => {
-                this.toastr.success(res.message);
-                if(this.isFormForInstructor) {
-                  this.dialogRef.close({
-                    user: user
-                  });
-                }else{
-                  this.dialogRef.close();
+                if(res.success){
+                  this.toastr.success(res.message);
+                  if(this.isFormForInstructor) {
+                    this.dialogRef.close({
+                      user: user
+                    });
+                  }else{
+                    this.dialogRef.close();
+                  }
+                }else {
+                  this.toastr.error(res.message);
                 }
               }, error: (err) =>{
                 this.toastr.error('');

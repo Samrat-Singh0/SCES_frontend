@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {MatCard, MatCardContent, MatCardTitle} from '@angular/material/card';
 import {NgForOf} from '@angular/common';
 import {Course} from '../model/course.model';
@@ -24,7 +24,7 @@ import {
   templateUrl: './attendance.component.html',
   styleUrl: './attendance.component.css'
 })
-export class AttendanceComponent {
+export class AttendanceComponent implements OnInit{
 
   courses: Course[] = [];
   attendance: Attendance[] = [];
@@ -46,7 +46,11 @@ export class AttendanceComponent {
   populateCourses() {
     this.courseService.getCoursesBasedOnRole().subscribe({
       next: res => {
-        this.courses = res.body;
+        if(res.success){
+          this.courses = res.body;
+        }else {
+          this.toastr.error(res.message);
+        }
       }, error: err => {
         this.toastr.error('');
       }
@@ -57,22 +61,21 @@ export class AttendanceComponent {
     const formattedTodayDate = this.formatDate.formatDateWithoutTimezone(new Date());
     this.attendanceService.getAttendanceOfDate(course.code, formattedTodayDate).subscribe({
       next: res => {
-        this.attendance = res.body;
+        if(res.success){
+          this.attendance = res.body;
 
-        if(this.isAttendanceDone()) {
-          this.router.navigate(['instructor/attendance/save/'+''+course.code]);
-        }else {
-          const dialogConfig = new MatDialogConfig();
-          dialogConfig.width = '2000px';
-          dialogConfig.height = '756px';
-          dialogConfig.backdropClass = 'cdk-overlay-dark-backdrop';       //dark-shade in the background.
-          dialogConfig.disableClose = true;
-          dialogConfig.data = {
-            courseCode : course.code
+          if(!course.isStudentEnrolled){
+            this.toastr.error("No any student enrolled in this course.");
+            return;
           }
-          this.dialog.open(PopupMarkAttendanceComponent, dialogConfig);
-          this.attendance.length = 0;
 
+          if(this.isAttendanceDone()) {
+            this.attendanceDone(course);
+          }else {
+            this.attendanceNotDone(course);
+          }
+        }else {
+          this.toastr.error(res.message);
         }
       }, error: err => {
         this.toastr.error('');
@@ -80,12 +83,30 @@ export class AttendanceComponent {
     });
   }
 
+  attendanceDone(course: Course) {
+    this.router.navigate(['super/attendance/save/'+''+course.code]);
+  }
+
+  attendanceNotDone(course: Course) {
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.width = '2000px';
+    dialogConfig.height = '756px';
+    dialogConfig.backdropClass = 'cdk-overlay-dark-backdrop';       //dark-shade in the background.
+    dialogConfig.disableClose = true;
+    dialogConfig.data = {
+      courseCode : course.code
+    }
+    this.dialog.open(PopupMarkAttendanceComponent, dialogConfig);
+    this.attendance.length = 0;
+  }
+
+
   saveAttendance(course: Course) {
     this.populateAttendance(course);
   }
 
   isAttendanceDone():boolean {
-    return this.attendance.length > 0;
+    return this.attendance?.length > 0;
   }
 
 }

@@ -15,10 +15,17 @@ export class ReportService {
 
   }
 
-  downloadReport(reportRequest: ReportRequest): Observable<HttpResponse<Blob>> {
-    return this.http.post(this.reportEndpoints.GET_REPORT, reportRequest,{
+  downloadCourseReport(reportRequest: ReportRequest): Observable<HttpResponse<Blob>> {
+    return this.http.post(this.reportEndpoints.GET_COURSE_REPORT, reportRequest,{
       observe: 'response',
       responseType: 'blob'
     });
+  }
+
+  downloadSemesterReport(reportRequest: ReportRequest): Observable<HttpResponse<Blob>> {
+    return this.http.post(this.reportEndpoints.GET_SEMESTER_REPORT, reportRequest,{
+      observe: 'response',
+      responseType: 'blob'
+    })
   }
 }

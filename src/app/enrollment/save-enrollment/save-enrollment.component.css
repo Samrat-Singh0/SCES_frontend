@@ -48,7 +48,7 @@
   padding: 16px;
   border-radius: 8px;
   background-color: #f9f9f9;
-  border: 2px solid transparent;
+  border: 2px solid;
   transition: all 0.3s ease;
   cursor: pointer;
   box-shadow: 0 2px 6px rgba(0,0,0,0.1);

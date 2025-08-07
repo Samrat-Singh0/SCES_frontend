@@ -15,8 +15,7 @@ export const ATTENDANCE_API_URL = API_BASE_URL + '/attendance';
 export const FEE_API_URL = API_BASE_URL + '/fee';
 export const REPORT_API_URL = API_BASE_URL + '/main/report';
 export const ANALYTICS_API_URL = API_BASE_URL + '/main/analytics';
-
-export const TEST_REPORT_API_URL = API_BASE_URL + '/main/report/';
+export const ROLES_API_URL = SUPER_API_BASE_URL + '/role';
 
 export const AuthEndpoints = {
   LOGIN: `${API_AUTH_URL}/login`,
@@ -97,12 +96,17 @@ export const FeeEndpoints = {
 }
 
 export const ReportEndpoints = {
-  GET_COURSE_REPORT_TEST: 'http:localhost:8081/api/main/report/course',
-  GET_COURSE_REPORT: REPORT_API_URL + '/course',
-  GET_GRADE_REPORT: REPORT_API_URL + '/grade',
-  GET_REPORT: REPORT_API_URL + '/get'
+  GET_COURSE_REPORT: REPORT_API_URL + '/get/course',
+  GET_SEMESTER_REPORT: REPORT_API_URL + '/get/semester'
 }
 
 export const AnalyticsEndpoints = {
   GET_ANALYTICS_DATA: ANALYTICS_API_URL + '/list'
+}
+
+export const RolesEndpoints = {
+  GET_ROLES: ROLES_API_URL + '/list',
+  SAVE_ROLES: ROLES_API_URL + '/save',
+  ADD_NEW_ROLE: ROLES_API_URL + '/add/role',
+  GET_SAVED_ROLES: ROLES_API_URL + '/saved/roles'
 }

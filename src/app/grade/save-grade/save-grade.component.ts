@@ -37,7 +37,7 @@ export class SaveGradeComponent implements OnInit {
   course!: Course;
   gradeInput: number[] = [];
   grades: Grade[] = [];
-  isGradesValid: boolean = false;
+  label: string | null = '';
 
   constructor(
     private router: Router,
@@ -53,14 +53,19 @@ export class SaveGradeComponent implements OnInit {
 
   ngOnInit() {
     let code = this.route.snapshot.paramMap.get('code')!;
+    this.label = this.route.snapshot.paramMap.get('label');
     this.getCourse(code);
   }
 
   getCourse(code: string) {
     this.courseService.getCourse(code).subscribe({
       next: res => {
-        this.course = res.body;
-        this.populateStudent();
+        if(res.success){
+          this.course = res.body;
+          this.populateStudent();
+        }else {
+          this.toastr.error(res.message);
+        }
       }, error: err=>{
         this.toastr.error('');
       }
@@ -70,8 +75,13 @@ export class SaveGradeComponent implements OnInit {
   populateStudent() {
     this.studentService.getStudentsPerCourse(this.course).subscribe({
       next: res => {
-        this.students = res.body;
-        this.populateGrades();
+        if(res.success){
+          this.students = res.body;
+          this.populateGrades();
+        }else {
+          this.toastr.error(res.message);
+        }
+
       }, error: err => {
         this.toastr.error('');
       }
@@ -80,15 +90,20 @@ export class SaveGradeComponent implements OnInit {
 
   populateGrades() {
     this.gradeService.getGradesInstructor(this.course.code).subscribe({
-      next: value => {
-        this.grades = value.body;
+      next: res => {
+        if(res.success){
+          this.grades = res.body;
 
-        this.students.forEach((student, index) => {           //populate the grade field if exists
-          const foundGrade = this.grades.find(
-            g => g.student.code === student.code
-          );
-          this.gradeInput[index] = foundGrade ? foundGrade.grade : 0;
-        });
+          this.students.forEach((student, index) => {           //populate the grade field if exists
+            const foundGrade = this.grades.find(
+              g => g.student.code === student.code
+            );
+            this.gradeInput[index] = foundGrade ? foundGrade.grade : 0;
+          });
+        }else {
+          this.toastr.error(res.message);
+        }
+
       }, error: err => {
         this.toastr.error('');
       }
@@ -131,11 +146,11 @@ export class SaveGradeComponent implements OnInit {
 
     this.gradeService.saveGrade(grade).subscribe({
       next: value => {
-        if(!value.success) {
-          this.toastr.error(value.message);
-        }else {
+        if(value.success) {
           this.toastr.success("Student Graded.");
           this.ngOnInit();
+        }else {
+          this.toastr.error(value.message);
         }
       }, error: err => {
         this.toastr.error('');
@@ -145,7 +160,7 @@ export class SaveGradeComponent implements OnInit {
   }
 
   goBack() {
-    this.router.navigate(['instructor/grade/view']);
+    this.router.navigate(['super/manage/grade']);
   }
 
   checkGradeValidity() {

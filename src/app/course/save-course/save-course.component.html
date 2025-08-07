@@ -15,7 +15,6 @@
     <input type="text" id="name" formControlName="name" placeholder="Enter course name">
     <div class="error"
          *ngIf="this.courseForm.get('name')?.touched && this.courseForm.get('name')?.invalid">
-<!--      <small *ngIf="this.courseForm.get('name')?.errors?.['required']">Field required.</small>-->
       <small *ngIf="this.courseForm.get('name')?.errors?.['pattern']">Please enter alphabets only.</small>
     </div>
   </div>
@@ -31,26 +30,12 @@
 
   <div class="form-group">
     <label for="fullMarks">Full Marks</label>
-    <input type="number" id="fullMarks" formControlName="fullMarks" placeholder="e.g. 100">
+    <input type="number" id="fullMarks" [max]="60" [min]="40" formControlName="fullMarks" placeholder="e.g. 100">
     <div class="error"
          *ngIf="this.courseForm.get('fullMarks')?.touched && this.courseForm.get('fullMarks')?.invalid">
       <small *ngIf="this.courseForm.get('fullMarks')?.errors?.['required']">Field Required.</small>
     </div>
   </div>
-
-<!--  <div class="form-group">-->
-<!--    <label for="instructor">Instructor</label>-->
-<!--    <mat-select class="custom-ng-select" formControlName="instructor" [compareWith]="instructorMapper">-->
-<!--      @for (instructor of instructors; track instructor) {-->
-<!--        <mat-option [value]="instructor">-->
-<!--          {{ joinName.getFullName(instructor.user.firstName,-->
-<!--                                  instructor.user.middleName,-->
-<!--                                  instructor.user.lastName)-->
-<!--          }}-->
-<!--        </mat-option>-->
-<!--      }-->
-<!--    </mat-select>-->
-<!--  </div>-->
 
   <div class="btn-div">
     <button [ngClass]="this.courseForm.valid ? 'submit-btn-active' : 'submit-btn-inactive'" type="submit" (click)="onSubmit()">{{ isEditable? "Update Course" : "Add" }}</button>

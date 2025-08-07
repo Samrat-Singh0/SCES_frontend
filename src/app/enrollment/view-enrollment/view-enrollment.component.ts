@@ -72,25 +72,37 @@ export class ViewEnrollmentComponent implements OnInit{
   }
 
   ngOnInit() {
-    this.userRole = localStorage.getItem('role') || '';
+    this.userRole = JSON.parse(localStorage.getItem("loggedInUser")!).role.roleType || '';
     this.renderContent(this.currentPage);
     this.buildForm();
   }
 
-  renderContent(page: number){
-    if(this.isSearchEnabled){
-      this.searchEnrollment(page);
-    }else {
-      this.enrollmentService.getPagedEnrollments(page, this.pageSize).subscribe({
-        next: res => {
+  renderContent(page: number = 0){
+    let studentName: string = this.searchForm.value.studentName || null;
+    let semester: string = this.searchForm.value.semester || null;
+    let payStatus: string = this.searchForm.value.payStatus || null;
+
+    const searchCriteria: SearchEnrollment = {
+      studentName: studentName,
+      semester: semester,
+      payStatus: payStatus
+    }
+
+
+    this.enrollmentService.getPagedEnrollments(searchCriteria, page, this.pageSize).subscribe({
+      next: res => {
+        if(res.success){
           this.enrollments = res.body.content;
           this.totalPages = res.body.totalPages;
           this.currentPage = res.body.number;
-        },error: err => {
-          this.toastr.error('');
+        }else{
+          this.toastr.error(res.message);
         }
-      });
-    }
+
+      },error: err => {
+        this.toastr.error('');
+      }
+    });
   }
 
   buildForm() {
@@ -109,10 +121,10 @@ export class ViewEnrollmentComponent implements OnInit{
     }
   }
 
-  dropEnroll(enrollment: Enrollment) {
-    const droppedEnrollment = {
+  updateEnroll(enrollment: Enrollment, isEnrollmentCompleted: boolean) {
+    const updatedEnrollment = {
       ...enrollment,
-      completionStatus: CompletionStatus.DROPPED
+      completionStatus: isEnrollmentCompleted ? CompletionStatus.COMPLETED : CompletionStatus.DROPPED
     }
 
     const dialogRef = this.dialogRef.open(ConfirmationComponent, {
@@ -120,18 +132,27 @@ export class ViewEnrollmentComponent implements OnInit{
       maxWidth: 'none',
       disableClose: true,
       data: {
-        title: 'Drop Course',
-        message: 'Are you sure you want to drop this course?',
+        title: isEnrollmentCompleted ? 'Mark Complete?' : 'Drop Course?',
+        message: isEnrollmentCompleted ? 'Are you sure?' : 'Are you sure you want to drop this course? Please mind your account will be deactivated if u proceed to drop.',
         requireRemarks: false
       }
     });
 
     dialogRef.afterClosed().subscribe(result => {
       if(result?.confirmed) {
-        this.enrollmentService.updateEnroll(droppedEnrollment).subscribe({
-          next: value => {
-            this.ngOnInit();
-            this.toastr.success(value.message);
+        this.enrollmentService.updateEnroll(updatedEnrollment).subscribe({
+          next: res => {
+            if(res.success){
+              if(!isEnrollmentCompleted) {
+                localStorage.clear();
+                this.router.navigate(['login'])
+              }else {
+                this.renderContent(this.currentPage);
+                this.toastr.success(res.message);
+              }
+            }else{
+              this.toastr.error(res.message);
+            }
           }, error: err => {
             this.toastr.error('');
           }
@@ -140,72 +161,7 @@ export class ViewEnrollmentComponent implements OnInit{
     });
   }
 
-  completeEnroll(enrollment: Enrollment) {
-    const completedEnrollment = {
-      ...enrollment,
-      completionStatus: CompletionStatus.COMPLETED
-    }
-
-    const dialogRef = this.dialogRef.open(ConfirmationComponent, {
-      width: '600px',
-      maxWidth: 'none',
-      disableClose: true,
-      data: {
-        title: 'Complete Enrollment',
-        message:"Are you sure you want to mark this enrollment as `COMPLETE`?",
-        requireRemarks: false
-      }
-    });
-
-    dialogRef.afterClosed().subscribe(result => {
-      if(result?.confirmed) {
-        this.enrollmentService.updateEnroll(completedEnrollment).subscribe({
-          next: value => {
-            this.ngOnInit();
-            this.toastr.success(value.message);
-          }, error: err => {
-            this.toastr.success('(err.message');
-          }
-        });
-      }
-    });
-  }
-
-  searchEnrollment(page:number = 0) {
-    this.isSearchEnabled = true;
-    let studentName: string = this.searchForm.value.studentName || undefined;
-    let semester: string = this.searchForm.value.semester || undefined;
-    let payStatus: string = this.searchForm.value.payStatus || undefined;
-
-    const searchCriteria: SearchEnrollment = {
-      studentName: studentName,
-      semester: semester,
-      payStatus: payStatus
-    }
-
-    this.enrollmentService.searchEnrollment(searchCriteria, page, this.pageSize).subscribe({
-      next: res => {
-        if (res && res.body && res.body.content) {
-          this.enrollments = res.body.content;
-          this.totalPages = res.body.totalPages;
-          this.currentPage = res.body.number;
-        } else {
-          this.enrollments = [];
-        }
-      }, error: err => {
-        // console.log(err.message);
-      }
-    });
-  }
-
   isCurrentlyEnrolled(): boolean{
-    // for(let enrollment of this.enrollments){
-    //   if(enrollment.completionStatus == "RUNNING"){
-    //     return true;
-    //   }
-    // }
-    // return false;
-
     return this.enrollments.some(enrollment => (enrollment.completionStatus === CompletionStatus.RUNNING || enrollment.completionStatus === CompletionStatus.PENDING));
   }
 
@@ -253,6 +209,7 @@ export class ViewEnrollmentComponent implements OnInit{
   payFee(enrollment: Enrollment) {
     const dialogRef = this.dialogRef.open(FeePopupComponent, {
       width: '400px',
+      height: '350px',
       data: { enrollment }
     });
 
@@ -314,5 +271,18 @@ export class ViewEnrollmentComponent implements OnInit{
     this.searchForm.reset();
     this.isSearchEnabled = false;
     this.renderContent(this.currentPage);
+  }
+
+  isButtonVisible(i: number, currentPage: number): boolean {
+    console.log(currentPage);
+    if(currentPage === 0) {
+      return i === currentPage || i === currentPage + 1 || i === currentPage + 2;
+    }
+
+    if(currentPage === this.totalPages-1) {
+      return i === currentPage || i === currentPage - 1 || i === currentPage - 2;
+    }
+    return i === currentPage - 1 || i === currentPage + 1 || i === currentPage;
+
   }
 }

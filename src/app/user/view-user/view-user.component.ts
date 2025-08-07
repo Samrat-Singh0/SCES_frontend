@@ -18,6 +18,8 @@ import {ToastrService} from 'ngx-toastr';
 import {MatFormField, MatLabel} from '@angular/material/input';
 import {MatSelect} from '@angular/material/select';
 import {MatOption} from '@angular/material/core';
+import {RoleModel} from '../../model/role.model';
+import {RoleService} from '../../services/role.service';
 
 
 @Component({
@@ -54,6 +56,8 @@ export class ViewUserComponent implements OnInit {
   sizeSelect: number[] = [5,10,20,50,100]
   pageSize: number = this.sizeSelect[0];
   user: User;
+  roles: RoleModel[];
+  numberOfPages: number;
 
   constructor(
     private userService: UserService,
@@ -62,25 +66,54 @@ export class ViewUserComponent implements OnInit {
     private fb: FormBuilder,
     public joinName: JoinNameService,
     private currentUser: CurrentUserService,
+    private roleService: RoleService
   ) {
     this.searchForm = new FormGroup({});
     this.user = this.currentUser.getUser();
+    this.roles = [];
+    this.numberOfPages = 3;
   }
 
   ngOnInit(): void {
-    this.renderContent(this.currentPage);
+    this.getRoles();
     this.buildSearchForm();
+    this.renderContent(this.currentPage);
+  }
+
+  getRoles() {
+    this.roleService.getSavedRoles().subscribe({
+      next: res => {
+        if(res.success) {
+          this.roles = res.body;
+        }else {
+          this.toastr.error(res.message);
+        }
+      }, error: err => {
+        this.toastr.error(err.message);
+      }
+    });
   }
 
   renderContent(page: number) {
-    if(this.isSearchEnabled) {
-      this.searchUser(page);
+
+    const searchCriteria: SearchUser = {
+      firstName: this.searchForm.value.firstName?.trim() || null,
+      middleName: this.searchForm.value.middleName?.trim() || null,
+      lastName: this.searchForm.value.lastName?.trim() || null,
+      role: this.searchForm.value.role?.trim() || null,
+      phoneNumber: this.searchForm.value.phoneNumber?.trim() || null
     }
-    this.userService.getPagedUsers(page,this.pageSize).subscribe({
-      next: data => {
-          this.users = data.body.content;
-          this.totalPages = data.body.totalPages;
-          this.currentPage = data.body.number;
+
+
+    this.userService.getPagedUsers(searchCriteria, page,this.pageSize).subscribe({
+      next: res => {
+        if(res.success){
+          this.users = res.body.content;
+          this.totalPages = res.body.totalPages;
+          this.currentPage = res.body.number;
+        }else {
+          this.toastr.error(res.message);
+        }
       }, error: err => {
         this.toastr.error('');
       }
@@ -93,7 +126,7 @@ export class ViewUserComponent implements OnInit {
       middleName: [undefined, Validators.pattern("^[a-zA-Z]*$")],
       lastName: [undefined, Validators.pattern("^[a-zA-Z]*$")],
       role: [undefined],
-      phoneNumber: [undefined, Validators.pattern("^\\d+$")]
+      phoneNumber: [undefined, Validators.pattern("^(97|98)\\d{8}$")]
     })
 
   }
@@ -115,7 +148,7 @@ export class ViewUserComponent implements OnInit {
     })
 
     dialogRef.afterClosed().subscribe(result => {
-      this.ngOnInit();
+      this.renderContent(this.currentPage);
     })
   }
 
@@ -139,8 +172,12 @@ export class ViewUserComponent implements OnInit {
       if(result?.confirmed){
         this.userService.deleteUser(user.code, result?.remarks).subscribe({
           next: (res) => {
-            this.ngOnInit();
-            this.toastr.success(res.message);
+            if(res.success){
+              this.renderContent(this.currentPage);
+              this.toastr.success(res.message);
+            }else {
+              this.toastr.error(res.message);
+            }
           },
           error: (err) => {
             this.toastr.error('');
@@ -148,32 +185,6 @@ export class ViewUserComponent implements OnInit {
         })
       }
     })
-  }
-
-  searchUser(page: number = 0) {
-    const formValue = this.searchForm.value;
-    this.isSearchEnabled = true;
-
-    if(this.searchForm.valid){
-      const searchCriteria: SearchUser = {
-        firstName: formValue.firstName?.trim() || undefined,
-        middleName: formValue.middleName?.trim() || undefined,
-        lastName: formValue.lastName?.trim() || undefined,
-        role: formValue.role?.trim() || undefined,
-        phoneNumber: formValue.phoneNumber?.trim() || undefined
-      }
-
-      this.userService.searchUser(searchCriteria, page, this.pageSize).subscribe({
-        next: (res) => {
-          this.users = res.body.content;
-          this.totalPages = res.body.totalPages;
-          this.currentPage = res.body.number;
-
-        }, error: (err) => {
-          // console.log(err.message);
-        }
-      })
-    }
   }
 
   onPageSizeChange(size: number) {
@@ -187,11 +198,6 @@ export class ViewUserComponent implements OnInit {
     this.renderContent(this.currentPage);
   }
 
-  isSearchDisabled(): boolean {
-    const values = this.searchForm.value;
-    return !values.firstName && !values.middleName && !values.lastName && !values.role && !values.phoneNumber;
-  }
-
   getUserRole(role: Role):string {
     switch (role) {
       case Role.SUPER_ADMIN:
@@ -201,7 +207,7 @@ export class ViewUserComponent implements OnInit {
       case Role.STUDENT:
         return 'Student';
       default:
-        return '';
+        return role;
     }
   }
 
@@ -220,5 +226,18 @@ export class ViewUserComponent implements OnInit {
 
   isLoggedInUser(user: User): boolean {
     return user.email === this.user.email;
+  }
+
+  isButtonVisible(i: number, currentPage: number): boolean {
+    console.log(currentPage);
+    if(currentPage === 0) {
+      return i === currentPage || i === currentPage + 1 || i === currentPage + 2;
+    }
+
+    if(currentPage === this.totalPages-1) {
+      return i === currentPage || i === currentPage - 1 || i === currentPage - 2;
+    }
+    return i === currentPage - 1 || i === currentPage + 1 || i === currentPage;
+
   }
 }

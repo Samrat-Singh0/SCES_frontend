@@ -21,6 +21,8 @@ import {SaveCourseComponent} from '../../course/save-course/save-course.componen
 import {MatDialog} from '@angular/material/dialog';
 import {SaveUserComponent} from '../../user/save-user/save-user.component';
 import {Role} from '../../enum/role.enum';
+import {ConfirmationComponent} from '../../shared/confirmation/confirmation.component';
+import {feeValidator} from '../../auth/validators/fee.validator';
 
 @Component({
   selector: 'app-edit-semester',
@@ -55,8 +57,6 @@ export class EditSemesterComponent implements OnInit {
   selectedCourseCodes: string[] = [];
   renderCourseField: number = 0;
   renderInstructorField: number = 0;
-  selectedInstructor: Map<String, Instructor[]> = new Map();
-
 
   constructor(
     private route: ActivatedRoute,
@@ -75,7 +75,6 @@ export class EditSemesterComponent implements OnInit {
 
   ngOnInit(): void {
     this.renderContent();
-
   }
 
   renderContent() {
@@ -99,8 +98,17 @@ export class EditSemesterComponent implements OnInit {
   populateAvailableCourses() {
     this.courseService.getCoursesWithNoSemester().subscribe({
       next: res => {
-        this.availableCourses = res.body;
-        this.concatArrays();
+        if(res.success){
+          if(res.success){
+            this.availableCourses = res.body;
+            this.concatArrays();
+          }else {
+            this.toastr.error(res.message);
+          }
+        }else{
+          this.toastr.error(res.message);
+          this.router.navigate(['super/semester/view']);
+        }
 
       }, error: err => {
         this.toastr.error('');
@@ -122,7 +130,7 @@ export class EditSemesterComponent implements OnInit {
         {value: this.semester?.label, disabled: true},
         [Validators.required,Validators.pattern("^[A-Za-z]+$"),
           Validators.minLength(5)]],
-      fee: [this.semester?.fee, [Validators.required, Validators.pattern("^[0-9]+$")]],
+      fee: [this.semester?.fee, [Validators.required, Validators.pattern("^[0-9]+$"), feeValidator()]],
       startDate: [this.semester?.startDate, [Validators.required]],
       endDate: [this.semester?.endDate, [Validators.required]],
       courses: this.formBuilder.array([])
@@ -161,13 +169,9 @@ export class EditSemesterComponent implements OnInit {
     const instructorArray = this.getInstructors(courseIndex);
 
     const course = this.semester?.course?.[courseIndex];
-    const selectedInstructors: Instructor[] = [];
 
     course?.instructors?.forEach(instructor => {
       this.renderInstructorField++;
-
-      // this.availableInstructors.push(instructor);
-      selectedInstructors.push(instructor);
 
       const instructorGroup = this.formBuilder.group({
         instructor: [instructor],
@@ -175,9 +179,6 @@ export class EditSemesterComponent implements OnInit {
 
       instructorArray.push(instructorGroup);
     });
-    if(course?.code) {
-      this.selectedInstructor.set(course.code, selectedInstructors);
-    }
   }
 
   concatArrays(): any {
@@ -189,7 +190,7 @@ export class EditSemesterComponent implements OnInit {
   addCourse(course: Course | null) {
     this.renderCourseField++;
     const courseForm = this.formBuilder.group({
-      course: [course || ''],
+      course: [course || '', [Validators.required]],
       instructors: this.formBuilder.array([])
     })
 
@@ -197,9 +198,14 @@ export class EditSemesterComponent implements OnInit {
   }
 
   addInstructor(courseIndex: number, instructor: Instructor | null) {
+    const courseCode = this.courses.at(courseIndex).value.course.code;
+    if(!courseCode){
+      this.toastr.error('Select at least one course');
+      return;
+    }
     this.renderInstructorField++;
     const instructorForm = this.formBuilder.group({
-      instructor: [instructor || '']
+      instructor: [instructor || '', [Validators.required]],
     })
     this.getInstructors(courseIndex).push(instructorForm);
   }
@@ -207,54 +213,27 @@ export class EditSemesterComponent implements OnInit {
   removeInstructor(courseIndex: number, instructorIndex: number) {
     this.renderInstructorField--;
     this.getInstructors(courseIndex).removeAt(instructorIndex);
+
   }
 
   removeCourse(index: number) {
     this.renderCourseField--;
-    const removedCourseCode = this.courses.at(index).get('course')?.value?.code;
-
-    if (removedCourseCode) {
-      const codeIndex = this.selectedCourseCodes.indexOf(removedCourseCode);
-      if (codeIndex !== -1) {
-        this.selectedCourseCodes.splice(codeIndex, 1);
-      }
-    }
     this.courses.removeAt(index);
   }
 
-  onCourseSelect(event: MatSelectChange, index: number) {
-
-    const oldCode = this.selectedCourses.splice(index, 1);
-    if(oldCode) {
-      this.selectedCourses.splice(index, 1);
-    }
-    this.selectedCourses.push(event.value.code);
-  }
-
   isCourseSelected(course: Course): boolean {
-    return this.selectedCourseCodes.includes(course.code);
-  }
-
-  onInstructorSelect(event: MatSelectChange, courseIndex: number) {
-    const courseCode = this.selectedCourses[courseIndex].code;
-    if(courseCode) {
-      const selectedList = this.selectedInstructor.get(courseCode) || [];
-      const alreadySelected = selectedList.some(instr => instr.code === event.value.code);
-      if (!alreadySelected) {
-        selectedList.push(event.value);
-        this.selectedInstructor.set(courseCode, selectedList);
+    for(let i = 0 ; i < this.courses.length ; i++) {
+      if(this.courses.at(i).value.course.code === course.code) {
+        return true;
       }
     }
+    return false;
   }
 
   isInstructorSelected(courseIndex: number, instructor: Instructor): boolean {
-    const courseCode = this.selectedCourses[courseIndex]?.code;
-    if(courseCode) {
-      const selected = this.selectedInstructor.get(courseCode) || [];
-      for(let i = 0; i < selected.length; i++) {
-        if(selected[i].code === instructor.code) {
-          return true;
-        }
+    for(let i = 0 ; i < this.getInstructors(courseIndex).length ; i++) {
+      if(this.getInstructors(courseIndex).at(i).value.instructor.code === instructor.code){
+        return true;
       }
     }
     return false;
@@ -266,6 +245,7 @@ export class EditSemesterComponent implements OnInit {
       this.toastr.error("Semester data is missing");
       return;
     }
+
 
     const updatedSemester: Semester = {
       ...this.semester,
@@ -285,15 +265,56 @@ export class EditSemesterComponent implements OnInit {
       })
     }
 
-    this.semesterService.update(updatedSemester).subscribe({
-        next: (res) => {
-          this.router.navigate(['super/semester/view']);
-          this.toastr.success(res.message);
+    if(JSON.stringify(this.semester) === JSON.stringify(updatedSemester)) {
+      this.toastr.info("No any changes detected.");
+      return;
+    }
 
-        }, error: (err) => {
-          this.toastr.error(err.message);
-        }
-      });
+    if(this.editForm.invalid){
+      this.toastr.error("Please fill all the fields that are required");
+      return;
+    }
+
+    if(this.selectedCourses.length === 0){
+      this.toastr.error("Please select at least one course.")
+      return;
+    }
+
+    for(let i = 0 ; i < this.courses.length ; i++) {
+      if(this.getInstructors(i).length === 0){
+        this.toastr.error("Please add at least one instructor in selected courses");
+        return;
+      }
+    }
+
+    const dialog = this.dialog.open(ConfirmationComponent, {
+      width: '600px',
+      maxWidth: 'none',
+      disableClose: true,
+      data: {
+        title: 'Confirm Save',
+        message:"Are you sure you want to create a new semester? Some of the details cannot be changed after saving.",
+        requireRemarks: false
+      }
+    })
+    dialog.afterClosed().subscribe(result => {
+      if(result?.confirmed) {
+        this.semesterService.update(updatedSemester).subscribe({
+          next: (res) => {
+            if(res.success){
+              this.router.navigate(['super/semester']);
+              this.toastr.success(res.message);
+            }else {
+              this.toastr.error(res.message);
+            }
+
+          }, error: (err) => {
+            this.toastr.error(err.message);
+          }
+        });
+      }
+    })
+
   }
 
 
@@ -302,12 +323,9 @@ export class EditSemesterComponent implements OnInit {
   }
 
   goBack() {
-    this.router.navigate(['super/semester/view']);
+    this.router.navigate(['super/semester']);
   }
 
-  courseMapper(a: Course, b: Course) {
-    return(a.code === b.code);
-  }
 
   addNewCourse() {
     const dialog = this.dialog.open(SaveCourseComponent, {
@@ -317,6 +335,7 @@ export class EditSemesterComponent implements OnInit {
     dialog.afterClosed().subscribe((result) => {
       if (result) {
         this.availableCourses.push(result);
+        result.code = result.name;
         this.addCourse(result);
       }
     })
@@ -340,16 +359,18 @@ export class EditSemesterComponent implements OnInit {
       if (result) {
         this.instructorService.getAll().subscribe({
           next: res => {
-            this.availableInstructors = res.body;
+            if(res.success){
+              this.availableInstructors = res.body;
 
-            const newlyAddedInstructor = this.availableInstructors.find(
-              instructor => instructor.user.email === result.user.email
-            );
-
-
-            if (newlyAddedInstructor) {
-              const lastCourseIndex = this.courses.length - 1;
-              this.addInstructor(lastCourseIndex, newlyAddedInstructor);
+              const newlyAddedInstructor = this.availableInstructors.find(
+                instructor => instructor.user.email === result.user.email
+              );
+              if (newlyAddedInstructor) {
+                const lastCourseIndex = this.courses.length - 1;
+                this.addInstructor(lastCourseIndex, newlyAddedInstructor);
+              }
+            }else {
+              this.toastr.error(res.message);
             }
           },
           error: err => {
@@ -360,12 +381,24 @@ export class EditSemesterComponent implements OnInit {
     });
   }
 
-  compareByCode = (a: Course, b: Course): boolean => {
-    return a && b ? a.code === b.code : a === b;
+  courseMapper(a: Course, b: Course) {
+    return(a.code === b.code);
   }
 
   compareByEmail = (a: Instructor, b: Instructor): boolean => {
     return a && b ? a.user.email === b.user.email : a === b;
   }
 
+  resetForm() {
+    this.renderContent()
+  }
+
+  isAddCourseButtonDisabled(): boolean {
+    return (this.availableCourses.length === this.courses.length);
+  }
+
+  isAddInstructorButtonDisabled(courseIndex: number): boolean {
+    const selected = this.getInstructors(courseIndex)?.length || 0;
+    return selected === 3;
+  }
 }

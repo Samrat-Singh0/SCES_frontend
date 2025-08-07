@@ -37,9 +37,10 @@ import {PayFee} from '../model/pay-fee.model';
 export class FeePopupComponent implements OnInit {
 
   amount: number | null= null;
-  isAmountValid: boolean = false;
+  isAmountValid: boolean = true;
   thresholdPercent: number = 50;
   minimumAmount: number = 0;
+  validationErrorMessage: string = '';
 
   constructor(
     private toastr: ToastrMsgService,
@@ -64,6 +65,8 @@ export class FeePopupComponent implements OnInit {
   }
 
   confirmPayment() {
+    this.isAmountValid = this.validateAmount();
+
     if(this.isAmountValid){
       const fee: PayFee = {
         enrollmentPayload: this.data.enrollment,
@@ -85,7 +88,12 @@ export class FeePopupComponent implements OnInit {
         if(result?.confirmed){
           this.feeService.payFee(fee).subscribe({
             next: res => {
-              this.dialogRef.close();
+              if(res.success){
+                this.toastr.success("Payment successful!");
+                this.dialogRef.close();
+              }else {
+                this.toastr.error(res.message);
+              }
             }, error: err => {
               this.toastr.error('');
             }
@@ -96,22 +104,27 @@ export class FeePopupComponent implements OnInit {
   }
 
   validateAmount(): boolean {
+    if(this.amount == null){
+      this.validationErrorMessage = "Please fill the field";
+      return false;
+    }
     if(this.amount! < 0){
-      this.toastr.error("Please add a positive numeric amount");
+      this.validationErrorMessage = "Please add a positive numeric amount";
       return false;
     }
     if(!this.amount || !/^\d+$/.test(this.amount.toString())){
-      this.toastr.error('Please enter a valid numeric amount');
+      this.validationErrorMessage = "Please enter a valid numeric amount";
       return false;
     }
     if(this.amount > this.data.enrollment.outstandingFee) {
-      this.toastr.error("Your amount cannot exceed the outstanding amount");
+      this.validationErrorMessage = "Your amount cannot exceed the outstanding amount";
       return false;
     }
     if(this.amount < this.minimumAmount) {
-      this.toastr.error("Your amount must be greater than minimum amount");
+      this.validationErrorMessage = "Your amount must be greater than minimum amount";
       return false;
     }
+    this.validationErrorMessage = '';
     return true;
   }
 

@@ -19,7 +19,7 @@
       <td>{{ course.name }}</td>
       <td>{{ course.creditHours }}</td>
       <td>{{ course.fullMarks }}</td>
-      <td>{{ course.semester.label }}</td>
+      <td>{{ course.semester?.label || '-'}} </td>
       <td>{{ joinName.getFullName(course?.addedBy?.firstName, course?.addedBy?.middleName, course?.addedBy?.lastName)}}</td>
       <td class="status">
         <button mat-icon-button

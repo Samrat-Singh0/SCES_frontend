@@ -36,7 +36,11 @@ export class FeeHistoryComponent implements OnInit{
   populateFee() {
     this.feeService.getFeeHistory(this.data.code).subscribe({
       next: res => {
-        this.fees = res.body;
+        if(res.success){
+          this.fees = res.body;
+        }else{
+          this.toastr.error(res.message);
+        }
       }, error: err => {
         this.toastr.error('');
       }

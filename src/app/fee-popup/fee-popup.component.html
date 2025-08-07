@@ -4,12 +4,15 @@
   <p>Minimum required: Rs. {{minimumAmount}}</p>
   <mat-form-field appearance="fill" class="w-full">
     <mat-label>Enter Amount</mat-label>
-    <input matInput type="number" [(ngModel)]="amount" min="0" [max]="data.enrollment.outstandingFee" (keyup)="updateButtonValidity()">
+    <input class="right-align" matInput type="number" [(ngModel)]="amount" min="0" [max]="data.enrollment.outstandingFee">
 
   </mat-form-field>
+  @if (!isAmountValid) {
+  <p style="color: red; font-style: italic">*{{validationErrorMessage}}</p>
+  }
 </mat-dialog-content>
 <mat-dialog-actions align="end">
   <button mat-button mat-dialog-close>Cancel</button>
-  <button mat-flat-button [color]="getColor()" (click)="confirmPayment()" [disabled]="!isAmountValid">Pay</button>
+  <button mat-flat-button [color]="getColor()" (click)="confirmPayment()">Pay</button>
 </mat-dialog-actions>
 

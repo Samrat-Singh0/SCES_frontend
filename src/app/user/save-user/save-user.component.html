@@ -69,10 +69,10 @@
 
     <div class="form-group" *ngIf="!isEditMode && !isFormForInstructor">
       <label for="role">Role</label>
-      <select class="role" formControlName="role" [disabled]="isEditMode">
-        <option value="SUPER_ADMIN">Super Admin</option>
-        <option value="INSTRUCTOR">Instructor</option>
-        <option value="STUDENT">Student</option>
+      <select class="role" formControlName="newRole" [disabled]="isEditMode">
+        @for (role of roles; track role.code) {
+          <option [value]="role.roleType">{{role.roleName}}</option>
+        }
       </select>
     </div>
 

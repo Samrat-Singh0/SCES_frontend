@@ -39,10 +39,13 @@ export class PasswordPolicyComponent implements OnInit {
 
   loadPasswordPolicies() {
     this.passwordPolicyService.getAllPolicies().subscribe(
-      data => {
-        this.policies = data.body;
-        // this.count = this.policies.map(policy => policy.length );
-        this.oldPolicies = JSON.parse(JSON.stringify(data.body));           //clean copy of the original, undefined haru hatauxa
+      res => {
+        if(res.success){
+          this.policies = res.body;
+          this.oldPolicies = JSON.parse(JSON.stringify(res.body));           //clean copy of the original, undefined haru hatauxa
+        }else {
+          this.toastr.error(res.message);
+        }
       }
     )
   }
@@ -66,8 +69,12 @@ export class PasswordPolicyComponent implements OnInit {
 
     this.passwordPolicyService.updatePolicies(modifiedPolicies).subscribe({
       next: (res) => {
-        this.loadPasswordPolicies();
-        this.toastr.success("Policies updated successfully");
+        if(res.success){
+          this.loadPasswordPolicies();
+          this.toastr.success("Policies updated successfully");
+        }else {
+          this.toastr.error(res.message);
+        }
       }, error: (err) => {
         this.toastr.error('');
       }
