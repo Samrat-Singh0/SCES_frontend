@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {PasswordPolicy} from '../model/password-policy.model';
 import {PasswordPolicyService} from '../services/password-policy.service';
-import {NgForOf, NgIf} from '@angular/common';
+import {NgClass, NgForOf, NgIf} from '@angular/common';
 import {MatCheckbox} from '@angular/material/checkbox';
 import {MatIcon} from '@angular/material/icon';
 import {UpdatePasswordPolicy} from '../model/update-password-policy.model';
@@ -15,9 +15,11 @@ import {ToastrMsgService} from '../shared/toastr-msg.service';
     MatCheckbox,
     MatIcon,
     NgIf,
-    MatMiniFabButton
+    MatMiniFabButton,
+    NgClass
   ],
   templateUrl: './password-policy.component.html',
+  standalone: true,
   styleUrl: './password-policy.component.css'
 })
 export class PasswordPolicyComponent implements OnInit {
@@ -37,10 +39,13 @@ export class PasswordPolicyComponent implements OnInit {
 
   loadPasswordPolicies() {
     this.passwordPolicyService.getAllPolicies().subscribe(
-      data => {
-        this.policies = data.body;
-        // this.count = this.policies.map(policy => policy.length );
-        this.oldPolicies = JSON.parse(JSON.stringify(data.body));           //clean copy of the original, undefined haru hatauxa
+      res => {
+        if(res.success){
+          this.policies = res.body;
+          this.oldPolicies = JSON.parse(JSON.stringify(res.body));           //clean copy of the original, undefined haru hatauxa
+        }else {
+          this.toastr.error(res.message);
+        }
       }
     )
   }
@@ -62,11 +67,14 @@ export class PasswordPolicyComponent implements OnInit {
       length: policy.length
     }));
 
-    console.log(modifiedPolicies);
     this.passwordPolicyService.updatePolicies(modifiedPolicies).subscribe({
       next: (res) => {
-        this.loadPasswordPolicies();
-        this.toastr.success("Policies updated successfully");
+        if(res.success){
+          this.loadPasswordPolicies();
+          this.toastr.success("Policies updated successfully");
+        }else {
+          this.toastr.error(res.message);
+        }
       }, error: (err) => {
         this.toastr.error('');
       }
@@ -81,6 +89,18 @@ export class PasswordPolicyComponent implements OnInit {
   decreaseCount(index: number) {
     if(this.policies[index].length > 0){
       this.policies[index].length--;
+    }
+  }
+
+  resetPolicy() {
+    this.loadPasswordPolicies();
+  }
+
+  getStatusClass(status: boolean) {
+    if(status) {
+      return 'active-status';
+    }else {
+      return 'inactive-status';
     }
   }
 

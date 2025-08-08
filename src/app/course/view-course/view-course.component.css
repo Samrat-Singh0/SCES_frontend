@@ -1,5 +1,5 @@
 .control-container {
-  margin-top: 3vh;
+  /*margin-top: 3vh;*/
   display: flex;
 }
 
@@ -160,18 +160,16 @@ th,td {
 }
 
 .footer {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
   margin-top: 30px;
   padding: 10px;
+  text-align: right;
 }
 
 .download-btn {
   height: 50px;
   display: flex;
   gap: 10px;
+  justify-content: right;
 }
 
 .btn-download {
@@ -191,8 +189,7 @@ th,td {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
-  align-items: center;
-  justify-content: center;
+  justify-content: right;
   margin-top: 20px;
 }
 
@@ -227,5 +224,13 @@ page-size-item {
   display: flex;
   justify-content: flex-end;
   margin-top: 1rem;
+}
+
+.select-size {
+  max-width: 5rem;
+}
+
+.page-button {
+  display: flex;
 }
 

@@ -5,7 +5,7 @@ import {Injectable} from '@angular/core';
 })
 export class CurrentUserService {
 
-  private currentUser: string | null;
+  private currentUser: any | null;
 
   constructor() {
     this.currentUser = JSON.parse(localStorage.getItem('loggedInUser') || '{}');

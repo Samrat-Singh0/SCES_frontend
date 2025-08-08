@@ -1,0 +1,86 @@
+<div class="container">
+  <h4 class="text-center">Analytics Overview</h4>
+</div>
+
+@if (!isDataNotPopulated && currentUser.role.roleType === Role.SUPER_ADMIN) {
+  <div class="analytics-grid mt-4">
+    <mat-card class="analytics-alt-card mat-elevation-z4" (click)="goToCourse()">
+      <div class="card-header">
+        <mat-icon class="icon accent">bar_chart</mat-icon>
+        <span class="title">Total Courses</span>
+      </div>
+      <div class="card-body">
+        <span class="value">{{ analytics?.totalCourse }}</span>
+      </div>
+    </mat-card>
+
+    <mat-card class="analytics-alt-card mat-elevation-z4" (click)="goToUser()">
+      <div class="card-header">
+        <mat-icon class="icon accent">group</mat-icon>
+        <span class="title">Total Students</span>
+      </div>
+      <div class="card-body">
+        <span class="value">{{ analytics?.totalStudent }}</span>
+      </div>
+    </mat-card>
+
+    <mat-card class="analytics-alt-card mat-elevation-z4" (click)="goToUser()">
+      <div class="card-header">
+        <mat-icon class="icon accent">person</mat-icon>
+        <span class="title">Total Instructors</span>
+      </div>
+      <div class="card-body">
+        <span class="value">{{ analytics?.totalInstructor }}</span>
+      </div>
+    </mat-card>
+
+    <mat-card class="analytics-alt-card mat-elevation-z4" (click)="goToSemester()">
+      <div class="card-header">
+        <mat-icon class="icon accent">payments</mat-icon>
+        <span class="title">Total Fee</span>
+      </div>
+      <div class="card-body">
+        <span class="value">Rs. {{ analytics?.totalFee }}</span>
+      </div>
+    </mat-card>
+
+    <mat-card class="analytics-alt-card mat-elevation-z4" (click)="goToEnrollment()">
+      <div class="card-header">
+        <mat-icon class="icon accent">money_off</mat-icon>
+        <span class="title">Outstanding Fee</span>
+      </div>
+      <div class="card-body">
+        <span class="value">Rs. {{ analytics?.totalOutstandingFee }}</span>
+      </div>
+    </mat-card>
+
+    <mat-card class="analytics-alt-card mat-elevation-z4">
+      <div class="card-header">
+        <mat-icon class="icon accent">group</mat-icon>
+        <span style="margin-left: 10px" class="title">Onboarded Date</span>
+      </div>
+      <div class="card-body">
+        <span class="value">{{getOnboardedDate(analytics?.onboardedDate)}}</span>
+      </div>
+    </mat-card>
+
+  </div>
+} @else {
+  <div class="analytics-grid mt-4">
+    <mat-card class="analytics-alt-card mat-elevation-z4">
+      <div class="card-header">
+        <mat-icon class="icon accent">group</mat-icon>
+        <span style="margin-left: 10px" class="title">Onboarded Date</span>
+      </div>
+      <div class="card-body">
+        <span class="value">{{getOnboardedDate(analytics?.onboardedDate)}}</span>
+      </div>
+    </mat-card>
+  </div>
+}
+
+
+
+<div *ngIf="isDataNotPopulated" class="no-data-msg-div">
+  <p class="no-data-msg">Dashboard is not available right now.</p>
+</div>

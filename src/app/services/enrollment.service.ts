@@ -16,16 +16,8 @@ export class EnrollmentService {
 
   constructor(private http:HttpClient) { }
 
-  getEnrollments(): Observable<ApiResponse<Enrollment[]>> {
-    return this.http.get<ApiResponse<Enrollment[]>>(this.enrollmentEndpoint.GET_ALL);
-  }
-
-  // getPagedEnrollments(page: number, size: number): Observable<ApiResponse<PageResponse<Enrollment>>> {
-  //   return this.http.get<ApiResponse<PageResponse<Enrollment>>(this.enrollmentEndpoint.GET_PAGED_ENROLLMENT+`?page=${page}&size=${size}&sort=id,asc`);
-  // }
-
-  getPagedEnrollments(page: number, size: number): Observable<ApiResponse<PageResponse<Enrollment>>> {
-    return this.http.get<ApiResponse<PageResponse<Enrollment>>>(this.enrollmentEndpoint.GET_PAGED_ENROLLMENT+`?page=${page}&size=${size}&sort=id,asc`);
+  getPagedEnrollments(searchCriteria: SearchEnrollment, page: number, size: number): Observable<ApiResponse<PageResponse<Enrollment>>> {
+    return this.http.post<ApiResponse<PageResponse<Enrollment>>>(this.enrollmentEndpoint.GET_PAGED_ENROLLMENT+`?page=${page}&size=${size}&sort=id,asc`, searchCriteria);
   }
 
   getPendingEnrollments(): Observable<ApiResponse<Enrollment[]>> {
@@ -38,10 +30,6 @@ export class EnrollmentService {
 
   updateEnroll(enrollment: Enrollment): Observable<ApiResponse<any>>{
     return this.http.post<ApiResponse<any>>(this.enrollmentEndpoint.UPDATE, enrollment);
-  }
-
-  searchEnrollment(searchCriteria: SearchEnrollment, page: number, size: number): Observable<ApiResponse<PageResponse<Enrollment>>> {
-    return this.http.post<ApiResponse<PageResponse<Enrollment>>>(this.enrollmentEndpoint.SEARCH_ENROLLMENT + `?page=${page}&size=${size}`, searchCriteria);
   }
 
 }

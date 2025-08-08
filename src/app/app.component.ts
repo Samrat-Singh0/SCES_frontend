@@ -5,8 +5,9 @@ import {SpinnerComponent} from './shared/spinner/spinner.component';
 
 @Component({
   selector: 'app-root',
-  imports: [FormsModule, RouterOutlet],
+  imports: [FormsModule, RouterOutlet, SpinnerComponent],
   templateUrl: './app.component.html',
+  standalone: true,
   styleUrl: './app.component.css'
 })
 export class AppComponent {

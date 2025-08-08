@@ -16,4 +16,8 @@ export class InstructorService {
   getAll(): Observable<ApiResponse<Instructor[]>> {
     return this.http.get<ApiResponse<Instructor[]>>(this.instructorEndpoints.GET_ALL);
   }
+
+  getInstructor(email: string): Observable<ApiResponse<Instructor>> {
+    return this.http.post<ApiResponse<Instructor>>(`${this.instructorEndpoints.GET_INSTRUCTOR}`, email);
+  }
 }

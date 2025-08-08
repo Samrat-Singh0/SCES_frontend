@@ -16,17 +16,21 @@
     <thead>
       <th>S.N.</th>
       <th>Course Name</th>
+      <th>Semester</th>
       <th>Attendance</th>
+      <th>Presence Rate (%)</th>
     </thead>
     <tbody >
       <tr *ngFor="let attendance of attendances; let i = index">
         <td>{{i + 1}}</td>
         <td>{{attendance.course.name}}</td>
+        <td>{{attendance.course.semester.label}}</td>
         <td class="attendance-cell">
           <span [ngClass]="getAttendanceClass(attendance.attendanceStatus)">
             {{attendance.attendanceStatus}}
           </span>
         </td>
+        <td>{{getAttendanceRate(attendance.course.code)}}</td>
       </tr>
 
     </tbody>

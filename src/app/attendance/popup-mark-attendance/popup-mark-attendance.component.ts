@@ -33,6 +33,7 @@ import {ToastrMsgService} from '../../shared/toastr-msg.service';
     NgStyle
   ],
   templateUrl: './popup-mark-attendance.component.html',
+  standalone: true,
   styleUrl: './popup-mark-attendance.component.css'
 })
 export class PopupMarkAttendanceComponent implements OnInit{
@@ -55,15 +56,18 @@ export class PopupMarkAttendanceComponent implements OnInit{
   }
 
   ngOnInit() {
-    let code = this.route.snapshot.paramMap.get('code')!;
     this.getCourse(this.data.courseCode);
   }
 
   getCourse(code: string) {
     this.courseService.getCourse(code).subscribe({
       next: res => {
-        this.course = res.body;
-        this.populateStudent();
+        if(res.success){
+          this.course = res.body;
+          this.populateStudent();
+        }else {
+          this.toastr.error(res.message);
+        }
       }, error: err=>{
         this.toastr.error('');
       }
@@ -105,8 +109,12 @@ export class PopupMarkAttendanceComponent implements OnInit{
     if(this.students.length === this.attendanceMap.size) {
       this.attendanceService.saveAttendance(Array.from(this.attendanceMap.values())).subscribe({
         next: res => {
-          this.dialogRef.close();
-          this.toastr.success(res.message);
+          if(res.success){
+            this.dialogRef.close();
+            this.toastr.success(res.message);
+          }else{
+            this.toastr.error(res.message);
+          }
         }, error: err => {
           this.toastr.error('');
         }

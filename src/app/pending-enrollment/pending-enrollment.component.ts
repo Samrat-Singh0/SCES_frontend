@@ -19,6 +19,7 @@ import {ToastrMsgService} from '../shared/toastr-msg.service';
     MatIconButton
   ],
   templateUrl: './pending-enrollment.component.html',
+  standalone: true,
   styleUrl: './pending-enrollment.component.css'
 })
 export class PendingEnrollmentComponent implements OnInit{
@@ -31,7 +32,7 @@ export class PendingEnrollmentComponent implements OnInit{
     private toastr: ToastrMsgService,
     public joinName: JoinNameService
   ) {
-    this.userRole = localStorage.getItem('role') || '' ;
+    this.userRole = JSON.parse(localStorage.getItem("loggedInUser")!).role.roleType || '' ;
     this.pendingEnrollments = [];
   }
 
@@ -42,38 +43,30 @@ export class PendingEnrollmentComponent implements OnInit{
   populateEnrollments() {
     this.enrollmentService.getPendingEnrollments().subscribe({
       next: res => {
-        this.pendingEnrollments = res.body;
+        if (res.success) {
+          this.pendingEnrollments = res.body;
+        } else {
+          this.toastr.error(res.message);
+        }
       }, error: err => {
         this.toastr.error('');
       }
     });
   }
 
-  acceptEnroll(enrollment: Enrollment) {
-    const acceptedEnrollment : Enrollment = {
+  updateEnrollment(enrollment: Enrollment, status: boolean){
+    const updatedEnrollment : Enrollment = {
       ...enrollment,
-      completionStatus: CompletionStatus.RUNNING,
+      completionStatus: status ? CompletionStatus.RUNNING : CompletionStatus.REJECTED,
     };
-    this.updateEnroll(acceptedEnrollment, true);
 
-  }
-
-  rejectEnroll(enrollment: Enrollment) {
-    const rejectedEnroll : Enrollment = {
-      ...enrollment,
-      completionStatus: CompletionStatus.REJECTED,
-    };
-    this.updateEnroll(rejectedEnroll, false);
-  }
-
-  updateEnroll(enrollment: Enrollment, status: boolean){
-    this.enrollmentService.updateEnroll(enrollment).subscribe({
+    this.enrollmentService.updateEnroll(updatedEnrollment).subscribe({
       next: res=> {
-        this.ngOnInit();
-        if(status){
-          this.toastr.success("Enrollment Accepted");
+        if(res.success){
+          this.populateEnrollments();
+          this.toastr.success(res.message);
         }else {
-          this.toastr.error('');
+          this.toastr.error(res.message);
         }
       }, error:err => {
         this.toastr.error('');

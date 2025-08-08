@@ -27,7 +27,6 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const now = new Date();
 
   if(accessExpiry > now){
-    console.log("access valid")
     const authReq = req.clone({
       setHeaders: {
         Authorization: `Bearer ${accessToken}`
@@ -36,7 +35,6 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
     return next(authReq);
   }else{
     if(refreshExpiry > now) {
-    console.log("refresh valid")
       return authService.refreshToken().pipe(
         switchMap(res => {
           const newAccessToken = res.headers.get('Authorization');
@@ -53,7 +51,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
           });
           return next(retryReq);
         }), catchError(error => {
-          console.log(error);
+          // console.log(error);
           return next(req);
         })
       );

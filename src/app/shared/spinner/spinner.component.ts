@@ -10,6 +10,7 @@ import {SpinnerService} from '../spinner.service';
     MatProgressSpinner,
   ],
   templateUrl: './spinner.component.html',
+  standalone: true,
   styleUrl: './spinner.component.css'
 })
 export class SpinnerComponent {

@@ -1,9 +1,11 @@
+
 <div class="header-div">
   <button mat-icon-button (click)="goBack()">
     <mat-icon>arrow_back</mat-icon>
   </button>
-  <h4 class="header-title">Grade a Student</h4>
+  <h4 class="mt-3 header-title"><b>Semester:</b> {{label}}</h4>
 </div>
+<h4 class="mb-5 header-title"><b>Course:</b> {{course?.name}}</h4>
 
 <div class="student-div">
   <table class="student-table">

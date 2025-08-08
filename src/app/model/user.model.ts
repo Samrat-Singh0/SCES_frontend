@@ -1,3 +1,5 @@
+import {RoleModel} from './role.model';
+
 export interface User {
   code: string;
   email: string,
@@ -6,5 +8,6 @@ export interface User {
   lastName: string,
   address: string,
   phoneNumber: string,
-  role: string
+  role: string,
+  newRole: RoleModel
 }

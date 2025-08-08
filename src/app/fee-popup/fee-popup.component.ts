@@ -1,4 +1,4 @@
-import {Component, Inject} from '@angular/core';
+import {Component, Inject, OnInit} from '@angular/core';
 import {
   MAT_DIALOG_DATA,
   MatDialog,
@@ -13,7 +13,6 @@ import {MatFormField, MatInput, MatLabel} from '@angular/material/input';
 import {FormsModule} from '@angular/forms';
 import {MatButton} from '@angular/material/button';
 import {FeeService} from '../services/fee.service';
-import {Fee} from '../model/fee.model';
 import {ToastrMsgService} from '../shared/toastr-msg.service';
 import {ConfirmationComponent} from '../shared/confirmation/confirmation.component';
 import {PayFee} from '../model/pay-fee.model';
@@ -32,12 +31,16 @@ import {PayFee} from '../model/pay-fee.model';
     MatDialogClose
   ],
   templateUrl: './fee-popup.component.html',
+  standalone: true,
   styleUrl: './fee-popup.component.css'
 })
-export class FeePopupComponent {
+export class FeePopupComponent implements OnInit {
 
   amount: number | null= null;
-  isAmountValid: boolean = false;
+  isAmountValid: boolean = true;
+  thresholdPercent: number = 50;
+  minimumAmount: number = 0;
+  validationErrorMessage: string = '';
 
   constructor(
     private toastr: ToastrMsgService,
@@ -46,9 +49,24 @@ export class FeePopupComponent {
     private dialog: MatDialog,
     @Inject(MAT_DIALOG_DATA)public data: {enrollment: Enrollment}
   ) {
+
+  }
+
+  ngOnInit() {
+    this.setMinimumAmount();
+  }
+
+  setMinimumAmount() {
+    const outstandingFee = this.data.enrollment.outstandingFee;
+    this.minimumAmount = this.data.enrollment.semester.fee * this.thresholdPercent/100;
+    if(outstandingFee < this.minimumAmount) {
+      this.minimumAmount = 0;
+    }
   }
 
   confirmPayment() {
+    this.isAmountValid = this.validateAmount();
+
     if(this.isAmountValid){
       const fee: PayFee = {
         enrollmentPayload: this.data.enrollment,
@@ -70,7 +88,12 @@ export class FeePopupComponent {
         if(result?.confirmed){
           this.feeService.payFee(fee).subscribe({
             next: res => {
-              this.dialogRef.close();
+              if(res.success){
+                this.toastr.success("Payment successful!");
+                this.dialogRef.close();
+              }else {
+                this.toastr.error(res.message);
+              }
             }, error: err => {
               this.toastr.error('');
             }
@@ -81,18 +104,27 @@ export class FeePopupComponent {
   }
 
   validateAmount(): boolean {
+    if(this.amount == null){
+      this.validationErrorMessage = "Please fill the field";
+      return false;
+    }
     if(this.amount! < 0){
-      this.toastr.error("Please add a positive numeric amount");
+      this.validationErrorMessage = "Please add a positive numeric amount";
       return false;
     }
     if(!this.amount || !/^\d+$/.test(this.amount.toString())){
-      this.toastr.error('Please enter a valid numeric amount');
+      this.validationErrorMessage = "Please enter a valid numeric amount";
       return false;
     }
     if(this.amount > this.data.enrollment.outstandingFee) {
-      this.toastr.error("You amount cannot exceed the outstanding amount");
+      this.validationErrorMessage = "Your amount cannot exceed the outstanding amount";
       return false;
     }
+    if(this.amount < this.minimumAmount) {
+      this.validationErrorMessage = "Your amount must be greater than minimum amount";
+      return false;
+    }
+    this.validationErrorMessage = '';
     return true;
   }
 

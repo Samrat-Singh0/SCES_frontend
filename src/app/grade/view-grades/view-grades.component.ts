@@ -15,6 +15,7 @@ import {ToastrMsgService} from '../../shared/toastr-msg.service';
     NgIf
   ],
   templateUrl: './view-grades.component.html',
+  standalone: true,
   styleUrl: './view-grades.component.css'
 })
 export class ViewGradesComponent implements OnInit{
@@ -36,7 +37,11 @@ export class ViewGradesComponent implements OnInit{
   populateCourses() {
     this.courseService.getCoursesBasedOnRole().subscribe({
       next: res => {
-        this.courses = res.body;
+        if(res.success){
+          this.courses = res.body;
+        }else {
+          this.toastr.error(res.message);
+        }
 
       }, error: err => {
         this.toastr.error('');
@@ -46,8 +51,12 @@ export class ViewGradesComponent implements OnInit{
 
   populateGrades() {
     this.gradeService.getGradesStudent().subscribe({
-      next: value => {
-        this.grades = value.body;
+      next: res => {
+        if(res.success){
+          this.grades = res.body;
+        }else {
+          this.toastr.error(res.message);
+        }
       }, error: err => {
         this.toastr.error('');
       }

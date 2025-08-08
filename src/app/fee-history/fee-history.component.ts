@@ -14,6 +14,7 @@ import {NgForOf, NgIf} from '@angular/common';
     NgIf,
   ],
   templateUrl: './fee-history.component.html',
+  standalone: true,
   styleUrl: './fee-history.component.css'
 })
 export class FeeHistoryComponent implements OnInit{
@@ -35,7 +36,11 @@ export class FeeHistoryComponent implements OnInit{
   populateFee() {
     this.feeService.getFeeHistory(this.data.code).subscribe({
       next: res => {
-        this.fees = res.body;
+        if(res.success){
+          this.fees = res.body;
+        }else{
+          this.toastr.error(res.message);
+        }
       }, error: err => {
         this.toastr.error('');
       }

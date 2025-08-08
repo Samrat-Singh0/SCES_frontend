@@ -67,8 +67,33 @@ input {
 
 .error {
   color: red;
-  font-size: 0.8rem;
-  margin-top: 4px;
-  margin-bottom: 4px;
+  font-size: 1rem;
   display: block;
+}
+
+.policy-div {
+  border-radius: 6px;
+  border: #ccc solid 1px;
+}
+
+.passed-policy
+,.failed-policy {
+  font-size: 0.9rem;
+}
+
+li {
+}
+
+li::before {
+  height: 10px;
+  width: 10px;
+}
+
+.passed-policy {
+  color: #218838;
+  /*list-style-image: url("/assets/images/check.png");*/
+}
+
+.failed-policy {
+  color: red;
 }

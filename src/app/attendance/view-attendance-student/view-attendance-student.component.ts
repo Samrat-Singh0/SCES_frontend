@@ -10,6 +10,7 @@ import {MatDatepicker, MatDatepickerInput, MatDatepickerToggle} from '@angular/m
 import {FormsModule} from '@angular/forms';
 import {FormatDateService} from '../../shared/format-date.service';
 import {ToastrMsgService} from '../../shared/toastr-msg.service';
+import {AttendanceRate} from '../../model/attendanceRate.model';
 
 @Component({
   selector: 'app-view-attendance-student',
@@ -26,6 +27,7 @@ import {ToastrMsgService} from '../../shared/toastr-msg.service';
     NgIf
   ],
   templateUrl: './view-attendance-student.component.html',
+  standalone: true,
   styleUrl: './view-attendance-student.component.css'
 })
 export class ViewAttendanceStudentComponent implements OnInit{
@@ -33,6 +35,7 @@ export class ViewAttendanceStudentComponent implements OnInit{
   attendances: Attendance[] =[];
   selectedDate: Date = new Date();
   today: Date = new Date();
+  attendanceRate: AttendanceRate[] = [];
 
   constructor(
     private courseService: CourseService,
@@ -62,9 +65,20 @@ export class ViewAttendanceStudentComponent implements OnInit{
     this.attendanceService.getAttendanceOfDate('', formattedDate).subscribe({
       next: res => {
         this.attendances = res.body;
+        this.populateAttendanceRate();
       }, error: err => {
         this.toastr.error('');
     }
+    });
+  }
+
+  populateAttendanceRate() {
+    this.attendanceService.getAttendanceRateOfCourse().subscribe({
+      next: res => {
+        this.attendanceRate = res.body;
+      },error: err => {
+        this.toastr.error('');
+      }
     });
   }
 
@@ -81,5 +95,14 @@ export class ViewAttendanceStudentComponent implements OnInit{
 
   isAttendanceEmpty():boolean {
     return this.attendances.length < 1;
+  }
+
+  getAttendanceRate(courseCode: string): string {
+    const course = this.attendanceRate.find(rate => courseCode === rate.courseCode);
+
+    if(!course || course.totalDays === 0) {
+      return '0.00';
+    }
+    return ((course.presentDays / course.totalDays) * 100).toFixed(2);
   }
 }

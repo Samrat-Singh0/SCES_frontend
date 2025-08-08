@@ -299,5 +299,13 @@ page-size-item {
 
 }
 
+.select-size {
+  max-width: 5rem;
+}
+
+
+.page-button {
+  display: flex;
+}
 
 

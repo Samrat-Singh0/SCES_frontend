@@ -4,7 +4,7 @@
 
   <form class="search-container" [formGroup]="searchForm">
 
-    <div class="inputs-wrap" *ngIf="user.role === Role.SUPER_ADMIN">
+    <div class="inputs-wrap" *ngIf="userRole === Role.SUPER_ADMIN">
       <div class="input-wrap">
 <!--        <i class="bi bi-search name-search-icon"></i>-->
         <input type="text" class="search-input" placeholder="Student Name" formControlName="studentName">
@@ -38,7 +38,7 @@
       </div>
     </div>
 
-    <button class="search-btn" type="submit" (click)="searchEnrollment()">Search</button>
+    <button class="search-btn" type="submit" (click)="renderContent()">Search</button>
     <button class="reset-btn" (click)="resetSearchForm()">Reset</button>
 
   </form>
@@ -65,8 +65,7 @@
       <th>Outstanding Fee (Rs.)</th>
       <th>Enrolled Date</th>
       <th>Completion Date</th>
-      <th *ngIf="userRole === Role.STUDENT">Actions</th>
-      <th *ngIf="userRole === Role.SUPER_ADMIN">Actions</th>
+      <th>Actions</th>
     </tr>
 
     <ng-container *ngFor="let enrollment of enrollments; let i = index">
@@ -109,7 +108,7 @@
                   matTooltip="Complete Enrollment"
                   class="btn-complete"
                   *ngIf="userRole === Role.SUPER_ADMIN"
-                  (click)="completeEnroll(enrollment)"
+                  (click)="updateEnroll(enrollment, true)"
                   [disabled]="isDisabled(enrollment)">
             <mat-icon>check</mat-icon>
           </button>
@@ -117,7 +116,7 @@
                   class="btn-delete"
                   *ngIf="userRole === Role.STUDENT"
                   matTooltip="Drop Enrollment"
-                  (click)="dropEnroll(enrollment)"
+                  (click)="updateEnroll(enrollment, false)"
                   [disabled]="isDisabled(enrollment)">
             <mat-icon>delete</mat-icon>
           </button>
@@ -128,7 +127,7 @@
             <mat-icon>preview</mat-icon>
           </button>
           <button mat-mini-fab aria-label="Pay Fee"
-                  *ngIf="userRole === Role.STUDENT"
+                  *ngIf="userRole === Role.SUPER_ADMIN"
                   class="pay-btn"
                   (click)="payFee(enrollment);"
                   matTooltip="Pay now"
@@ -167,10 +166,14 @@
 
 <div class="pagination-container">
 
-
-  <button [disabled]="currentPage === 0" (click)="goToPage(currentPage - 1)">
-    Prev
+  <button class="page-button" [disabled]="currentPage === 0" (click)="goToPage(0)">
+    <mat-icon>first_page</mat-icon>
   </button>
+
+  <button class="page-button" [disabled]="currentPage === 0" (click)="goToPage(currentPage - 1)">
+    <mat-icon>chevron_left</mat-icon>
+  </button>
+
 
   <!--  [].constructor(totalPages): empty array create garxa, of size: totalPAges-->
   <button
@@ -180,13 +183,17 @@
     {{ i + 1 }}
   </button>
 
-  <button [disabled]="currentPage === totalPages - 1" (click)="goToPage(currentPage + 1)">
-    Next
+  <button class="page-button" [disabled]="currentPage === totalPages - 1" (click)="goToPage(currentPage + 1)">
+    <mat-icon>chevron_right</mat-icon>
+  </button>
+
+  <button class="page-button" [disabled]="currentPage === totalPages - 1" (click)="goToPage(totalPages - 1)">
+    <mat-icon>last_page</mat-icon>
   </button>
 </div>
 
 <div class="page-size-item">
-  <mat-form-field appearance="fill">
+  <mat-form-field class="select-size" appearance="outline">
     <mat-select [(ngModel)]="pageSize" (selectionChange)="onPageSizeChange(pageSize)">
       <mat-option *ngFor="let size of sizeSelect" [value]="size">
         {{size}}

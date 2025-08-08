@@ -60,18 +60,19 @@
       <input type="text" placeholder="e.g. '9800000000'" formControlName="phoneNumber">
       <div class="error" *ngIf="myForm.get('phoneNumber')?.invalid && myForm.get('phoneNumber')?.touched">
         <small *ngIf="myForm.get('phoneNumber')?.errors?.['required']">Phone number is required. </small>
-        <small *ngIf="myForm.get('phoneNumber')?.errors?.['minlength']">At least 10. </small>
-        <small *ngIf="myForm.get('phoneNumber')?.errors?.['pattern']"> Must be digits and start with '98' or '97'. </small>
+        <small *ngIf="myForm.get('phoneNumber')?.errors?.['minlength']">Numbers must be 10 digits.</small>
+        <small *ngIf="myForm.get('phoneNumber')?.errors?.['maxlength']">Numbers must be 10 digits.</small>
+        <small *ngIf="myForm.get('phoneNumber')?.errors?.['pattern']"> Must be digits that start with '98' or '97'. </small>
 
       </div>
     </div>
 
-    <div class="form-group" *ngIf="!isEditMode">
+    <div class="form-group" *ngIf="!isEditMode && !isFormForInstructor">
       <label for="role">Role</label>
-      <select class="role" formControlName="role" [disabled]="isEditMode">
-        <option value="SUPER_ADMIN">Super Admin</option>
-        <option value="INSTRUCTOR">Instructor</option>
-        <option value="STUDENT">Student</option>
+      <select class="role" formControlName="newRole" [disabled]="isEditMode">
+        @for (role of roles; track role.code) {
+          <option [value]="role.roleType">{{role.roleName}}</option>
+        }
       </select>
     </div>
 

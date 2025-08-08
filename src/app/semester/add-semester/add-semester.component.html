@@ -2,68 +2,164 @@
   <button mat-icon-button (click)="goBack()">
     <mat-icon>arrow_back</mat-icon>
   </button>
-  <h4 class="header-title">Add Semester</h4>
+  <h4 class="header-title">{{ mode === 'add' ? 'Add Semester' : 'Update Semester' }}</h4>
 </div>
 
-<form [formGroup]="addForm" (ngSubmit)="add()">
+<div class="p-2 text-end"><i style="color: gray">Fields with "<b style="color: red">*</b>" are mandatory.</i></div>
+<form [formGroup]="addForm" (ngSubmit)="saveSemester()">
+  <mat-card>
+    <mat-card-title class="mb-3 form-label fw-semibold p-3">Semester</mat-card-title>
+    <mat-card-content>
+      <div class="mb-3 control-group">
+        <label for="label" class="form-label fw-semibold">Level <b style="color: red">*</b></label>
+        <mat-select formControlName="label" class="semester-select" placeholder="Select a semester label">
+          @for (semester of inactiveSemesters; track semester.label) {
+            <mat-option [value]="semester.label">{{semester.label}}</mat-option>
+          }
+        </mat-select>
+      </div>
 
-  <div class="mb-3">
-    <label for="label" class="form-label fw-semibold">Semester</label>
-    <input
-      type="text"
-      id="label"
-      class="form-control"
-      formControlName="label">
-    <div class="error" *ngIf="this.addForm.get('label')?.invalid && this.addForm.get('label')?.touched">
-      <small *ngIf="this.addForm.get('label')?.errors?.['required']">Enter a valid label</small>
-      <small *ngIf="this.addForm.get('label')?.errors?.['pattern']">Alphabets only.</small>
-      <small *ngIf="this.addForm.get('label')?.errors?.['minlength']">Enter a valid label.</small>
-    </div>
-  </div>
+      <div class="mb-3 control-group">
+        <label for="fee" class="form-label fw-semibold">Fee (Rs.)<b style="color: red"> *</b></label>
+        <input
+          type="text"
+          placeholder="E.g. 50000"
+          id="fee"
+          class="form-controls"
+          formControlName="fee">
+        <div class="error"
+             *ngIf="this.addForm.get('fee')?.invalid && this.addForm.get('fee')?.touched">
+          <small *ngIf="this.addForm.get('fee')?.errors?.['required']">Enter a valid amount.</small>
+          <small *ngIf="this.addForm.get('fee')?.errors?.['pattern']">Enter a valid amount.</small>
+          <small *ngIf="this.addForm.get('fee')?.errors?.['feeValidator']">Fee must be between Rs.1,000 to Rs.10,00,000.</small>
+        </div>
+      </div>
 
-  <div class="mb-3">
-    <label for="fee" class="form-label fw-semibold">Fee</label>
-    <input
-      type="text"
-      id="fee"
-      class="form-control"
-      formControlName="fee">
-    <div class="error" *ngIf="this.addForm.get('fee')?.invalid && this.addForm.get('fee')?.touched">
-      <small *ngIf="this.addForm.get('fee')?.errors?.['required']">Enter a valid amount.</small>
-      <small *ngIf="this.addForm.get('fee')?.errors?.['pattern']">Enter a valid amount.</small>
-    </div>
-  </div>
+      <div class="mb-3 control-group">
+        <label for="startDate" class="form-label fw-semibold">Start Date <b style="color: red">*</b></label>
+        <input
+          type="date"
+          id="startDate"
+          class="form-controls"
+          formControlName="startDate"
+          [min]="validDate">
+        <div class="error"
+             *ngIf="this.addForm.get('startDate')?.invalid && this.addForm.get('startDate')?.touched">
+          <small *ngIf="this.addForm.get('startDate')?.errors?.['required']">Enter a valid
+            date.</small>
+          <small *ngIf="this.addForm.get('startDate')?.errors?.['futureDate']">Enter a valid
+            date.</small>
+        </div>
+      </div>
 
-  <div class="mb-3">
-    <label for="startDate" class="form-label fw-semibold">Start Date</label>
-    <input
-      type="date"
-      id="startDate"
-      class="form-control"
-      formControlName="startDate">
-    <div class="error" *ngIf="this.addForm.get('startDate')?.invalid && this.addForm.get('startDate')?.touched">
-      <small *ngIf="this.addForm.get('startDate')?.errors?.['required']">Enter a valid date.</small>
-      <small *ngIf="this.addForm.get('startDate')?.errors?.['futureDate']">Enter a valid date.</small>
-    </div>
-  </div>
+      <div class="mb-3 control-group">
+        <label for="endDate" class="form-label fw-semibold">End Date <b style="color: red">*</b></label>
+        <input
+          type="date"
+          id="endDate"
+          class="form-controls"
+          formControlName="endDate"
+          [min]="validDate">
+        <div class="error"
+             *ngIf="this.addForm.get('endDate')?.invalid && this.addForm.get('endDate')?.touched">
+          <small *ngIf="this.addForm.get('endDate')?.errors?.['required']">Enter a valid
+            date.</small>
+          <small *ngIf="this.addForm.get('endDate')?.errors?.['futureDate']">Enter a valid
+            date.</small>
+        </div>
+      </div>
 
-  <div class="mb-3">
-    <label for="endDate" class="form-label fw-semibold">End Date</label>
-    <input
-      type="date"
-      id="endDate"
-      class="form-control"
-      formControlName="endDate">
-    <div class="error" *ngIf="this.addForm.get('endDate')?.invalid && this.addForm.get('endDate')?.touched">
-      <small *ngIf="this.addForm.get('endDate')?.errors?.['required']">Enter a valid date.</small>
-      <small *ngIf="this.addForm.get('endDate')?.errors?.['futureDate']">Enter a valid date.</small>
-    </div>
-  </div>
+      <mat-card *ngIf="renderCourseField !== 0">
+        <mat-card-content>
+          <div formArrayName="courses" class="course-form-array-container">
+            <div *ngFor="let courseGroup of courses.controls; let i = index"
+                 [formGroupName]="i"
+                 class="mb-3 control-group">
+              <label class="form-label fw-semibold">Course {{ i + 1 }} <b style="color: red">*</b></label>
+              <div class="select-remove-container">
+                <mat-form-field appearance="outline" class="course-select">
+                  <mat-label class="mb-2">Select a course</mat-label>
+                  <mat-select class="select-control" formControlName="course"
+                              [compareWith]="compareByCode">
+                    <mat-option
+                      *ngFor="let course of availableCourses"
+                      [value]="course"
+                      [disabled]="isCourseSelected(course)">
+                      {{ course.name }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+                <button type="button" mat-mini-fab matTooltip="Remove" color="warn" (click)="removeCourse(i)"
+                        class="remove-course-btn">
+                  <mat-icon>remove_circle</mat-icon>
+                </button>
+              </div>
 
-  <div class="mt-4">
-    <button type="submit" class="add-btn">
+              <mat-card *ngIf="renderInstructorField !== 0">
+                <mat-card-content>
+                  <div formArrayName="instructors" class="course-form-array-container">
+                    <div *ngFor="let instructorGroup of getInstructors(i).controls; let j = index"
+                         [formGroupName]="j"
+                         class="mb-3 control-group">
+                      <label class="form-label fw-semibold">Instructor {{ j + 1 }} <b style="color: red">*</b></label>
+                      <div class="select-remove-container">
+                        <mat-form-field appearance="outline" class="instructor-select">
+                          <mat-label class="mb-2">Select a instructor</mat-label>
+                          <mat-select formControlName="instructor" [compareWith]="compareByEmail">
+                            <mat-option
+                              *ngFor="let instructor of availableInstructors"
+                              [value]="instructor"
+                              [disabled]="isInstructorSelected(i, instructor)"
+                            >
+                              {{ joinName.getFullName(instructor.user.firstName, instructor.user.middleName, instructor.user.lastName) }}
+                            </mat-option>
+                          </mat-select>
+                        </mat-form-field>
+                        <button type="button" mat-mini-fab matTooltip="Remove" color="warn" (click)="removeInstructor(i,j)"
+                                class="remove-course-btn">
+                          <mat-icon>remove_circle</mat-icon>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </mat-card-content>
+              </mat-card>
+              <div class="mt-2 add-instructor-container">
+                <mat-label class="form-label fw-semibold">Assign a instructor? <i (click)="addNewInstructor()" class="new-course-link">Or add a new instructor?</i></mat-label>
+                <button matTooltip="Add instructor field" type="button" mat-mini-fab (click)="addInstructor(i,null)" [disabled]="isAddInstructorButtonDisabled(i) || getInstructors(i).invalid">
+                  <mat-icon class="add-instructor-btn">add</mat-icon>
+                </button>
+              </div>
+
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <div class="mt-2 add-course-container">
+        <mat-label class="form-label fw-semibold">Assign a course? <i (click)="addNewCourse()" class="new-course-link">Or add a new course?</i></mat-label>
+        <button matTooltip="Add course field" type="button" mat-mini-fab (click)="addCourse(null)" [disabled]="isAddCourseButtonDisabled() || courses.invalid">
+          <mat-icon class="add-course-btn">add</mat-icon>
+        </button>
+      </div>
+
+    </mat-card-content>
+  </mat-card>
+  <div class="mt-4 save-sem-btn">
+
+    <button type="button" class="reset-button" (click)="resetForm()">
+      <mat-icon>refresh</mat-icon>
+      RESET
+    </button>
+    <button type="submit" class="save-btn">
       <mat-icon>save</mat-icon>
-      Add
+      Save
     </button>
   </div>
+
+
 </form>
+
+
+
+

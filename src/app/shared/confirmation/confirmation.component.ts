@@ -24,6 +24,7 @@ import {MatButton} from '@angular/material/button';
     MatLabel,
   ],
   templateUrl: './confirmation.component.html',
+  standalone: true,
   styleUrl: './confirmation.component.css'
 })
 export class ConfirmationComponent {

@@ -14,6 +14,7 @@ import {EnrollmentService} from '../../services/enrollment.service';
 import {ToastrMsgService} from '../../shared/toastr-msg.service';
 import {MatDialog} from '@angular/material/dialog';
 import {ConfirmationComponent} from '../../shared/confirmation/confirmation.component';
+import {ActiveStatus} from '../../enum/active-status.enum';
 
 @Component({
   selector: 'app-add-enrollment',
@@ -27,6 +28,7 @@ import {ConfirmationComponent} from '../../shared/confirmation/confirmation.comp
 
   ],
   templateUrl: './save-enrollment.component.html',
+  standalone: true,
   styleUrl: './save-enrollment.component.css'
 })
 export class SaveEnrollmentComponent implements OnInit{
@@ -34,8 +36,7 @@ export class SaveEnrollmentComponent implements OnInit{
   semesters: Semester[] = [];
   allCourses: Course[] = [];
   coursePerSemester: Course[] = [];
-  selectedCourses: Course[] = [];
-  coursesMap: Map<string, Course>;
+  coursesMap: Map<string, Course> = new Map();
 
   constructor(
     private builder: FormBuilder,
@@ -48,11 +49,10 @@ export class SaveEnrollmentComponent implements OnInit{
     private dialogRef: MatDialog
   ) {
     this.enrollForm = new FormGroup({});
-    this.coursesMap = new Map<string, Course>();
   }
 
   ngOnInit() {
-    this.populateCourses();
+
     this.populateSemester();
     this.buildForm();
   }
@@ -66,12 +66,15 @@ export class SaveEnrollmentComponent implements OnInit{
   }
 
   populateSemester() {
-    this.semesterService.getAll().subscribe({
+    this.semesterService.getAll(ActiveStatus.ACTIVE).subscribe({
       next: res => {
-        this.semesters = res.body;
-
-        this.enrollForm.patchValue({semester: this.semesters[0]})
-
+        if(res.success){
+          this.semesters = res.body;
+          this.enrollForm.patchValue({semester: this.semesters[0]})
+          this.populateCourses();
+        }else {
+          this.toastr.error(res.message);
+        }
       },
       error: err =>
         this.toastr.error(''),
@@ -81,11 +84,14 @@ export class SaveEnrollmentComponent implements OnInit{
   populateCourses() {
     this.courseService.getCourses().subscribe({
       next: res => {
-        this.allCourses = res.body;
-
-        const selectedSem: Semester = this.enrollForm.value.semester;
-        if (selectedSem) {
-          this.onSemesterChange(selectedSem);
+        if(res.success){
+          this.allCourses = res.body;
+          const selectedSem: Semester = this.enrollForm.value.semester;
+          if (selectedSem) {
+            this.onSemesterChange(selectedSem);
+          }
+        }else {
+          this.toastr.error(res.message);
         }
       }, error: err => {
         this.toastr.error('');
@@ -94,10 +100,15 @@ export class SaveEnrollmentComponent implements OnInit{
   }
 
   enroll() {
+    if(this.coursesMap.size === 0){
+      this.toastr.error('Please select at least one course');
+      return;
+    }
     const enrolledData = {
       semester: this.enrollForm.value.semester,
-      courses: this.selectedCourses,
+      courses: Array.from(this.coursesMap.values())
     };
+
 
     const dialog = this.dialogRef.open(ConfirmationComponent, {
       width: '600px',
@@ -114,37 +125,37 @@ export class SaveEnrollmentComponent implements OnInit{
       if(result?.confirmed) {
         this.enrollmentService.enroll(enrolledData).subscribe({
           next: res => {
-
-            this.toastr.info(res.message);
+            if(res.success){
+              this.toastr.success(res.message);
+            }else{
+              this.toastr.error(res.message);
+            }
             this.goBack();
           }, error: err => {
             this.toastr.error('');
           }
         });
-
       }
     });
-
   }
 
   goBack() {
-    this.router.navigate(['student/enroll/view']);
+    this.router.navigate(['student/enroll']);
   }
 
   onSemesterChange(semester: Semester){
+    this.coursesMap.clear();
     this.coursePerSemester = this.allCourses.filter(
-      (course) => course.semester.label === semester.label
+      (course) => course.semester?.label === semester?.label
     );
   }
 
   selectCourse(course: Course) {
-
     if(this.coursesMap.has(course.code)){
       this.coursesMap.delete(course.code);
-    }else {
-      this.coursesMap.set(course.code, course);
+    }else{
+      this.coursesMap.set(course.code,course);
     }
-
-    this.selectedCourses = Array.from(this.coursesMap.values());
   }
+
 }

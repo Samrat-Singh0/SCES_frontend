@@ -22,8 +22,8 @@ export class UserService {
     return this.http.post<ApiResponse<User>>(this.userEndpoints.ADD_USER, user);
   }
 
-  getPagedUsers(page: number, size: number): Observable<ApiResponse<PageResponse<User>>> {
-    return this.http.get<ApiResponse<PageResponse<User>>>(this.userEndpoints.GET_PAGED_USERS + `?page=${page}&size=${size}`);
+  getPagedUsers(searchCriteria: SearchUser, page: number, size: number): Observable<ApiResponse<PageResponse<User>>> {
+    return this.http.post<ApiResponse<PageResponse<User>>>(this.userEndpoints.GET_PAGED_USERS + `?page=${page}&size=${size}`, searchCriteria);
   }
   updateUser(user: User): Observable<ApiResponse<any>> {
     return this.http.put<ApiResponse<any>>(this.userEndpoints.UPDATE_USER, user);

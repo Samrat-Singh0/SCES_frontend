@@ -1,5 +1,16 @@
 <h3 class="mt-1 text-center">Course</h3>
 
+<div class="mt-2 download-btn">
+  <button class="btn-download" (click)="downloadReport('PDF',null)">
+    <i class="bi bi-download"></i>Download PDF
+  </button>
+
+  <button class="btn-download" (click)="downloadReport('XLSX',null)">
+    <i class="bi bi-download"></i>Download XLSX
+  </button>
+</div>
+
+
 <div class="control-container">
 
   <form class="search-container" [formGroup]="searchForm">
@@ -8,7 +19,8 @@
       <div class="input-wrap">
         <i class="bi bi-search name-search-icon"></i>
         <input type="text" class="search-input" placeholder="Course Name" formControlName="name">
-        <div class="error" *ngIf="this.searchForm.get('name')?.touched && this.searchForm.get('name')?.invalid">
+        <div class="error"
+             *ngIf="this.searchForm.get('name')?.touched && this.searchForm.get('name')?.invalid">
           <small *ngIf="this.searchForm.get('name')?.errors?.['pattern']">Only Alphabets</small>
         </div>
       </div>
@@ -19,8 +31,10 @@
         <i class="bi bi-search ins-search-icon"></i>
         <input type="text" class="search-input" placeholder="Assigned To"
                formControlName="instructor">
-        <div class="error" *ngIf="this.searchForm.get('instructor')?.touched && this.searchForm.get('instructor')?.invalid">
-          <small *ngIf="this.searchForm.get('instructor')?.errors?.['pattern']">Only Alphabets</small>
+        <div class="error"
+             *ngIf="this.searchForm.get('instructor')?.touched && this.searchForm.get('instructor')?.invalid">
+          <small *ngIf="this.searchForm.get('instructor')?.errors?.['pattern']">Only
+            Alphabets</small>
         </div>
       </div>
     </div>
@@ -29,25 +43,22 @@
       <div class="input-wrap">
         <i class="bi bi-search sem-search-icon"></i>
         <input type="text" class="search-input" placeholder="Semester" formControlName="semester">
-        <div class="error" *ngIf="this.searchForm.get('semester')?.touched && this.searchForm.get('semester')?.invalid">
+        <div class="error"
+             *ngIf="this.searchForm.get('semester')?.touched && this.searchForm.get('semester')?.invalid">
           <small *ngIf="this.searchForm.get('semester')?.errors?.['pattern']">Only Alphabets</small>
         </div>
       </div>
     </div>
 
-    <button class="search-btn" type="submit" (click)="searchCourse()" [disabled]="isSearchDisabled()">Search</button>
+    <button class="search-btn" type="submit" (click)="renderContent(currentPage)"
+            [disabled]="isSearchDisabled()">Search
+    </button>
     <button class="reset-btn" (click)="resetSearchForm()">Reset</button>
 
   </form>
 
-
-  <div class="add-container">
-    <button class="add-btn" (click) = "addCourse()">
-      <mat-icon>add</mat-icon>
-      Add Course
-    </button>
-  </div>
 </div>
+
 
 <div class="course-container">
   <table class="mt-5 custom-table">
@@ -57,7 +68,6 @@
       <th>Course Name</th>
       <th>Credit Hour</th>
       <th>Full Mark</th>
-      <th>Assigned Instructor</th>
       <th>Semester</th>
       <th>Actions</th>
     </tr>
@@ -68,8 +78,7 @@
       <td>{{ course.name }}</td>
       <td>{{ course.creditHours }}</td>
       <td>{{ course.fullMarks }}</td>
-      <td>{{joinName.getFullName(course.instructor.user.firstName, course.instructor.user.middleName, course.instructor.user.lastName)}}</td>
-      <td>{{ course.semester.label }}</td>
+      <td>{{ course.semester?.label || '-' }}</td>
       <td class="edit-delete-btn">
         <button mat-mini-fab
                 matTooltip="Update"
@@ -82,7 +91,7 @@
                 matTooltip="Delete"
                 aria-label="Delete Course"
                 class="btn-delete"
-                (click) = "deleteCourse(course.code)">
+                (click)="deleteCourse(course.code)">
           <mat-icon>delete</mat-icon>
         </button>
         <button mat-mini-fab
@@ -98,48 +107,46 @@
   </table>
 </div>
 
-
-
-
 <div *ngIf="courses?.length === 0" class="no-data-message text-center mt-4">
   <p>No data found.</p>
 </div>
 
 <div class="footer">
 
-  <div class="download-btn">
-    <button class="btn-download" (click)="downloadReport('PDF',null)">
-      <i class="bi bi-download"></i>Download PDF
-    </button>
-
-    <button class="btn-download" (click)="downloadReport('XLSX',null)">
-      <i class="bi bi-download"></i>Download XLSX
-    </button>
-  </div>
-
   <div class="pagination-container">
-    <button [disabled]="currentPage === 0" (click)="goToPage(currentPage - 1)">
-      Prev
+    <button class="page-button" [disabled]="currentPage === 0" (click)="goToPage(0)">
+      <mat-icon>first_page</mat-icon>
     </button>
-    <!--  [].constructor(totalPages): empty array create garxa, of size: totalPAges-->
-    <button
-      *ngFor="let page of [].constructor(totalPages); let i = index"
-      [class.active]="i === currentPage"
-      (click)="goToPage(i)">
-      {{ i + 1 }}
+
+    <button class="page-button" [disabled]="currentPage === 0" (click)="goToPage(currentPage - 1)">
+      <mat-icon>chevron_left</mat-icon>
     </button>
-    <button [disabled]="currentPage === totalPages - 1" (click)="goToPage(currentPage + 1)">
-      Next
+
+    <ng-container *ngFor="let page of [].constructor(totalPages); let i = index">
+      <button
+        *ngIf="isButtonVisible(i, currentPage)"
+        [class.active]="i === currentPage"
+        (click)="goToPage(i)">
+        {{ i + 1 }}
+      </button>
+    </ng-container>
+
+    <button class="page-button" [disabled]="currentPage === totalPages - 1" (click)="goToPage(currentPage + 1)">
+      <mat-icon>chevron_right</mat-icon>
+    </button>
+
+    <button class="page-button" [disabled]="currentPage === totalPages - 1" (click)="goToPage(totalPages - 1)">
+      <mat-icon>last_page</mat-icon>
     </button>
   </div>
 
 </div>
 
 <div class="page-size-item">
-  <mat-form-field appearance="fill">
+  <mat-form-field class="select-size" appearance="outline">
     <mat-select [(ngModel)]="pageSize" (selectionChange)="onPageSizeChange(pageSize)">
       <mat-option *ngFor="let size of sizeSelect" [value]="size">
-        {{size}}
+        {{ size }}
       </mat-option>
     </mat-select>
   </mat-form-field>

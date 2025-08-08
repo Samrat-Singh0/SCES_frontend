@@ -1,13 +1,15 @@
+import {RoleModel} from './role.model';
+
 export interface Course {
   code: string;
   name: string;
   creditHours: number;
   fullMarks: number;
   checked: string | null;
-  instructor: {
-    instructorCode: string;
+  instructors: [{
+    code: string;
     user: {
-      userCode: string;
+      code: string;
       firstName: string;
       middleName: string;
       lastName: string;
@@ -16,8 +18,9 @@ export interface Course {
       phoneNumber: string;
       role: string;
       mustChangePassword: boolean;
+      newRole: RoleModel
     }
-  };
+  }] | null;
   semester: {
     label: string;
     fee: number;
@@ -35,4 +38,5 @@ export interface Course {
       role: string;
       mustChangePassword: boolean;
   }
+  isStudentEnrolled: boolean | null;
 }
