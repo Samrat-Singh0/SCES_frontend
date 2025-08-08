@@ -1,0 +1,15 @@
+<h4 class="text-center text-xl font-semibold mt-4 mb-6">Select Course</h4>
+
+<div class="mt-5 course-grid">
+  <div *ngFor="let course of courses" class="course-card" (click)="saveGrade(course)">
+    <mat-card class="course-mat-card">
+      <mat-card-title class="text-start course-title">
+        Semester: {{ course.semester.label }}
+      </mat-card-title>
+      <mat-card-content class="course-content">
+        Course: {{ course.name }}<br>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>
+

@@ -1,0 +1,44 @@
+<div class="dashboard-wrapper">
+  <nav class="sidebar">
+    <div class="sidebar-body">
+      <a [routerLink]="'/super'" class="dashboard">
+        <h4 class="clickable">Dashboard</h4>
+      </a>
+
+      <ul class="nav flex-column nav-gap">
+        @for (item of dashboardItems; track item.code) {
+          <li class="nav-item mb-2">
+            <a class="nav-link text-dark d-flex align-items-center px-3" [routerLink]="item.path" routerLinkActive="active-tab">
+              <i [class]="getIconClass(item)" style="margin-left: -4px"></i>
+              <span class="flex-grow-1">{{ item.description }}</span>
+            </a>
+          </li>
+        }
+      </ul>
+    </div>
+
+    <div class="sidebar-footer">
+      <div class="profile-section d-flex align-items-center gap-2 px-3 py-2 border-top border-secondary">
+        <i class="bi bi-person-circle sidebar-icon" style="font-size: 1.8rem;"></i>
+        <div class="ms-2">
+          <div class="fw-semibold">
+            {{ joinName.getFullName(currentUser?.firstName, currentUser?.middleName, currentUser?.lastName) }}
+          </div>
+          <div class="text-muted" style="font-size: 0.85rem;">
+            {{ currentUser?.role?.roleName}}
+          </div>
+        </div>
+      </div>
+
+      <button class="btn btn-outline-danger mt-auto logout-btn" (click)="logout()">
+        <i class="bi bi-box-arrow-right sidebar-icon" style="margin-left: -4px"></i> Logout
+      </button>
+    </div>
+  </nav>
+
+
+
+  <main class="main-content">
+    <router-outlet></router-outlet>
+  </main>
+</div>
