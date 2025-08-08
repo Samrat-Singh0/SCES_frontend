@@ -1,0 +1,94 @@
+
+.custom-table {
+  margin-top: 2rem;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  border-collapse: separate;
+  width: max-content;
+  min-width: 100%;
+}
+
+.table-header {
+  background-color: #343a40;
+  color: white;
+}
+
+.fixed-content {
+  position: sticky;
+  left: 0;
+  background: white;
+  z-index: 2;
+}
+
+.custom-table th,
+.custom-table td {
+  padding: 12px;
+  text-align: left;
+  align-content: center
+}
+input[type="checkbox"] {
+  transform: scale(1.2);
+  cursor: pointer;
+}
+
+.button-container {
+  width: 100%;
+  margin-top: 2vh;
+  display: flex;
+  gap: 1rem;
+  justify-content: end;
+  position: sticky;
+  left: 0;
+  background: white;
+  z-index: 2;
+}
+
+.add-btn-container {
+  text-align: right;
+  margin-top: 3rem;
+  position: sticky;
+  left: 0;
+  background: white;
+  z-index: 2;
+}
+
+.add-button,
+.save-button,
+.reset-button{
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.add-button,
+.save-button {
+  background-color:#009579 ;
+  color: white;
+}
+
+.reset-button {
+  background-color: #e68900;
+  color: white;
+}
+
+.add-button:hover,
+.save-button:hover {
+  background-color: #00C8A2;
+}
+
+.reset-button:hover {
+  background-color: #ff9800;
+}
+
+.add-button mat-icon,
+.save-button mat-icon,
+.reset-button mat-icon{
+  vertical-align: middle;
+  margin-right: 8px;
+}
+
+mat-select {
+  padding: 2rem;
+}

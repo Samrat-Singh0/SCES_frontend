@@ -1,0 +1,67 @@
+.close-btn-div {
+  text-align: right;
+  margin-top: 5px;
+  margin-right: 20px;
+}
+
+.add-div {
+  padding: 2rem 2rem;
+}
+
+.form-container {
+  margin-bottom: 2rem;
+}
+
+label {
+  margin-bottom: 0.5rem;
+}
+
+.input-div {
+  text-align: center;
+}
+
+.form-field {
+  height: 55px;
+  width: 275px;
+  padding: 10px;
+}
+
+.select-field {
+  height: 50px;
+  width: 275px;
+}
+
+.save-button {
+  width: 275px;
+}
+
+.button-container {
+  margin-top: -2rem;
+  text-align: center;
+}
+
+.save-button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  background-color:#009579 ;
+  color: white;
+}
+
+.save-button mat-icon {
+  vertical-align: middle;
+  margin-right: 8px;
+}
+
+.save-button:hover {
+  background-color: #00C8A2;
+}
+
+.error {
+  text-align: left;
+  color: red;
+}
+

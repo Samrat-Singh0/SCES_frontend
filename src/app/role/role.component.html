@@ -1,0 +1,38 @@
+<h4 class="mt-2 text-center fixed-content">Role and Permission</h4>
+
+<div class="add-btn-container">
+  <button class="add-button" (click)="addRole()">
+    <mat-icon>add</mat-icon>
+    Add Role
+  </button>
+</div>
+
+<table class="table table-bordered custom-table">
+  <thead class="table-header">
+  <tr>
+    <th style="width: 400px" class="fixed-content">Permission / Roles</th>
+    <th *ngFor="let role of rolePermission?.roles" class="text-center" style="width: 200px">
+      {{ role.roleName }}
+    </th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr *ngFor="let permission of rolePermission?.permissions">
+    <td class="fixed-content">{{ permission.description }}</td>
+    <td *ngFor="let role of rolePermission?.roles" class="text-center">
+      <mat-checkbox (change)="onCheck(role, permission)" [checked]="isCheckboxChecked(role, permission)"></mat-checkbox>
+    </td>
+  </tr>
+  </tbody>
+</table>
+
+<div class="button-container">
+  <button class="save-button" (click)="save()">
+    <mat-icon>save</mat-icon>
+    SAVE
+  </button>
+  <button class="reset-button" (click)="reset()">
+    <mat-icon>refresh</mat-icon>
+    RESET
+  </button>
+</div>

@@ -1,0 +1,47 @@
+<div class="close-btn-div">
+  <button mat-icon-button
+          aria-label="Close"
+          class="close-button"
+          (click)="dialogRef.close()">
+    <mat-icon>close</mat-icon>
+  </button>
+</div>
+<h4 class="mt-3 text-center">Add Role</h4>
+
+
+<div class="add-div">
+  <form [formGroup]="roleForm">
+    <div class="form-container">
+      <label for="role-name"><b>Role Name</b></label>
+      <div class="input-div">
+        <input class="form-field" type="text" placeholder="E.g. Instructor" formControlName="name">
+        <div class="error" *ngIf="roleForm.get('name')?.invalid && roleForm.get('name')?.touched">
+          <small *ngIf="roleForm.get('name')?.errors?.['required']">Name is required</small>
+          <small *ngIf="roleForm.get('name')?.errors?.['pattern']">Alphabets only</small>
+        </div>
+      </div>
+    </div>
+    <div class="form-container">
+      <label for="role-type"><b>Role Type</b></label>
+      <div class="input-div">
+        <mat-form-field class="select-field" appearance="outline">
+          <mat-select formControlName="type" placeholder="Select a role type">
+            @for (role of roles; track role) {
+              <mat-option [value]="role">{{role}}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+        <div class="mt-1 error" *ngIf="roleForm.get('type')?.invalid && roleForm.get('type')?.touched">
+          <small *ngIf="roleForm.get('type')?.errors?.['required']">Type is required</small>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+
+<div class="button-container">
+  <button class="save-button" (click)="save()" >
+    <mat-icon>save</mat-icon>
+    SAVE
+  </button>
+</div>
