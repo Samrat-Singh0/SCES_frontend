@@ -22,6 +22,10 @@ export class UserService {
     return this.http.post<ApiResponse<User>>(this.userEndpoints.ADD_USER, user);
   }
 
+  getAllUsers(searchCriteria: SearchUser, page: number, size: number): Observable<ApiResponse<PageResponse<User>>> {
+    return this.http.post<ApiResponse<PageResponse<User>>>(this.userEndpoints.GET_ALL_USERS + `?page=${page}&size=${size}`, searchCriteria);
+  }
+
   getPagedUsers(searchCriteria: SearchUser, page: number, size: number): Observable<ApiResponse<PageResponse<User>>> {
     return this.http.post<ApiResponse<PageResponse<User>>>(this.userEndpoints.GET_PAGED_USERS + `?page=${page}&size=${size}`, searchCriteria);
   }

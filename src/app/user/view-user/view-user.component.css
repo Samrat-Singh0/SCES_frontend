@@ -212,6 +212,7 @@ th,td {
   color: #007bff;
 }
 
+.badge-active,
 .badge-student {
   background-color: #e8f5e9;
   color: #2e7d32;
@@ -225,6 +226,11 @@ th,td {
 .badge-default {
   background-color: #f0f0f0;
   color: #666;
+}
+
+.badge-inactive {
+  background-color: #fbeaea;
+  color: #b00020;
 }
 
 page-size-item {

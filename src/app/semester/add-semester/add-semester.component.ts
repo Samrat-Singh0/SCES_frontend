@@ -288,7 +288,7 @@ export class AddSemesterComponent implements OnInit {
         this.semesterService.add(semesterData).subscribe({
           next: res => {
             if(res.success){
-              this.router.navigate(['super/semester/view']);
+              this.router.navigate(['super/semester']);
               this.toastr.success(res.message);
             }else {
               this.toastr.error(res.message);
@@ -302,7 +302,7 @@ export class AddSemesterComponent implements OnInit {
   }
 
   goBack() {
-    this.router.navigate(['super/semester/view']);
+    this.router.navigate(['super/semester']);
   }
 
   isCourseSelected(course: Course): boolean {

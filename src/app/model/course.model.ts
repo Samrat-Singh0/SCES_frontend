@@ -1,4 +1,5 @@
 import {RoleModel} from './role.model';
+import {ActiveStatus} from '../enum/active-status.enum';
 
 export interface Course {
   code: string;
@@ -19,6 +20,7 @@ export interface Course {
       role: string;
       mustChangePassword: boolean;
       newRole: RoleModel
+      activeStatus: ActiveStatus;
     }
   }] | null;
   semester: {

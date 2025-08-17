@@ -25,8 +25,8 @@
         <td>{{i + 1}}</td>
         <td>{{attendance.course.name}}</td>
         <td>{{attendance.course.semester.label}}</td>
-        <td class="attendance-cell">
-          <span [ngClass]="getAttendanceClass(attendance.attendanceStatus)">
+        <td >
+          <span class="attendance-cell" [ngClass]="getAttendanceClass(attendance.attendanceStatus)">
             {{attendance.attendanceStatus}}
           </span>
         </td>

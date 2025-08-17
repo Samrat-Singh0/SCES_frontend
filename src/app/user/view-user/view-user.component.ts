@@ -20,6 +20,7 @@ import {MatSelect} from '@angular/material/select';
 import {MatOption} from '@angular/material/core';
 import {RoleModel} from '../../model/role.model';
 import {RoleService} from '../../services/role.service';
+import {ActiveStatus} from '../../enum/active-status.enum';
 
 
 @Component({
@@ -48,7 +49,7 @@ import {RoleService} from '../../services/role.service';
 
 export class ViewUserComponent implements OnInit {
   users: User[] = [];
-  displayedColumns: string[] = ['index', 'email', 'fullName', 'address', 'phoneNumber', 'role', 'edit']
+  displayedColumns: string[] = ['index', 'email', 'fullName', 'address', 'phoneNumber', 'role', 'status', 'edit']
   searchForm: FormGroup;
   totalPages: number = 0;
   currentPage: number = 0;
@@ -105,7 +106,7 @@ export class ViewUserComponent implements OnInit {
     }
 
 
-    this.userService.getPagedUsers(searchCriteria, page,this.pageSize).subscribe({
+    this.userService.getAllUsers(searchCriteria, page,this.pageSize).subscribe({
       next: res => {
         if(res.success){
           this.users = res.body.content;
@@ -196,6 +197,24 @@ export class ViewUserComponent implements OnInit {
     this.searchForm.reset();
     this.isSearchEnabled = false;
     this.renderContent(this.currentPage);
+  }
+
+  getStatusStyle(status: ActiveStatus): string {
+    switch (status) {
+      case ActiveStatus.ACTIVE:
+        return 'badge-active';
+      case ActiveStatus.INACTIVE:
+        return 'badge-inactive';
+    }
+  }
+
+  getUserStatus(status: ActiveStatus): string {
+    switch (status) {
+      case ActiveStatus.ACTIVE:
+        return 'Active';
+      case ActiveStatus.INACTIVE:
+        return 'Inactive';
+    }
   }
 
   getUserRole(role: Role):string {

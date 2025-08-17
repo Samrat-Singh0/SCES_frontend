@@ -170,6 +170,6 @@ export class SaveCourseComponent implements OnInit{
   }
 
   goBack() {
-    this.router.navigate(['super/course/view']);
+    this.router.navigate(['super/course']);
   }
 }

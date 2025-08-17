@@ -25,7 +25,7 @@ export const AuthEndpoints = {
 
 export const UserEndpoints = {
   GET_PAGED_USERS: `${SUPER_USER_API_URL}/paged`,
-  GET_ALL_USERS : `${SUPER_USER_API_URL}/list`,
+  GET_ALL_USERS : `${SUPER_USER_API_URL}/all/list`,
   ADD_USER : `${SUPER_USER_API_URL}/add`,
   UPDATE_USER : `${SUPER_USER_API_URL}/update`,
   DELETE_USER : `${SUPER_USER_API_URL}/delete`,

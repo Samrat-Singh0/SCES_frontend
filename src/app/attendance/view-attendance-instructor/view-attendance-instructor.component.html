@@ -34,8 +34,8 @@
         student?.user?.lastName
       ) }}
       </td>
-      <td class="attendance-cell">
-        <span [ngClass]="getStatusClass(getStatus(student))">
+      <td >
+        <span class="attendance-cell"   [ngClass]="getStatusClass(getStatus(student))">
           {{ getStatus(student)}}
         </span>
       </td>

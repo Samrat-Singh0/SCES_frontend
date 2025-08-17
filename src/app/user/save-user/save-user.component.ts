@@ -2,13 +2,13 @@ import {Component, Inject, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
 import {NgClass, NgIf} from '@angular/common';
 import {MatIconModule} from '@angular/material/icon';
-import {User} from '../../model/user.model';
 import {UserService} from '../../services/user.service';
 import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from '@angular/material/dialog';
 import {ToastrMsgService} from '../../shared/toastr-msg.service';
 import {ConfirmationComponent} from '../../shared/confirmation/confirmation.component';
 import {RoleModel} from '../../model/role.model';
 import {RoleService} from '../../services/role.service';
+import {ActiveStatus} from '../../enum/active-status.enum';
 
 @Component({
   selector: 'app-add-user',
@@ -137,7 +137,8 @@ export class SaveUserComponent implements OnInit {
             phoneNumber: form.phoneNumber,
             role: form.role,
             mustChangePassword: false,
-            newRole: role
+            newRole: role,
+            activeStatus: ActiveStatus.ACTIVE,
           }
 
           if(this.oldData === JSON.stringify(user)) {

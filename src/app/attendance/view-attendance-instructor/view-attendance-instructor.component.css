@@ -49,10 +49,12 @@ th, td {
 }
 
 .attendance-cell {
-  padding: 0.25rem 0.75rem;
+  padding: 4px 10px;
   border-radius: 20px;
-  font-size: 1rem;
-  font-weight: 500;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  display: inline-block;
 }
 
 .status-green {
